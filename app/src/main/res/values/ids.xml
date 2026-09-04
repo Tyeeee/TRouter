@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 场景索引行：id = scenario_s{场景号} -->
+    <item name="scenario_s01" type="id" />
+    <item name="scenario_s02" type="id" />
+    <item name="scenario_s03" type="id" />
+    <item name="scenario_s04" type="id" />
+    <item name="scenario_s08" type="id" />
+    <item name="scenario_s09" type="id" />
+    <item name="scenario_s11" type="id" />
+    <item name="scenario_s13" type="id" />
+    <item name="scenario_s14" type="id" />
+    <item name="status_text" type="id" />
+    <item name="main_scroll" type="id" />
+</resources>

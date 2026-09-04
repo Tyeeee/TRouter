@@ -1,0 +1,29 @@
+package com.trouter.core.api
+
+import android.content.ComponentName
+
+/**
+ * 统一配置：所有可调参数集中注入，禁止散落全局变量。
+ *
+ * V1.0 字段：
+ * - [isDebug]：true 时日志完整输出；false 时日志静默（R3 验收点）；
+ * - [logSink]：日志输出通道，默认 null 表示走 android.util.Log；测试注入收集器断言；
+ * - [onLost]：未找到路径时的全局降级回调（navigate 返回 NotFound 后触发），不受 isDebug 影响。
+ *
+ * V2.0 新增：
+ * - [interceptors]：拦截器列表（顺序即执行顺序，见 RouteInterceptor）；默认空列表 = 行为与 V1.0 一致。
+ *   不设独立 enableMockInterceptor 布尔：Mock 能力由 core MockInterceptor + 本列表统一承载。
+ *
+ * V4.0 新增（跨进程通道）：
+ * - [remoteService]：remote 进程 AIDL 服务组件；null = 未启用跨进程导航（navigateRemote 返回 Blocked）；
+ * - [remoteWhitelist]：@CrossProcess 白名单（KSP 生成 CrossProcessPaths.paths）；null = 不校验（全部放行），
+ *   非 null = 只允许集合内 path 走跨进程通道。
+ */
+open class TRouterConfig(
+    val isDebug: Boolean = false,
+    val logSink: ((String) -> Unit)? = null,
+    val onLost: ((path: String) -> Unit)? = null,
+    val interceptors: List<RouteInterceptor> = emptyList(),
+    val remoteService: ComponentName? = null,
+    val remoteWhitelist: Set<String>? = null,
+)

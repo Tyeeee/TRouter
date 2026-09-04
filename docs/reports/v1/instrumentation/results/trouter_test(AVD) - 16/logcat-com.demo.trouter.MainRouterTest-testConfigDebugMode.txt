@@ -1,0 +1,662 @@
+09-04 21:18:53.367  7489  7506 I TestRunner: started: testConfigDebugMode(com.demo.trouter.MainRouterTest)
+09-04 21:18:53.372  7489  7506 W Settings: Setting always_finish_activities has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+09-04 21:18:53.456  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:18:53.499   458  7515 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:53.499   458  7515 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:18:53.517   458  7516 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:53.517   458  7516 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:18:53.518   672  1019 W SntpClient: Unknown host: time.android.com
+09-04 21:18:53.518   672  1019 D SntpClient: request time failed
+09-04 21:18:53.534   672  2304 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:18:53.556  1071  1225 D SplashScreenView: Build android.window.SplashScreenView{3adcae V.E...... ......ID 0,0-0,0}
+09-04 21:18:53.556  1071  1225 D SplashScreenView: Icon: view: null drawable: null size: 0
+09-04 21:18:53.556  1071  1225 D SplashScreenView: Branding: view: android.view.View{4e12a4f G.ED..... ......I. 0,0-0,0 #1020541 android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-04 21:18:53.558   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:53.559  1379  1379 I Choreographer: Skipped 39 frames!  The application may be doing too much work on its main thread.
+09-04 21:18:53.624   458   513 I netd    : tetherGetStats() -> {[]} <1.49ms>
+09-04 21:18:53.654   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:53.655   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:53.656   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:53.674  1379  1913 D SharedPreferencesImpl: Time required to fsync /data/user/0/com.google.android.apps.nexuslauncher/shared_prefs/com.android.launcher3.prefs.xml: [<1: 0, <2: 6, <4: 7, <8: 17, <16: 16, <32: 15, <64: 6, <128: 9, <256: 5, <512: 1, <1024: 2, <2048: 0, <4096: 0, <8192: 0, <16384: 0, >=16384: 0]
+09-04 21:18:53.746  1379  1379 D RecentsView: onTaskRemoved: 49, not handling task stack changes
+09-04 21:18:53.747  1379  1379 D RecentsView: onTaskRemoved: 49, not handling task stack changes
+09-04 21:18:53.752  1379  1379 W SplitSelectStateCtor: Missing session instanceIds
+09-04 21:18:53.752  1379  1379 D StatsLog: LAUNCHER_SPLIT_SELECTION_EXIT_INTERRUPTED
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 151458, 500424788, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 151458, 500424788, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 151473, 663792581, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 151473, 663792581, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 151502, 657394879, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 151502, 657394879, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 151533, 641603802, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 151533, 641603802, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 151569, 376907817, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 151569, 376907817, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:JANK_APPLICATION, 151584, 703338448, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1379 W FrameTracker: Missed App frame:JANK_APPLICATION, 151600, 763198912, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:18:53.773  1379  1415 V PerfettoTrigger: Not triggering com.android.telemetry.interaction-jank-monitor-9 - not enough time since last trigger
+09-04 21:18:53.778  1379  1662 I HWUI    : Davey! duration=790ms; Flags=0, FrameTimelineVsyncId=151609, IntendedVsync=1316433208545, Vsync=1317083208519, InputEventId=0, HandleInputStart=1317098064586, AnimationStart=1317098065336, PerformTraversalsStart=1317098376752, DrawStart=1317098438711, FrameDeadline=1317233208513, FrameStartTime=1317097970211, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1317098478586, SyncStart=1317145805961, IssueDrawCommandsStart=1317145834669, SwapBuffers=1317146321211, FrameCompleted=1317270792169, DequeueBufferDuration=123703958, QueueBufferDuration=183292, GpuCompleted=1317270232752, SwapBuffersCompleted=1317270792169, DisplayPresentTime=0, CommandSubmissionCompleted=1317146321211,
+09-04 21:18:53.785  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: PRE_ON_CREATE
+09-04 21:18:53.785  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the reported transition was not ON_CREATE while the last known transition was PRE_ON_CREATE
+09-04 21:18:53.804  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: CREATED
+09-04 21:18:53.805  7489  7489 V ActivityScenario: Update currentActivityStage to CREATED, currentActivity=com.demo.trouter.MainActivity@2a4ee4c
+09-04 21:18:53.806  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: STARTED
+09-04 21:18:53.807  7489  7489 V ActivityScenario: Update currentActivityStage to STARTED, currentActivity=com.demo.trouter.MainActivity@2a4ee4c
+09-04 21:18:53.807  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:18:53.808  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: RESUMED
+09-04 21:18:53.808  7489  7489 V ActivityScenario: Update currentActivityStage to RESUMED, currentActivity=com.demo.trouter.MainActivity@2a4ee4c
+09-04 21:18:53.809   524   783 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:53.964   672   693 I ActivityTaskManager: Displayed com.demo.trouter/.MainActivity for user 0: +430ms
+09-04 21:18:54.200  1379  1662 I HWUI    : Davey! duration=991ms; Flags=0, FrameTimelineVsyncId=151609, IntendedVsync=1316433208545, Vsync=1317083208519, InputEventId=0, HandleInputStart=1317098064586, AnimationStart=1317098065336, PerformTraversalsStart=1317098376752, DrawStart=1317148453002, FrameDeadline=1317116541851, FrameStartTime=1317097970211, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1317148712544, SyncStart=1317271064669, IssueDrawCommandsStart=1317271165669, SwapBuffers=1317317100544, FrameCompleted=1317546978211, DequeueBufferDuration=2208, QueueBufferDuration=1325334, GpuCompleted=1317546978211, SwapBuffersCompleted=1317404620086, DisplayPresentTime=0, CommandSubmissionCompleted=1317317100544,
+09-04 21:18:54.347   672   794 I ImeTracker: com.demo.trouter:e701ffbc: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:18:54.364  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:18:54.366  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:18:54.367  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:18:54.369  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:18:54.371  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:18:54.394   672   687 I ImeTracker: system_server:c43c8227: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:18:54.404   672   696 I ImeTracker: system_server:c43c8227: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:18:54.590  1379  1379 D VRI[NexusLauncherActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:18:54.591  1379  1379 D NexusLauncherModelDelegate: notifySmartspaceEvent: SmartspaceTargetEvent{mSmartspaceTarget=null, mSmartspaceActionId='null', mEventType=7}
+09-04 21:18:54.675   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:54.676   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:54.694   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:54.697   458   513 I netd    : tetherGetStats() -> {[]} <0.67ms>
+09-04 21:18:54.876  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:18:54.884  7489  7489 I ImeTracker: com.demo.trouter:e701ffbc: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:18:55.318  1379  1379 D BaseDepthController: setSurface:
+09-04 21:18:55.318  1379  1379 D BaseDepthController: 	mWaitingOnSurfaceValidity: false
+09-04 21:18:55.318  1379  1379 D BaseDepthController: 	mBaseSurface: null
+09-04 21:18:55.323  1379  1379 D BaseDepthController: mSurface is null and mCurrentBlur is: 0
+09-04 21:18:55.327  1379  1379 D StateManager: goToState - fromState: Normal, toState: Normal, partial trace:
+09-04 21:18:55.327  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StateManager.moveToRestState(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:4)
+09-04 21:18:55.327  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StateManager.moveToRestState(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:1)
+09-04 21:18:55.327  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StatefulActivity.onStop(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:34)
+09-04 21:18:55.327  1379  1379 D StatsLog: LAUNCHER_ONSTOP
+09-04 21:18:55.343  1379  1379 D StatsLog: LAUNCHER_GOOGLE_SEARCH_RESTORE_LIST_SIZE_AFTER_ACTIVITY_RESTART
+09-04 21:18:55.467  1566  1566 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.feedback.internal.IFeedbackService dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
+09-04 21:18:55.698   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:55.735   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:55.738   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:55.993  7489  7489 I ViewInteraction: Performing 'single click' action on view view.getId() is <2131165271/com.demo.trouter:id/scenario_s01>
+09-04 21:18:56.101   672  2304 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:18:56.108   520   632 D AudioFlinger: mixer(0xb400007072223770) throttle end: throttle time(31)
+09-04 21:18:56.119   672  2303 W AS.PlaybackActivityMon: No piid assigned for invalid/internal port id 15
+09-04 21:18:56.156   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:56.258  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: PAUSED
+09-04 21:18:56.258  7489  7489 V ActivityScenario: Update currentActivityStage to PAUSED, currentActivity=com.demo.trouter.MainActivity@2a4ee4c
+09-04 21:18:56.356  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: PRE_ON_CREATE
+09-04 21:18:56.356  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:56.384  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: CREATED
+09-04 21:18:56.384  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:56.390  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: STARTED
+09-04 21:18:56.391  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:56.391  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:18:56.391  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: RESUMED
+09-04 21:18:56.391  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:56.404   524   564 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:56.717  1071  1216 E FrameTracker: force finish cuj, time out: J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:18:56.718  1071  1216 W FrameTracker: Missed App frame:JANK_APPLICATION, 150172, 680355272, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:18:56.718  1071  1216 W FrameTracker: Missed App frame:JANK_APPLICATION, 150193, 898973606, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:18:56.718  1071  1216 W FrameTracker: Missed App frame:UNKNOWN: 3, 150221, 975315694, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:18:56.718  1071  1216 W FrameTracker: Missed SF frame:UNKNOWN: 3, 150221, 975315694, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:18:56.718  1071  1198 V PerfettoTrigger: Not triggering com.android.telemetry.interaction-jank-monitor-39 - not enough time since last trigger
+09-04 21:18:56.742   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:56.743   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:56.745   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:56.879   458  7538 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:56.891   458  7537 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:57.063   672   693 I ActivityTaskManager: Displayed com.demo.trouter/.SecondActivity for user 0: +947ms
+09-04 21:18:57.095   458  7509 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:57.097   458  7510 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:18:57.135  7489  7489 I Choreographer: Skipped 38 frames!  The application may be doing too much work on its main thread.
+09-04 21:18:57.272   483   578 I RanchuHwc: logCompositionFallbackIfChanged: layer 335 CompositionType fallback from 2 to 1
+09-04 21:18:57.743   672   696 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=0 in void com.android.server.wm.WindowManagerService$H.handleMessage(android.os.Message) for 681ms
+09-04 21:18:57.746  7489  7534 I HWUI    : Davey! duration=751ms; Flags=1, FrameTimelineVsyncId=152584, IntendedVsync=1319816541743, Vsync=1320016541735, InputEventId=0, HandleInputStart=1320023647837, AnimationStart=1320023649420, PerformTraversalsStart=1320023765587, DrawStart=1320461254045, FrameDeadline=1319833208409, FrameStartTime=1320022734295, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1320462768087, SyncStart=1320569129504, IssueDrawCommandsStart=1320569284004, SwapBuffers=1320572133671, FrameCompleted=1320674347587, DequeueBufferDuration=5500, QueueBufferDuration=240083, GpuCompleted=1320674347587, SwapBuffersCompleted=1320573245962, DisplayPresentTime=0, CommandSubmissionCompleted=1320572133671,
+09-04 21:18:57.749   672  2300 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=1 in android.app.ActivityTaskManager$RootTaskInfo com.android.server.wm.ActivityTaskManagerService.getFocusedRootTaskInfo() for 646ms
+09-04 21:18:57.750   672   697 I Choreographer: Skipped 41 frames!  The application may be doing too much work on its main thread.
+09-04 21:18:57.754   672  2303 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:57.755   672  2303 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:57.756   672   687 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.WindowAnimator.lambda$new$1(long)(WindowAnimator.java:118) waiters=4 in void com.android.server.wm.WindowOrganizerController.finishTransition(android.os.IBinder, android.window.WindowContainerTransaction) for 208ms
+09-04 21:18:57.767   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:57.837  7489  7500 I HWUI    : Davey! duration=1231ms; Flags=0, FrameTimelineVsyncId=152632, IntendedVsync=1320033208401, Vsync=1320666541709, InputEventId=0, HandleInputStart=1320683298212, AnimationStart=1320683300671, PerformTraversalsStart=1320683561504, DrawStart=1320683654754, FrameDeadline=1320699875041, FrameStartTime=1320674068296, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1320685367129, SyncStart=1320699515837, IssueDrawCommandsStart=1320699630796, SwapBuffers=1320808563087, FrameCompleted=1321279294879, DequeueBufferDuration=4959, QueueBufferDuration=208958, GpuCompleted=1321279294879, SwapBuffersCompleted=1320834711254, DisplayPresentTime=0, CommandSubmissionCompleted=1320808563087,
+09-04 21:18:57.957   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:57.957   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.101  7489  7500 I HWUI    : Davey! duration=1364ms; Flags=0, FrameTimelineVsyncId=152632, IntendedVsync=1320033208401, Vsync=1320666541709, InputEventId=0, HandleInputStart=1320683298212, AnimationStart=1320683300671, PerformTraversalsStart=1320683561504, DrawStart=1320699915296, FrameDeadline=1320833208369, FrameStartTime=1320674068296, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1320700880671, SyncStart=1320861941837, IssueDrawCommandsStart=1320862146879, SwapBuffers=1321267073213, FrameCompleted=1321558922504, DequeueBufferDuration=4299334, QueueBufferDuration=1457875, GpuCompleted=1321558922504, SwapBuffersCompleted=1321285114254, DisplayPresentTime=0, CommandSubmissionCompleted=1321267073213,
+09-04 21:18:58.122   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.122   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.181   672   794 I ImeTracker: com.demo.trouter:635c1c1: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:18:58.183  7489  7489 I Choreographer: Skipped 51 frames!  The application may be doing too much work on its main thread.
+09-04 21:18:58.184  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:18:58.185  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:18:58.185  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:18:58.186   672  2300 I ImeTracker: system_server:e8c2da20: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:18:58.186  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:18:58.186  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:18:58.187   672   696 I ImeTracker: system_server:e8c2da20: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:18:58.371  7489  7498 I HWUI    : Davey! duration=723ms; Flags=0, FrameTimelineVsyncId=152768, IntendedVsync=1320683208375, Vsync=1320849875035, InputEventId=0, HandleInputStart=1320871668504, AnimationStart=1320871670546, PerformTraversalsStart=1320871910671, DrawStart=1321293317546, FrameDeadline=1321299875017, FrameStartTime=1320865508212, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1321294053046, SyncStart=1321714640213, IssueDrawCommandsStart=1321714757296, SwapBuffers=1321719838379, FrameCompleted=1321827160338, DequeueBufferDuration=9459, QueueBufferDuration=32092625, GpuCompleted=1321827160338, SwapBuffersCompleted=1321753057504, DisplayPresentTime=0, CommandSubmissionCompleted=1321719838379,
+09-04 21:18:58.373  7489  7489 D VRI[MainActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:18:58.396  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: STOPPED
+09-04 21:18:58.396  7489  7489 V ActivityScenario: Update currentActivityStage to STOPPED, currentActivity=com.demo.trouter.MainActivity@2a4ee4c
+09-04 21:18:58.397  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:18:58.397  7489  7489 I ImeTracker: com.demo.trouter:635c1c1: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:18:58.436  7489  7498 I HWUI    : Davey! duration=1024ms; Flags=0, FrameTimelineVsyncId=152832, IntendedVsync=1320866541701, Vsync=1321716541667, InputEventId=0, HandleInputStart=1321726130296, AnimationStart=1321726132879, PerformTraversalsStart=1321726831338, DrawStart=1321726909921, FrameDeadline=1321849874995, FrameStartTime=1321722116046, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1321727311588, SyncStart=1321753092629, IssueDrawCommandsStart=1321753175796, SwapBuffers=1321819718713, FrameCompleted=1321917135421, DequeueBufferDuration=1174875, QueueBufferDuration=939500, GpuCompleted=1321917135421, SwapBuffersCompleted=1321910140713, DisplayPresentTime=0, CommandSubmissionCompleted=1321819718713,
+09-04 21:18:58.474   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.474   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.582   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.582   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.686   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.686   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.770   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:58.770   672  2300 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:58.772   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:58.791   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.792   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.869  7489  7489 I ViewInteraction: Checking 'MatchesViewAssertion{viewMatcher=(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() to return non-empty rectangle)}' assertion on view an instance of android.widget.TextView and view.getText() with or without transformation to match: is "Second 页面"
+09-04 21:18:58.888   672  2304 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:18:58.894   524  1447 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:58.898   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:58.898   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:58.901  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: PAUSED
+09-04 21:18:58.901  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:58.919  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: PRE_ON_CREATE
+09-04 21:18:58.920  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:18:58.927  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: CREATED
+09-04 21:18:58.927  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:18:58.929  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: STARTED
+09-04 21:18:58.929  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:18:58.929  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:18:58.930  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: RESUMED
+09-04 21:18:58.931  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:18:58.970   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:59.007   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:59.007   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:59.066   672   693 I ActivityTaskManager: Displayed com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity for user 0: +166ms
+09-04 21:18:59.110   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:59.110   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:59.172   469  3794 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 10462208
+09-04 21:18:59.173   469  3794 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: joining consumeThread
+09-04 21:18:59.214   469  7541 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:18:59.214   469  7541 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:18:59.214   469  7541 D android.hardware.audio@7.1-impl.ranchu: consumeThread: exiting
+09-04 21:18:59.215   469  3794 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: stopping PCM stream
+09-04 21:18:59.236   672   696 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=1 in void com.android.server.wm.WindowManagerService$H.handleMessage(android.os.Message) for 183ms
+09-04 21:18:59.243  7489  7489 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@ec68e81
+09-04 21:18:59.244  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2a4ee4c in: DESTROYED
+09-04 21:18:59.244  7489  7489 V ActivityScenario: Update currentActivityStage to DESTROYED, currentActivity=null
+09-04 21:18:59.255   672   794 I ImeTracker: com.demo.trouter:47b15811: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:18:59.259  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:18:59.260  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:18:59.261  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:18:59.263   672  2300 I ImeTracker: system_server:1ce5ec53: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:18:59.268  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:18:59.268   672   696 I ImeTracker: system_server:1ce5ec53: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:18:59.269  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:18:59.297  7489  7489 D VRI[SecondActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:18:59.302   524   783 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:59.302  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:18:59.302  7489  7489 I ImeTracker: com.demo.trouter:47b15811: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:18:59.339  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: STOPPED
+09-04 21:18:59.339  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:59.340  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: PAUSED
+09-04 21:18:59.340  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:18:59.364  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:18:59.364  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: RESTARTED
+09-04 21:18:59.364  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:59.365  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: STARTED
+09-04 21:18:59.366  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:59.366  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: RESUMED
+09-04 21:18:59.366  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:59.392   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:59.659  7489  7506 W Settings: Setting always_finish_activities has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+09-04 21:18:59.687  7489  7500 E FrameEvents: addRelease: Did not find frame.
+09-04 21:18:59.688   672  2300 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:18:59.712  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: PAUSED
+09-04 21:18:59.712  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:18:59.775   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:59.778  1071  1225 D SplashScreenView: Build android.window.SplashScreenView{ad93b22 V.E...... ......ID 0,0-0,0}
+09-04 21:18:59.778  1071  1225 D SplashScreenView: Icon: view: null drawable: null size: 0
+09-04 21:18:59.778  1071  1225 D SplashScreenView: Branding: view: android.view.View{cceb9b3 G.ED..... ......I. 0,0-0,0 #1020541 android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-04 21:18:59.779   672  2135 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:59.779   672  2135 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:59.783   672  2135 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:18:59.831   458   513 I netd    : tetherGetStats() -> {[]} <0.66ms>
+09-04 21:18:59.836  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: PRE_ON_CREATE
+09-04 21:18:59.837  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the reported transition was not ON_CREATE while the last known transition was PRE_ON_CREATE
+09-04 21:18:59.855   524  1447 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:18:59.895  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: CREATED
+09-04 21:18:59.908  7489  7489 V ActivityScenario: Update currentActivityStage to CREATED, currentActivity=com.demo.trouter.MainActivity@2439df6
+09-04 21:18:59.915  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: STARTED
+09-04 21:18:59.920  7489  7489 V ActivityScenario: Update currentActivityStage to STARTED, currentActivity=com.demo.trouter.MainActivity@2439df6
+09-04 21:18:59.928  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:18:59.934  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: RESUMED
+09-04 21:18:59.935  7489  7489 V ActivityScenario: Update currentActivityStage to RESUMED, currentActivity=com.demo.trouter.MainActivity@2439df6
+09-04 21:18:59.960  7489  7489 D VRI[InstrumentationActivityInvoker$EmptyActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:00.155   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+09-04 21:19:00.158   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+09-04 21:19:00.159   672   989 D InetDiagMessage: Destroyed live tcp sockets for uids={10212} in 6ms
+09-04 21:19:00.220   672  2311 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=2 in void com.android.server.wm.ActivityClientController.setTaskDescription(android.os.IBinder, android.app.ActivityManager$TaskDescription) for 172ms
+09-04 21:19:00.527   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+09-04 21:19:00.527   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+09-04 21:19:00.527   672   989 D InetDiagMessage: Destroyed live tcp sockets for uids={10199} in 0ms
+09-04 21:19:00.527   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+09-04 21:19:00.548   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+09-04 21:19:00.548   672   989 D InetDiagMessage: Destroyed live tcp sockets for uids={20199} in 21ms
+09-04 21:19:00.703   672   693 I ActivityTaskManager: Displayed com.demo.trouter/.MainActivity for user 0: +1s17ms
+09-04 21:19:00.715  7489  7489 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:00.716  7489  7489 D VRI[SecondActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:00.784   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:00.784   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:00.787   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:00.913  7489  7500 I HWUI    : Davey! duration=799ms; Flags=1, FrameTimelineVsyncId=153308, IntendedVsync=1323499874929, Vsync=1323499874929, InputEventId=0, HandleInputStart=1323515052130, AnimationStart=1323515053672, PerformTraversalsStart=1323515054380, DrawStart=1324118135881, FrameDeadline=1323516541595, FrameStartTime=1323515048214, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1324125941172, SyncStart=1324131678256, IssueDrawCommandsStart=1324132189464, SwapBuffers=1324213559381, FrameCompleted=1324305319714, DequeueBufferDuration=3916, QueueBufferDuration=182500, GpuCompleted=1324305319714, SwapBuffersCompleted=1324214755422, DisplayPresentTime=0, CommandSubmissionCompleted=1324213559381,
+09-04 21:19:01.041  1071  1559 I HWUI    : Davey! duration=826ms; Flags=0, FrameTimelineVsyncId=153352, IntendedVsync=1323599874925, Vsync=1323599874925, InputEventId=0, HandleInputStart=1323614679880, AnimationStart=1323614680672, PerformTraversalsStart=1323614681380, DrawStart=1323615038797, FrameDeadline=1323616541591, FrameStartTime=1323614677422, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1323615191922, SyncStart=1323629850839, IssueDrawCommandsStart=1323629918880, SwapBuffers=1324307033006, FrameCompleted=1324441183756, DequeueBufferDuration=10959, QueueBufferDuration=332959, GpuCompleted=1324441183756, SwapBuffersCompleted=1324327120006, DisplayPresentTime=0, CommandSubmissionCompleted=1324307033006,
+09-04 21:19:01.044  7489  7500 I HWUI    : Davey! duration=890ms; Flags=0, FrameTimelineVsyncId=153323, IntendedVsync=1323549874927, Vsync=1324249874899, InputEventId=0, HandleInputStart=1324253676131, AnimationStart=1324253677047, PerformTraversalsStart=1324253833256, DrawStart=1324253887422, FrameDeadline=1324333208229, FrameStartTime=1324253506172, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1324254144756, SyncStart=1324254466381, IssueDrawCommandsStart=1324254542422, SwapBuffers=1324306456089, FrameCompleted=1324440771297, DequeueBufferDuration=5833, QueueBufferDuration=288000, GpuCompleted=1324440771297, SwapBuffersCompleted=1324307796922, DisplayPresentTime=0, CommandSubmissionCompleted=1324306456089,
+09-04 21:19:01.163   672   794 I ImeTracker: com.demo.trouter:8a86af1c: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:19:01.166  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:19:01.167   672  2311 I ImeTracker: system_server:60703b86: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:19:01.167  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:19:01.168  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:19:01.168   672   696 I ImeTracker: system_server:60703b86: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:19:01.169  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:19:01.169  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:19:01.315  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:19:01.317  7489  7489 I ImeTracker: com.demo.trouter:8a86af1c: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:19:01.415   458   513 I netd    : tetherGetStats() -> {[]} <50.52ms>
+09-04 21:19:01.869   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:01.869   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:01.871   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:01.871  1071  1559 I HWUI    : Davey! duration=876ms; Flags=0, FrameTimelineVsyncId=153467, IntendedVsync=1323849874915, Vsync=1324316541563, InputEventId=0, HandleInputStart=1324347378506, AnimationStart=1324347380589, PerformTraversalsStart=1324347749131, DrawStart=1324347797547, FrameDeadline=1324599874885, FrameStartTime=1324328473422, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1324349063214, SyncStart=1324876504298, IssueDrawCommandsStart=1324878462506, SwapBuffers=1324988711839, FrameCompleted=1325253417006, DequeueBufferDuration=6041, QueueBufferDuration=347417, GpuCompleted=1325253417006, SwapBuffersCompleted=1325122317548, DisplayPresentTime=0, CommandSubmissionCompleted=1324988711839,
+09-04 21:19:01.903   458  7537 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:01.903   458  7537 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:19:01.916   458  7538 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:01.916   458  7538 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:19:01.922  1566  6986 W humh    : [{0}] Failed to resolve name. status={1}
+09-04 21:19:02.103   458  7509 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:02.103   458  7509 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:19:02.104   458  7510 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:02.104   458  7510 I resolv  : doQuery: rcode=255, ancount=0, return value=-110
+09-04 21:19:02.105  1392  6991 W humh    : [{0}] Failed to resolve name. status={1}
+09-04 21:19:02.120  1566  6986 W humh    : [{0}] Failed to resolve name. status={1}
+09-04 21:19:02.196  1566  6986 W humh    : [{0}] Failed to resolve name. status={1}
+09-04 21:19:02.663  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: STOPPED
+09-04 21:19:02.663  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:19:02.664  7489  7489 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@9936c22
+09-04 21:19:02.665  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f in: DESTROYED
+09-04 21:19:02.665  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@fc0bc1f
+09-04 21:19:02.665  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:19:02.683  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: STOPPED
+09-04 21:19:02.683  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:19:02.683  7489  7489 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@6717d0d
+09-04 21:19:02.683  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@e3e996b in: DESTROYED
+09-04 21:19:02.683  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@e3e996b
+09-04 21:19:02.684  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:19:02.702   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.703   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704  1566  2797 W humh    : [{0}] Failed to resolve name. status={1}
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.704   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.705   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.705   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.705   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.709   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.709   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.709   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.710   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:02.712  7489  7500 I HWUI    : Davey! duration=781ms; Flags=0, FrameTimelineVsyncId=153753, IntendedVsync=1325416541519, Vsync=1325883208167, InputEventId=0, HandleInputStart=1325892527881, AnimationStart=1325892529881, PerformTraversalsStart=1325892531256, DrawStart=1325892678131, FrameDeadline=1326133208157, FrameStartTime=1325890516465, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1325894653298, SyncStart=1325895826715, IssueDrawCommandsStart=1325895957340, SwapBuffers=1325996642548, FrameCompleted=1326199651757, DequeueBufferDuration=201648501, QueueBufferDuration=285583, GpuCompleted=1326199140173, SwapBuffersCompleted=1326199651757, DisplayPresentTime=0, CommandSubmissionCompleted=1325996642548,
+09-04 21:19:02.771  7489  7489 I ViewInteraction: Performing 'single click' action on view view.getId() is <2131165271/com.demo.trouter:id/scenario_s01>
+09-04 21:19:02.832   672  2135 W AS.PlaybackActivityMon: No piid assigned for invalid/internal port id 15
+09-04 21:19:02.834   672  2311 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:02.839   520   632 D AudioFlinger: mixer(0xb400007072223770) throttle end: throttle time(33)
+09-04 21:19:02.845   524  1447 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:02.849  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: PAUSED
+09-04 21:19:02.849  7489  7489 V ActivityScenario: Update currentActivityStage to PAUSED, currentActivity=com.demo.trouter.MainActivity@2439df6
+09-04 21:19:02.861  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: PRE_ON_CREATE
+09-04 21:19:02.862  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:02.889   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:02.889   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:02.891   520   632 D AudioFlinger: mixer(0xb400007072223770) throttle end: throttle time(22)
+09-04 21:19:02.892   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:02.904  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: CREATED
+09-04 21:19:02.904  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:02.904  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: STARTED
+09-04 21:19:02.906  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:02.907  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:19:02.907  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: RESUMED
+09-04 21:19:02.908  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:02.911   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:02.962   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:02.962   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.070   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.070   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.090  1239  1493 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled
+09-04 21:19:03.175   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.176   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.278   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.278   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.387   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.387   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.490   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.490   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.595   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.597   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.704   672   693 I ActivityTaskManager: Displayed com.demo.trouter/.SecondActivity for user 0: +854ms
+09-04 21:19:03.732   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.732   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.834   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.834   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:03.847  7489  7500 I HWUI    : Davey! duration=720ms; Flags=1, FrameTimelineVsyncId=153996, IntendedVsync=1326399874813, Vsync=1326599874805, InputEventId=0, HandleInputStart=1326614610173, AnimationStart=1326614612048, PerformTraversalsStart=1326614891673, DrawStart=1327089993757, FrameDeadline=1326416541479, FrameStartTime=1326613101965, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1327090851715, SyncStart=1327193642465, IssueDrawCommandsStart=1327193788507, SwapBuffers=1327197638882, FrameCompleted=1327223619757, DequeueBufferDuration=4208, QueueBufferDuration=202125, GpuCompleted=1327223619757, SwapBuffersCompleted=1327198581132, DisplayPresentTime=0, CommandSubmissionCompleted=1327197638882,
+09-04 21:19:03.916   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:03.916   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:03.929   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:03.938   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:03.938   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.043   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.043   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.146   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.146   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.250   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.250   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.357   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.357   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.393  7489  7489 I Choreographer: Skipped 78 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:04.394   672   697 I Choreographer: Skipped 37 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:04.418   672  2311 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=2 in void com.android.server.wm.BLASTSyncEngine$SyncGroup$1CommitCallback.onCommitted(android.view.SurfaceControl$Transaction) for 638ms
+09-04 21:19:04.462   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.462   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.470  7489  7500 I HWUI    : Davey! duration=1437ms; Flags=1, FrameTimelineVsyncId=153996, IntendedVsync=1326399874813, Vsync=1326599874805, InputEventId=0, HandleInputStart=1326614610173, AnimationStart=1326614612048, PerformTraversalsStart=1326614891673, DrawStart=1327202462382, FrameDeadline=1327399874773, FrameStartTime=1326613101965, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1327202631590, SyncStart=1327294734715, IssueDrawCommandsStart=1327295092340, SwapBuffers=1327382046257, FrameCompleted=1327929683216, DequeueBufferDuration=546342833, QueueBufferDuration=356875, GpuCompleted=1327928671382, SwapBuffersCompleted=1327929683216, DisplayPresentTime=0, CommandSubmissionCompleted=1327382046257,
+09-04 21:19:04.483   672  2940 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=3 in void com.android.server.wm.TaskPersister$TaskWriteQueueItem.process() for 670ms
+09-04 21:19:04.484   672   687 W system_server: Long monitor contention with owner android.anim (697) at void com.android.server.wm.AbsAppSnapshotController.lambda$recordSnapshotInner$0(com.android.server.wm.WindowContainer, java.util.function.Consumer, android.window.TaskSnapshot)(AbsAppSnapshotController.java:208) waiters=4 in void com.android.server.wm.WindowOrganizerController.finishTransition(android.os.IBinder, android.window.WindowContainerTransaction) for 251ms
+09-04 21:19:04.580   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.580   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.595   672   794 I ImeTracker: com.demo.trouter:335f39dc: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:19:04.612  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:19:04.614  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:19:04.615  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:19:04.616  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:19:04.618   672  2311 I ImeTracker: system_server:9a9eb8d9: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:19:04.620   672   696 I ImeTracker: system_server:9a9eb8d9: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:19:04.621  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:19:04.687   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.687   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.793   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.793   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.841  7489  7500 I HWUI    : Davey! duration=1643ms; Flags=0, FrameTimelineVsyncId=154042, IntendedVsync=1326616541471, Vsync=1327916541419, InputEventId=0, HandleInputStart=1327931620049, AnimationStart=1327931622382, PerformTraversalsStart=1327931874049, DrawStart=1327931960174, FrameDeadline=1327249874779, FrameStartTime=1327931285007, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1327932910382, SyncStart=1328007009716, IssueDrawCommandsStart=1328007101007, SwapBuffers=1328007996549, FrameCompleted=1328333876008, DequeueBufferDuration=7209, QueueBufferDuration=495916, GpuCompleted=1328333876008, SwapBuffersCompleted=1328010908757, DisplayPresentTime=0, CommandSubmissionCompleted=1328007996549,
+09-04 21:19:04.902   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:04.902   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:04.903  7489  7500 I HWUI    : Davey! duration=1684ms; Flags=0, FrameTimelineVsyncId=154042, IntendedVsync=1326616541471, Vsync=1327916541419, InputEventId=0, HandleInputStart=1327931620049, AnimationStart=1327931622382, PerformTraversalsStart=1327931874049, DrawStart=1328007640132, FrameDeadline=1328366541401, FrameStartTime=1327931285007, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1328040616549, SyncStart=1328121603882, IssueDrawCommandsStart=1328121890757, SwapBuffers=1328229992174, FrameCompleted=1328381657799, DequeueBufferDuration=150277376, QueueBufferDuration=175292, GpuCompleted=1328379353008, SwapBuffersCompleted=1328381657799, DisplayPresentTime=0, CommandSubmissionCompleted=1328229992174,
+09-04 21:19:04.925  7489  7489 D VRI[MainActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:04.939   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:04.967   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:04.992   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:05.021   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.021   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.096  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: STOPPED
+09-04 21:19:05.100  7489  7489 V ActivityScenario: Update currentActivityStage to STOPPED, currentActivity=com.demo.trouter.MainActivity@2439df6
+09-04 21:19:05.102  7489  7489 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:05.127   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.127   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.166  7489  7511 D HWUI    : endAllActiveAnimators on 0xb400007d5a52a480 (RippleDrawable) with handle 0xb400007d2a4eb400
+09-04 21:19:05.172  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:19:05.172  7489  7489 I ImeTracker: com.demo.trouter:335f39dc: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:19:05.230   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.230   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.338   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.338   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.379  1071  1216 E FrameTracker: force finish cuj, time out: J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:19:05.380  1071  1216 W FrameTracker: Missed App frame:UNKNOWN: 3, 152000, 431667918, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:19:05.380  1071  1216 W FrameTracker: Missed SF frame:UNKNOWN: 3, 152000, 431667918, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:19:05.380  1071  1198 V PerfettoTrigger: Not triggering com.android.telemetry.interaction-jank-monitor-39 - not enough time since last trigger
+09-04 21:19:05.445   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.445   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.461   672   683 I system_server: NativeAlloc concurrent mark compact GC freed 25MB AllocSpace bytes, 47(1336KB) LOS objects, 45% free, 28MB/52MB, paused 3.946ms,3.809ms total 441.933ms
+09-04 21:19:05.477  7489  7489 I ViewInteraction: Checking 'MatchesViewAssertion{viewMatcher=(view has effective visibility <VISIBLE> and view.getGlobalVisibleRect() to return non-empty rectangle)}' assertion on view an instance of android.widget.TextView and view.getText() with or without transformation to match: is "Second 页面"
+09-04 21:19:05.479   672   684 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:05.490   672  2311 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:05.502   524   563 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:05.502  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: PAUSED
+09-04 21:19:05.503  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:05.510  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5 in: PRE_ON_CREATE
+09-04 21:19:05.510  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5
+09-04 21:19:05.512   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:05.514  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5 in: CREATED
+09-04 21:19:05.514  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5
+09-04 21:19:05.515  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5 in: STARTED
+09-04 21:19:05.515  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5
+09-04 21:19:05.516  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:19:05.519  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5 in: RESUMED
+09-04 21:19:05.519  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5
+09-04 21:19:05.547   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.548   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.650   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.650   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.723   672   693 I ActivityTaskManager: Displayed com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity for user 0: +231ms
+09-04 21:19:05.854   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.854   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.933  7489  7489 D VRI[SecondActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:05.934  7489  7489 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@e3e20da
+09-04 21:19:05.934  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@2439df6 in: DESTROYED
+09-04 21:19:05.936  7489  7489 V ActivityScenario: Update currentActivityStage to DESTROYED, currentActivity=null
+09-04 21:19:05.951   469  3794 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 10605824
+09-04 21:19:05.951   469  3794 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: joining consumeThread
+09-04 21:19:05.957   469  7547 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:05.957   469  7547 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:05.957   469  7547 D android.hardware.audio@7.1-impl.ranchu: consumeThread: exiting
+09-04 21:19:05.958   469  3794 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: stopping PCM stream
+09-04 21:19:05.996   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:05.996   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:05.997   672   687 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:06.001  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: STOPPED
+09-04 21:19:06.006  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:06.009   672   794 I ImeTracker: com.demo.trouter:f251cff4: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:19:06.063  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:19:06.064   672   687 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:06.083  7489  7489 I ImeTracker: com.demo.trouter:f251cff4: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:19:06.093  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5 in: PAUSED
+09-04 21:19:06.093  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@48278b5
+09-04 21:19:06.113  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: RESTARTED
+09-04 21:19:06.113   524  1050 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:06.114  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:06.114  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: STARTED
+09-04 21:19:06.114   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:06.114  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:06.114  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: RESUMED
+09-04 21:19:06.114  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { xflg=0x4 cmp=com.demo.trouter/.SecondActivity (has extras) }, activity=com.demo.trouter.SecondActivity@3723a06
+09-04 21:19:06.116  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:19:06.123   672   687 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:06.132  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:19:06.132  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:19:06.136  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:19:06.137  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:19:06.157   672  2311 I ImeTracker: system_server:fbc867ef: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:19:06.158   672   696 I ImeTracker: system_server:fbc867ef: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:19:06.201   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+09-04 21:19:06.201   672   989 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+09-04 21:19:06.201   672   989 D InetDiagMessage: Destroyed live tcp sockets for uids={10199} in 2ms
+09-04 21:19:06.323  7489  7506 I TestRunner: finished: testConfigDebugMode(com.demo.trouter.MainRouterTest)

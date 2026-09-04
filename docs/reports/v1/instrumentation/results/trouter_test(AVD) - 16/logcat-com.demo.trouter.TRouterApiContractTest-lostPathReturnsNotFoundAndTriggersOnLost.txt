@@ -1,0 +1,2 @@
+09-04 21:19:33.020  7489  7506 I TestRunner: started: lostPathReturnsNotFoundAndTriggersOnLost(com.demo.trouter.TRouterApiContractTest)
+09-04 21:19:33.041  7489  7506 I TestRunner: finished: lostPathReturnsNotFoundAndTriggersOnLost(com.demo.trouter.TRouterApiContractTest)

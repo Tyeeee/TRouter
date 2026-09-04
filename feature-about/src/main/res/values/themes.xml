@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- feature-about 独立主题（父主题与 app 一致：Light.NoActionBar；资源名避免跨模块重复） -->
+    <style name="Theme.TRouterFeatureAbout" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

@@ -1,0 +1,2 @@
+09-04 21:18:42.780  7489  7506 I TestRunner: started: useAppContext(com.demo.trouter.ExampleInstrumentedTest)
+09-04 21:18:42.797  7489  7506 I TestRunner: finished: useAppContext(com.demo.trouter.ExampleInstrumentedTest)

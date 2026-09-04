@@ -1,0 +1,4 @@
+09-04 21:19:32.919  7489  7506 I TestRunner: started: traceIdConsistentBetweenEntryAndExit(com.demo.trouter.TRouterApiContractTest)
+09-04 21:19:32.966   672   743 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:32.970  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:19:32.994  7489  7506 I TestRunner: finished: traceIdConsistentBetweenEntryAndExit(com.demo.trouter.TRouterApiContractTest)

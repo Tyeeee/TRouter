@@ -1,0 +1,53 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac NO-SOURCE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :trouter-processor:compileKotlin
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar
+
+> Task :feature-demo:kspDebugKotlin FAILED
+e: [ksp] 路由路径冲突（Fail-Fast）：path=/second 已被 [com.demo.trouter.feature.demo.DuplicateClashProbe] 注册，[com.demo.trouter.feature.demo.SecondActivity] 重复声明，请修正后重新编译。
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':feature-demo:kspDebugKotlin' (registered by plugin 'com.android.internal.library').
+> A failure occurred while executing com.google.devtools.ksp.gradle.KspAAWorkerAction
+   > KSP failed with exit code: PROCESSING_ERROR
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 5s
+19 actionable tasks: 3 executed, 16 up-to-date
+Configuration cache entry reused.

@@ -1,0 +1,15 @@
+--------- beginning of main
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][start] group=default
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][end] group=default routes=1 added=1 costMs=0
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][start] group=default
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][end] group=default routes=2 added=3 costMs=0
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][start] group=mock
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][end] group=mock routes=1 added=4 costMs=0
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 22:28:34.041 12427 12427 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=5 costMs=0
+09-04 22:28:38.824 12427 12427 D TRouter : [navigate][entry] traceId=00c77ded hop=0 path=/about bundleKeys=0
+09-04 22:28:38.824 12427 12427 D TRouter : [interceptor][start] traceId=00c77ded path=/about interceptors=2
+09-04 22:28:38.824 12427 12427 D TRouter : [interceptor][eval] traceId=00c77ded index=1 class=GateInterceptor decision=Continue
+09-04 22:28:38.824 12427 12427 D TRouter : [interceptor][eval] traceId=00c77ded index=2 class=MockInterceptor decision=Continue
+09-04 22:28:38.824 12427 12427 D TRouter : [interceptor][end] traceId=00c77ded decision=Continue costMs=0
+09-04 22:28:38.857 12427 12427 D TRouter : [navigate][exit] traceId=00c77ded hop=0 result=Success(meta=/about, kind=ACTIVITY) costMs=33

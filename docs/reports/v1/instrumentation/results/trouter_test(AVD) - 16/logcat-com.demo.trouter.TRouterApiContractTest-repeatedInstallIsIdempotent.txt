@@ -1,0 +1,3 @@
+09-04 21:19:33.044  7489  7506 I TestRunner: started: repeatedInstallIsIdempotent(com.demo.trouter.TRouterApiContractTest)
+09-04 21:19:33.063   672  2311 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:33.075  7489  7506 I TestRunner: finished: repeatedInstallIsIdempotent(com.demo.trouter.TRouterApiContractTest)

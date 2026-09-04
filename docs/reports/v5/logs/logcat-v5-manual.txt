@@ -1,0 +1,17 @@
+--------- beginning of main
+09-04 23:55:17.051 19823 19823 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:55:17.051 19823 19823 D TRouter : [GroupLoader][load][end] group=default routes=2 added=2 costMs=0
+09-04 23:55:17.051 19823 19823 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:55:17.052 19823 19823 D TRouter : [GroupLoader][load][end] group=default routes=2 added=4 costMs=0
+09-04 23:55:17.053 19823 19823 D TRouter : [GroupLoader][load][start] group=mock
+09-04 23:55:17.053 19823 19823 D TRouter : [GroupLoader][load][end] group=mock routes=1 added=5 costMs=0
+09-04 23:55:17.053 19823 19823 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 23:55:17.053 19823 19823 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=6 costMs=0
+09-04 23:55:25.158 19823 19823 D TRouter : [route][register] path=/dynamic-demo group=dynamic kind=ACTIVITY target=com.demo.trouter.DynamicDemoActivity
+09-04 23:55:30.021 19823 19823 D TRouter : [navigate][entry] traceId=dce834cb hop=0 path=/dynamic-demo bundleKeys=0
+09-04 23:55:30.021 19823 19823 D TRouter : [interceptor][start] traceId=dce834cb path=/dynamic-demo interceptors=2
+09-04 23:55:30.021 19823 19823 D TRouter : [interceptor][eval] traceId=dce834cb index=1 class=GateInterceptor decision=Continue
+09-04 23:55:30.021 19823 19823 D TRouter : [interceptor][eval] traceId=dce834cb index=2 class=MockInterceptor decision=Continue
+09-04 23:55:30.025 19823 19823 D TRouter : [interceptor][end] traceId=dce834cb decision=Continue costMs=0
+09-04 23:55:30.057 19823 19823 D TRouter : [navigate][exit] traceId=dce834cb hop=0 result=Success(meta=/dynamic-demo, kind=ACTIVITY) costMs=36
+09-04 23:55:43.117 19823 19823 D TRouter : [route][unregister] path=/dynamic-demo

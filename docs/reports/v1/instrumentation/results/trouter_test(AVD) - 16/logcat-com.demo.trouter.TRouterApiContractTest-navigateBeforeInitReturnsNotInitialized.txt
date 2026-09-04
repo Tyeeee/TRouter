@@ -1,0 +1,5 @@
+09-04 21:19:33.077  7489  7506 I TestRunner: started: navigateBeforeInitReturnsNotInitialized(com.demo.trouter.TRouterApiContractTest)
+09-04 21:19:33.080  1071  1225 D SplashScreenView: Build android.window.SplashScreenView{71ec95f V.E...... ......ID 0,0-0,0}
+09-04 21:19:33.080  1071  1225 D SplashScreenView: Icon: view: null drawable: null size: 0
+09-04 21:19:33.080  1071  1225 D SplashScreenView: Branding: view: android.view.View{7f0dfac G.ED..... ......I. 0,0-0,0 #1020541 android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-04 21:19:33.083  7489  7506 I TestRunner: finished: navigateBeforeInitReturnsNotInitialized(com.demo.trouter.TRouterApiContractTest)

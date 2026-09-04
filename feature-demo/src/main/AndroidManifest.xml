@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- feature-demo 模块页面：Activity 随模块声明，经 manifest 合并进 :app -->
+    <application>
+        <activity
+            android:name="com.demo.trouter.feature.demo.SecondActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterFeatureDemo" />
+        <activity
+            android:name="com.demo.trouter.feature.demo.MockSecondActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterFeatureDemo" />
+    </application>
+
+</manifest>

@@ -1,0 +1,260 @@
+09-04 21:19:08.217  7489  7506 I TestRunner: started: testLostNavigation(com.demo.trouter.MainRouterTest)
+09-04 21:19:08.218  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.SecondActivity@3723a06 in: DESTROYED
+09-04 21:19:08.239  7489  7506 W Settings: Setting always_finish_activities has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+09-04 21:19:08.305  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:19:08.323   672  2311 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:08.336  1071  1225 D SplashScreenView: Build android.window.SplashScreenView{dffcac1 V.E...... ......ID 0,0-0,0}
+09-04 21:19:08.336  1071  1225 D SplashScreenView: Icon: view: null drawable: null size: 0
+09-04 21:19:08.336  1071  1225 D SplashScreenView: Branding: view: android.view.View{7f65266 G.ED..... ......I. 0,0-0,0 #1020541 android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-04 21:19:08.362   575  5558 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:08.405   458   513 I netd    : tetherGetStats() -> {[]} <0.63ms>
+09-04 21:19:08.427   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:08.519  1379  1379 D RecentsView: onTaskRemoved: 50, not handling task stack changes
+09-04 21:19:08.519  1379  1379 D RecentsView: onTaskRemoved: 50, not handling task stack changes
+09-04 21:19:08.523  1379  1379 W SplitSelectStateCtor: Missing session instanceIds
+09-04 21:19:08.541  1379  1379 D StatsLog: LAUNCHER_SPLIT_SELECTION_EXIT_INTERRUPTED
+09-04 21:19:08.551   524   564 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154868, 316104850, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154868, 316104850, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154875, 683339934, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154875, 683339934, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154883, 848650895, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154883, 848650895, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154928, 913925114, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154928, 913925114, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154952, 908708244, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154952, 908708244, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed App frame:UNKNOWN: 3, 154982, 551547555, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.597  1379  1379 W FrameTracker: Missed SF frame:UNKNOWN: 3, 154982, 551547555, CUJ=J<LAUNCHER_APP_CLOSE_TO_HOME>
+09-04 21:19:08.610  1379  1415 V PerfettoTrigger: Not triggering com.android.telemetry.interaction-jank-monitor-9 - not enough time since last trigger
+09-04 21:19:08.640  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: PRE_ON_CREATE
+09-04 21:19:08.641  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the reported transition was not ON_CREATE while the last known transition was PRE_ON_CREATE
+09-04 21:19:08.660  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: CREATED
+09-04 21:19:08.661  7489  7489 V ActivityScenario: Update currentActivityStage to CREATED, currentActivity=com.demo.trouter.MainActivity@cabd8bd
+09-04 21:19:08.662  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: STARTED
+09-04 21:19:08.662  7489  7489 V ActivityScenario: Update currentActivityStage to STARTED, currentActivity=com.demo.trouter.MainActivity@cabd8bd
+09-04 21:19:08.662  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:19:08.662  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: RESUMED
+09-04 21:19:08.662  7489  7489 V ActivityScenario: Update currentActivityStage to RESUMED, currentActivity=com.demo.trouter.MainActivity@cabd8bd
+09-04 21:19:09.056   672   693 I ActivityTaskManager: Displayed com.demo.trouter/.MainActivity for user 0: +724ms
+09-04 21:19:09.097   672  2135 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:09.097   672  2135 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:09.103   672  2304 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:09.492  1379  1379 I Choreographer: Skipped 34 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:09.617  7489  7500 I HWUI    : Davey! duration=759ms; Flags=0, FrameTimelineVsyncId=155252, IntendedVsync=1332249874579, Vsync=1332549874567, InputEventId=0, HandleInputStart=1332565660218, AnimationStart=1332565661926, PerformTraversalsStart=1332565870426, DrawStart=1332565949551, FrameDeadline=1332616541231, FrameStartTime=1332563895301, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1332566231426, SyncStart=1332566264135, IssueDrawCommandsStart=1332566345093, SwapBuffers=1332709968593, FrameCompleted=1333009273218, DequeueBufferDuration=3875, QueueBufferDuration=556292, GpuCompleted=1333009273218, SwapBuffersCompleted=1332711766593, DisplayPresentTime=0, CommandSubmissionCompleted=1332709968593,
+09-04 21:19:09.630   672   794 I ImeTracker: com.demo.trouter:75cdc9f7: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:19:09.632  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:19:09.633  7489  7489 I ImeTracker: com.demo.trouter:75cdc9f7: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:19:09.635  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:19:09.638  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:19:09.639  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:19:09.639  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:19:09.640  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:19:09.662   672  2311 I ImeTracker: system_server:bb042d78: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:19:09.680  1663  1663 W NotificationCenter: NotificationCenter$NotificationQueue.notifyPendingNotificationsOnExecutor():877 Heavy notify work detected on UI thread: [kig->jjs] takes 40ms
+09-04 21:19:09.720  1379  1379 D VRI[NexusLauncherActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:09.725   672   696 I ImeTracker: system_server:bb042d78: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:19:09.742  1379  1379 D NexusLauncherModelDelegate: notifySmartspaceEvent: SmartspaceTargetEvent{mSmartspaceTarget=null, mSmartspaceActionId='null', mEventType=7}
+09-04 21:19:09.932  1071  1216 I Choreographer: Skipped 49 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:10.105   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:10.105   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:10.112   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:10.216  1071  1071 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
+09-04 21:19:10.370   575  5558 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:10.391   458   513 I netd    : tetherGetStats() -> {[]} <0.54ms>
+09-04 21:19:10.805  1071  1561 I HWUI    : Davey! duration=1028ms; Flags=0, FrameTimelineVsyncId=155484, IntendedVsync=1333049874547, Vsync=1333749874519, InputEventId=0, HandleInputStart=1333789046593, AnimationStart=1333789050593, PerformTraversalsStart=1333789051260, DrawStart=1333789158635, FrameDeadline=1333916541179, FrameStartTime=1333754507760, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1333789298593, SyncStart=1333897706052, IssueDrawCommandsStart=1333904951760, SwapBuffers=1333945618260, FrameCompleted=1334187016344, DequeueBufferDuration=71938875, QueueBufferDuration=577083, GpuCompleted=1334187016344, SwapBuffersCompleted=1334140666927, DisplayPresentTime=0, CommandSubmissionCompleted=1333945618260,
+09-04 21:19:10.807  1379  1379 D BaseDepthController: setSurface:
+09-04 21:19:10.807  1379  1379 D BaseDepthController: 	mWaitingOnSurfaceValidity: false
+09-04 21:19:10.807  1379  1379 D BaseDepthController: 	mBaseSurface: null
+09-04 21:19:10.807  1379  1379 D BaseDepthController: mSurface is null and mCurrentBlur is: 0
+09-04 21:19:10.817  1379  1379 D StateManager: goToState - fromState: Normal, toState: Normal, partial trace:
+09-04 21:19:10.817  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StateManager.moveToRestState(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:4)
+09-04 21:19:10.817  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StateManager.moveToRestState(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:1)
+09-04 21:19:10.817  1379  1379 D StateManager: 	at com.android.launcher3.statemanager.StatefulActivity.onStop(go/retraceme 43e00d9cd0eb17b3d9dd30fc1741b1c71445c4c0f7c8c9b81300265c86c5b873:34)
+09-04 21:19:10.819  1379  1379 D StatsLog: LAUNCHER_ONSTOP
+09-04 21:19:10.827  1379  1379 D StatsLog: LAUNCHER_GOOGLE_SEARCH_RESTORE_LIST_SIZE_AFTER_ACTIVITY_RESTART
+09-04 21:19:11.135   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:11.170   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:11.192   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:11.243  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.247  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.247  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.248  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.248  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.248  1379  1387 W System  : A resource failed to call release.
+09-04 21:19:11.431  7489  7489 I ViewInteraction: Performing 'single click' action on view view.getId() is <2131165274/com.demo.trouter:id/scenario_s04>
+09-04 21:19:11.525   672  2311 W AS.PlaybackActivityMon: No piid assigned for invalid/internal port id 15
+09-04 21:19:11.528   520   632 D AudioFlinger: mixer(0xb400007072223770) throttle end: throttle time(11)
+09-04 21:19:11.652  1071  1071 I ndroid.systemui: AssetManager2(0xb400007c9a4bac18) locale list changing from [] to [en-US]
+09-04 21:19:11.677  1071  1071 I ndroid.systemui: AssetManager2(0xb400007c9a4c0398) locale list changing from [] to [en-US]
+09-04 21:19:11.926   458  7553 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:11.970   458  7554 I resolv  : res_nsend: used send_dg 0 terrno: 110
+09-04 21:19:12.154  1071  1216 E FrameTracker: force finish cuj, time out: J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:19:12.154  1071  1216 W FrameTracker: Missed App frame:JANK_APPLICATION, 153596, 726389441, CUJ=J<SPLASHSCREEN_EXIT_ANIM>
+09-04 21:19:12.158   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.158   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.163  1071  1198 V PerfettoTrigger: Not triggering com.android.telemetry.interaction-jank-monitor-39 - not enough time since last trigger
+09-04 21:19:12.234   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:12.234   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:12.242   672  2303 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:12.263   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.263   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.369   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.373   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.482   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.482   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.589   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.590   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.694   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.694   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.800   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.800   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:12.903   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:12.903   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.006   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.006   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.088  1239  1493 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled
+09-04 21:19:13.090   672  2311 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.112   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.112   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.218   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.218   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.244   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:13.245   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:13.248   672  2311 W BestClock: java.time.DateTimeException: No network time available
+09-04 21:19:13.262  7489  7489 I ViewInteraction: Checking 'MatchesViewAssertion{viewMatcher=an instance of android.widget.TextView and view.getText() with or without transformation to match: a string containing "/not/exist"}' assertion on view view.getId() is <2131165276/com.demo.trouter:id/status_text>
+09-04 21:19:13.269   672  2311 V GrammaticalInflectionUtils: AttributionSource: AttributionSource { uid = 10223, packageName = null, attributionTag = null, token = android.os.Binder@d77a944, deviceId = 0, next = null } does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+09-04 21:19:13.273   524   783 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:13.275  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: PAUSED
+09-04 21:19:13.275  7489  7489 V ActivityScenario: Update currentActivityStage to PAUSED, currentActivity=com.demo.trouter.MainActivity@cabd8bd
+09-04 21:19:13.279   524   524 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1 in: PRE_ON_CREATE
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.309  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1
+09-04 21:19:13.309   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.310   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.310   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.310   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.310   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.311   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.311   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.311   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.311   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.311   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.315   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.315   672   696 W IPCThreadState: Sending oneway calls to frozen process.
+09-04 21:19:13.321   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.322   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.333  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1 in: CREATED
+09-04 21:19:13.335  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1
+09-04 21:19:13.338  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1 in: STARTED
+09-04 21:19:13.340  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1
+09-04 21:19:13.343  7489  7489 D AutofillManager: Fill dialog is enabled:false, hints=[]
+09-04 21:19:13.354  7489  7489 D LifecycleMonitor: Lifecycle status change: androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1 in: RESUMED
+09-04 21:19:13.354  7489  7489 V ActivityScenario: Activity lifecycle changed event received but ignored because the intent does not match. startActivityIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10008000 cmp=com.demo.trouter/.MainActivity }, activity.getIntent()=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 xflg=0x4 cmp=com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity }, activity=androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity@7007bd1
+09-04 21:19:13.445   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.452   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.477   672   693 I ActivityTaskManager: Displayed com.demo.trouter/androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity for user 0: +199ms
+09-04 21:19:13.550   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.550   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.588  7489  7489 D VRI[MainActivity]: visibilityChanged oldVisibility=true newVisibility=false
+09-04 21:19:13.591   672   794 I ImeTracker: com.demo.trouter:efeea8f9: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+09-04 21:19:13.596  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: STOPPED
+09-04 21:19:13.596  7489  7489 V ActivityScenario: Update currentActivityStage to STOPPED, currentActivity=com.demo.trouter.MainActivity@cabd8bd
+09-04 21:19:13.597  7489  7489 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@83ac8ae
+09-04 21:19:13.597  7489  7489 D LifecycleMonitor: Lifecycle status change: com.demo.trouter.MainActivity@cabd8bd in: DESTROYED
+09-04 21:19:13.597  7489  7489 V ActivityScenario: Update currentActivityStage to DESTROYED, currentActivity=null
+09-04 21:19:13.599  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043
+09-04 21:19:13.600   672  2303 I ImeTracker: system_server:42a7ab6a: onRequestHide at ORIGIN_SERVER reason IME_REQUESTED_CHANGED_LISTENER fromUser false
+09-04 21:19:13.602  7489  7489 D ViewRootImpl: Skipping stats log for color mode
+09-04 21:19:13.607  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+09-04 21:19:13.618  1663  1663 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.demo.trouter, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+09-04 21:19:13.630   672   696 I ImeTracker: system_server:42a7ab6a: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-04 21:19:13.633  1663  1663 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at asx.p(PG:6)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at axb.b(PG:13)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at jnr.b(PG:2)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at jnr.c(PG:4)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at jnr.f(PG:3)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at jnx.c(PG:3)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at kif.cz(PG:47)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at lhl.run(PG:1025)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at jaf.execute(PG:12)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at nco.v(PG:13)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at lhn.m(PG:96)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at lhn.k(PG:25)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+09-04 21:19:13.634  1663  1663 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+09-04 21:19:13.671   469  7557 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+09-04 21:19:13.671   469  7557 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+09-04 21:19:13.679  7489  7489 D InsetsController: hide(ime(), fromIme=false)
+09-04 21:19:13.679  7489  7489 I ImeTracker: com.demo.trouter:efeea8f9: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+09-04 21:19:13.707  7489  7506 I TestRunner: finished: testLostNavigation(com.demo.trouter.MainRouterTest)

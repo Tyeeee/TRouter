@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- feature-about 模块页面：Activity 随模块声明，经 manifest 合并进 :app -->
+    <application>
+        <activity
+            android:name="com.demo.trouter.feature.about.AboutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterFeatureAbout" />
+    </application>
+
+</manifest>

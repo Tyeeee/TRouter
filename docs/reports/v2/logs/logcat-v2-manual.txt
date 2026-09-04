@@ -1,0 +1,24 @@
+--------- beginning of main
+09-04 21:56:52.266 10819 10819 D TRouter : [GroupLoader][load][start] group=default
+09-04 21:56:52.267 10819 10819 D TRouter : [GroupLoader][load][end] group=default routes=3 added=3 costMs=0
+09-04 21:56:52.267 10819 10819 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 21:56:52.268 10819 10819 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=4 costMs=1
+09-04 21:56:52.268 10819 10819 D TRouter : [GroupLoader][load][start] group=mock
+09-04 21:56:52.268 10819 10819 D TRouter : [GroupLoader][load][end] group=mock routes=1 added=5 costMs=0
+09-04 21:57:39.930 10819 10819 D TRouter : [navigate][entry] traceId=b7ce2f4e hop=0 path=/second bundleKeys=0
+09-04 21:57:39.930 10819 10819 D TRouter : [interceptor][start] traceId=b7ce2f4e path=/second interceptors=2
+09-04 21:57:39.931 10819 10819 D TRouter : [interceptor][eval] traceId=b7ce2f4e index=1 class=GateInterceptor decision=Block(reason=演示门禁开启：拦截 /second)
+09-04 21:57:39.931 10819 10819 D TRouter : [interceptor][end] traceId=b7ce2f4e decision=Block(reason=演示门禁开启：拦截 /second) costMs=0
+09-04 21:57:39.931 10819 10819 D TRouter : [navigate][exit] traceId=b7ce2f4e hop=0 result=Blocked(path=/second, reason=演示门禁开启：拦截 /second) costMs=1
+09-04 21:57:57.749 10819 10819 D TRouter : [navigate][entry] traceId=65eb7626 hop=0 path=/second bundleKeys=0
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][start] traceId=65eb7626 path=/second interceptors=2
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][eval] traceId=65eb7626 index=1 class=GateInterceptor decision=Continue
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][eval] traceId=65eb7626 index=2 class=MockInterceptor decision=Redirect(target=/mock/second)
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][end] traceId=65eb7626 decision=Redirect(target=/mock/second) costMs=0
+09-04 21:57:57.749 10819 10819 D TRouter : [navigate][exit] traceId=65eb7626 hop=0 result=Redirect(target=/mock/second) costMs=0
+09-04 21:57:57.749 10819 10819 D TRouter : [navigate][entry] traceId=65eb7626 hop=1 path=/mock/second bundleKeys=0
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][start] traceId=65eb7626 path=/mock/second interceptors=2
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][eval] traceId=65eb7626 index=1 class=GateInterceptor decision=Continue
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][eval] traceId=65eb7626 index=2 class=MockInterceptor decision=Continue
+09-04 21:57:57.749 10819 10819 D TRouter : [interceptor][end] traceId=65eb7626 decision=Continue costMs=0
+09-04 21:57:57.803 10819 10819 D TRouter : [navigate][exit] traceId=65eb7626 hop=1 result=Success(meta=/mock/second, kind=ACTIVITY) costMs=52

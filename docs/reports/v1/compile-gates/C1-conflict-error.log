@@ -1,0 +1,53 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+
+> Task :app:kspDebugKotlin FAILED
+e: [ksp] 路由路径冲突（Fail-Fast）：path=/second 已被 [com.demo.trouter.SecondActivity] 注册，[com.demo.trouter.RouteConflictProbe] 重复声明，请修正后重新编译。
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:kspDebugKotlin' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing com.google.devtools.ksp.gradle.KspAAWorkerAction
+   > KSP failed with exit code: PROCESSING_ERROR
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2s
+19 actionable tasks: 1 executed, 18 up-to-date
+Configuration cache entry reused.

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".TRouterDemoApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TRouterDemo">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.TRouterDemo"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- V4.0 跨进程演示：目标页与 AIDL 服务都运行在独立进程 :remote -->
+        <activity
+            android:name=".RemoteSecondActivity"
+            android:exported="false"
+            android:process=":remote"
+            android:theme="@style/Theme.TRouterDemo" />
+        <service
+            android:name="com.trouter.core.internal.RemoteRouterService"
+            android:exported="false"
+            android:process=":remote" />
+        <!-- V5.0 动态路由演示：普通 Activity（不标 @Route，运行时注册） -->
+        <activity
+            android:name=".DynamicDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterDemo" />
+    </application>
+
+</manifest>

@@ -1,0 +1,581 @@
+# proto-message: google.testing.platform.proto.api.core.TestSuiteResult
+# 2026-09-04T13:19:36.845147Z:
+test_suite_meta_data {
+  scheduled_test_case_count: 10
+  device {
+    id: "emulator-5554"
+    friendly_name: "primary"
+  }
+}
+test_status: PASSED
+test_result {
+  test_case {
+    test_class: "ExampleInstrumentedTest"
+    test_package: "com.demo.trouter"
+    test_method: "useAppContext"
+    start_time {
+      seconds: 1788527923
+      nanos: 118000000
+    }
+    end_time {
+      seconds: 1788527923
+      nanos: 149000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.ExampleInstrumentedTest-useAppContext.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "MainRouterTest"
+    test_package: "com.demo.trouter"
+    test_method: "testBasicNavigation"
+    start_time {
+      seconds: 1788527923
+      nanos: 160000000
+    }
+    end_time {
+      seconds: 1788527931
+      nanos: 515000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.MainRouterTest-testBasicNavigation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "MainRouterTest"
+    test_package: "com.demo.trouter"
+    test_method: "testConfigDebugMode"
+    start_time {
+      seconds: 1788527934
+      nanos: 121000000
+    }
+    end_time {
+      seconds: 1788527946
+      nanos: 762000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.MainRouterTest-testConfigDebugMode.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "MainRouterTest"
+    test_package: "com.demo.trouter"
+    test_method: "testLostNavigation"
+    start_time {
+      seconds: 1788527948
+      nanos: 581000000
+    }
+    end_time {
+      seconds: 1788527954
+      nanos: 61000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.MainRouterTest-testLostNavigation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "MainRouterTest"
+    test_package: "com.demo.trouter"
+    test_method: "testSecondaryGroupNavigation"
+    start_time {
+      seconds: 1788527955
+      nanos: 689000000
+    }
+    end_time {
+      seconds: 1788527962
+      nanos: 683000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.MainRouterTest-testSecondaryGroupNavigation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "MainRouterTest"
+    test_package: "com.demo.trouter"
+    test_method: "testFragmentNavigation"
+    start_time {
+      seconds: 1788527964
+      nanos: 672000000
+    }
+    end_time {
+      seconds: 1788527971
+      nanos: 715000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.MainRouterTest-testFragmentNavigation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "TRouterApiContractTest"
+    test_package: "com.demo.trouter"
+    test_method: "traceIdConsistentBetweenEntryAndExit"
+    start_time {
+      seconds: 1788527973
+      nanos: 488000000
+    }
+    end_time {
+      seconds: 1788527973
+      nanos: 633000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.TRouterApiContractTest-traceIdConsistentBetweenEntryAndExit.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "TRouterApiContractTest"
+    test_package: "com.demo.trouter"
+    test_method: "lostPathReturnsNotFoundAndTriggersOnLost"
+    start_time {
+      seconds: 1788527973
+      nanos: 635000000
+    }
+    end_time {
+      seconds: 1788527973
+      nanos: 637000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.TRouterApiContractTest-lostPathReturnsNotFoundAndTriggersOnLost.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "TRouterApiContractTest"
+    test_package: "com.demo.trouter"
+    test_method: "repeatedInstallIsIdempotent"
+    start_time {
+      seconds: 1788527973
+      nanos: 639000000
+    }
+    end_time {
+      seconds: 1788527973
+      nanos: 640000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.TRouterApiContractTest-repeatedInstallIsIdempotent.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "TRouterApiContractTest"
+    test_package: "com.demo.trouter"
+    test_method: "navigateBeforeInitReturnsNotInitialized"
+    start_time {
+      seconds: 1788527973
+      nanos: 641000000
+    }
+    end_time {
+      seconds: 1788527973
+      nanos: 642000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/logcat-com.demo.trouter.TRouterApiContractTest-navigateBeforeInitReturnsNotInitialized.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/cpuinfo"
+    }
+  }
+}
+output_artifact {
+  label {
+    label: "test-results.log"
+    namespace: "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver"
+  }
+  source_path {
+    path: "/Users/tye/Work/Android/TRouterDemo/app/build/outputs/androidTest-results/connected/debug/trouter_test(AVD) - 16/testlog/test-results.log"
+  }
+  type: TEST_DATA
+  mime_type: "text/plain"
+}

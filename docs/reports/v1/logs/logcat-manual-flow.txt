@@ -1,0 +1,9 @@
+--------- beginning of main
+09-04 21:40:06.957  9932  9932 D TRouter : [GroupLoader][load][start] group=default
+09-04 21:40:06.958  9932  9932 D TRouter : [GroupLoader][load][end] group=default routes=3 added=3 costMs=0
+09-04 21:40:06.958  9932  9932 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 21:40:06.958  9932  9932 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=4 costMs=0
+09-04 21:40:11.841  9932  9932 D TRouter : [navigate][entry] traceId=f25c9e8c path=/second bundleKeys=0
+09-04 21:40:11.857  9932  9932 D TRouter : [navigate][exit] traceId=f25c9e8c result=Success(meta=/second, kind=ACTIVITY) costMs=16
+09-04 21:40:17.830  9932  9932 D TRouter : [navigate][entry] traceId=8bf7d0d6 path=/not/exist bundleKeys=0
+09-04 21:40:17.830  9932  9932 D TRouter : [navigate][exit] traceId=8bf7d0d6 result=NotFound(path=/not/exist) costMs=0

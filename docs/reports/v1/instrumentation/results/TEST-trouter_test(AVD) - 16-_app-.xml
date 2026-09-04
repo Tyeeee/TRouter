@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="10" failures="0" errors="0" skipped="0" time="53.696" timestamp="2026-09-04T13:19:36" hostname="localhost">
+  <testsuite name="com.demo.trouter.ExampleInstrumentedTest" tests="1" failures="0" errors="0" skipped="0" time="0.012" timestamp="2026-09-04T13:19:36" hostname="localhost">
+    <properties>
+      <property name="device" value="trouter_test(AVD) - 16" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="useAppContext" classname="com.demo.trouter.ExampleInstrumentedTest" time="0.012" />
+  </testsuite>
+  <testsuite name="com.demo.trouter.MainRouterTest" tests="5" failures="0" errors="0" skipped="0" time="40.519" timestamp="2026-09-04T13:19:36" hostname="localhost">
+    <properties>
+      <property name="device" value="trouter_test(AVD) - 16" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="testBasicNavigation" classname="com.demo.trouter.MainRouterTest" time="8.357" />
+    <testcase name="testConfigDebugMode" classname="com.demo.trouter.MainRouterTest" time="12.642" />
+    <testcase name="testLostNavigation" classname="com.demo.trouter.MainRouterTest" time="5.482" />
+    <testcase name="testSecondaryGroupNavigation" classname="com.demo.trouter.MainRouterTest" time="6.995" />
+    <testcase name="testFragmentNavigation" classname="com.demo.trouter.MainRouterTest" time="7.043" />
+  </testsuite>
+  <testsuite name="com.demo.trouter.TRouterApiContractTest" tests="4" failures="0" errors="0" skipped="0" time="0.15" timestamp="2026-09-04T13:19:36" hostname="localhost">
+    <properties>
+      <property name="device" value="trouter_test(AVD) - 16" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="traceIdConsistentBetweenEntryAndExit" classname="com.demo.trouter.TRouterApiContractTest" time="0.145" />
+    <testcase name="lostPathReturnsNotFoundAndTriggersOnLost" classname="com.demo.trouter.TRouterApiContractTest" time="0.003" />
+    <testcase name="repeatedInstallIsIdempotent" classname="com.demo.trouter.TRouterApiContractTest" time="0.001" />
+    <testcase name="navigateBeforeInitReturnsNotInitialized" classname="com.demo.trouter.TRouterApiContractTest" time="0.001" />
+  </testsuite>
+</testsuites>

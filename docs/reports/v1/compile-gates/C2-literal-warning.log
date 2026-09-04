@@ -1,0 +1,40 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :app:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :trouter-processor:compileKotlin
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar
+
+> Task :app:kspDebugKotlin
+w: [ksp] @Route path 使用了字符串字面量（/literal_probe），请引用 RouterContract 常量，禁止硬编码字符串。
+
+BUILD SUCCESSFUL in 5s
+19 actionable tasks: 3 executed, 16 up-to-date
+Configuration cache entry reused.

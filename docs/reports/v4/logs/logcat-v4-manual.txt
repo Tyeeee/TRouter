@@ -1,0 +1,25 @@
+--------- beginning of main
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][end] group=default routes=2 added=2 costMs=0
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][end] group=default routes=2 added=4 costMs=0
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][start] group=mock
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][end] group=mock routes=1 added=5 costMs=0
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 23:04:03.391 15256 15256 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=6 costMs=0
+09-04 23:05:02.270 15256 15256 D TRouter : [remote][send] traceId=12ad7683 path=/remote-second targetProcess=com.demo.trouter/com.trouter.core.internal.RemoteRouterService
+09-04 23:05:03.601 15533 15533 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:05:03.602 15533 15533 D TRouter : [GroupLoader][load][end] group=default routes=2 added=2 costMs=1
+09-04 23:05:03.603 15533 15533 D TRouter : [GroupLoader][load][start] group=default
+09-04 23:05:03.603 15533 15533 D TRouter : [GroupLoader][load][end] group=default routes=2 added=4 costMs=0
+09-04 23:05:03.603 15533 15533 D TRouter : [GroupLoader][load][start] group=mock
+09-04 23:05:03.603 15533 15533 D TRouter : [GroupLoader][load][end] group=mock routes=1 added=5 costMs=0
+09-04 23:05:03.604 15533 15533 D TRouter : [GroupLoader][load][start] group=secondary
+09-04 23:05:03.604 15533 15533 D TRouter : [GroupLoader][load][end] group=secondary routes=1 added=6 costMs=0
+09-04 23:05:03.621 15533 15543 D TRouter : [navigate][entry] traceId=8771630b hop=0 path=/remote-second bundleKeys=0
+09-04 23:05:03.621 15533 15543 D TRouter : [interceptor][start] traceId=8771630b path=/remote-second interceptors=2
+09-04 23:05:03.622 15533 15543 D TRouter : [interceptor][eval] traceId=8771630b index=1 class=GateInterceptor decision=Continue
+09-04 23:05:03.622 15533 15543 D TRouter : [interceptor][eval] traceId=8771630b index=2 class=MockInterceptor decision=Continue
+09-04 23:05:03.622 15533 15543 D TRouter : [interceptor][end] traceId=8771630b decision=Continue costMs=1
+09-04 23:05:03.642 15533 15543 D TRouter : [navigate][exit] traceId=8771630b hop=0 result=Success(meta=/remote-second, kind=ACTIVITY) costMs=21
+09-04 23:05:03.644 15256 15256 D TRouter : [remote][recv] traceId=62ed13b7 origin=12ad7683 result=Success(meta=/remote-second) costMs=30
