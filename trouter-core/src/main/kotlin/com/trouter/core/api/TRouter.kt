@@ -3,6 +3,7 @@ package com.trouter.core.api
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import com.trouter.core.internal.FragmentContainerActivity
@@ -39,6 +40,9 @@ object TRouter {
     /** 拦截器 Redirect 重定向累计跳数上限（防死循环，见 navigateInternal）。 */
     private const val MAX_REDIRECTS = 3
 
+    /** G5：别名注册表中正则别名前缀（exact 优先，其次按注册序正则匹配）。 */
+    private const val ALIAS_REGEX_PREFIX = "regex:"
+
     @Volatile
     private var initialized = false
     private var appContext: Context? = null
@@ -56,6 +60,10 @@ object TRouter {
     // L3：目标级拦截器绑定表（name -> member）。CopyOnWrite 快照语义与 liveInterceptors 一致。
     private val targetBindingsLock = Any()
     private val targetBindings = LinkedHashMap<String, RouteChainMember>()
+
+    // G5：路由别名表（alias -> 真实 path；支持 regex: 前缀正则别名）
+    private val aliasLock = Any()
+    private val aliasTable = LinkedHashMap<String, String>()
 
     // F（动态路由热更/持久化）：动态注册路径集合（用于导出/恢复；静态路由不入集）
     private val dynamicPathsLock = Any()
@@ -194,9 +202,20 @@ object TRouter {
         // 埋点：navigate 入口（每跳一条）
         log("[navigate][entry] traceId=$traceId hop=$redirectHop path=$path bundleKeys=${bundle?.size() ?: 0}")
 
-        // 未注册路径：丢失语义（V1.0），不经过拦截器
-        val meta = routeTable.find(path)
+        // 未注册路径：先查 G5 别名（精确 -> 正则），命中则转向真实 path（记跳数防环）
+        var meta = routeTable.find(path)
         if (meta == null) {
+            val resolved = resolveAlias(path)
+            if (resolved != null) {
+                if (redirectHop + 1 > MAX_REDIRECTS) {
+                    val cost = SystemClock.elapsedRealtime() - startMs
+                    val reason = "alias loop（>=$MAX_REDIRECTS 跳）: $path"
+                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=$path, reason=$reason) costMs=$cost")
+                    return TRouterResult.Blocked(path, reason)
+                }
+                log("[route][alias] from=$path to=$resolved hop=$redirectHop")
+                return navigateInternal(resolved, bundle, traceId, redirectHop + 1, requestCode)
+            }
             val cost = SystemClock.elapsedRealtime() - startMs
             // 埋点：navigate 出口（未找到）
             log("[navigate][exit] traceId=$traceId hop=$redirectHop result=NotFound(path=$path) costMs=$cost")
@@ -541,6 +560,75 @@ object TRouter {
     fun registeredTargetInterceptors(): Map<String, RouteChainMember> =
         synchronized(targetBindingsLock) { LinkedHashMap(targetBindings) }
 
+    // ------------------------------------------------------------------ 深链（G1）与路由别名（G5）
+
+    /**
+     * URI/Scheme 深链入口（G1）：scheme 须在 config.deeplinkSchemes 白名单内；
+     * uri.path 段即内部路由 path；query 并入导航参数（query 优先于入参 bundle）。
+     */
+    fun navigateUri(uri: Uri, bundle: Bundle? = null): TRouterResult {
+        if (!initialized) return TRouterResult.NotInitialized
+        val scheme = uri.scheme
+        if (scheme.isNullOrEmpty() || scheme !in (config.deeplinkSchemes ?: emptySet())) {
+            return TRouterResult.Blocked(uri.toString(), "scheme 未启用（TRouterConfig.deeplinkSchemes 需包含 \"$scheme\"）")
+        }
+        val path = uri.path?.takeIf { it.isNotBlank() }
+            ?: return TRouterResult.Blocked(uri.toString(), "URI 缺少路径段")
+        val merged = Bundle()
+        if (bundle != null) merged.putAll(bundle)
+        merged.putAll(UriRouter.paramsOf(uri))
+        return navigate(path, merged)
+    }
+
+    /**
+     * 注册路由别名（G5）：alias 未注册时导航 alias 会转向 [toPath]。
+     * alias 以 `regex:` 开头视为正则（精确别名优先，正则按注册序取首个命中）。
+     * @return true 注册成功；false = 未初始化 / 空参数 / 别名重复。
+     */
+    fun registerRouteAlias(alias: String, toPath: String): Boolean {
+        if (!initialized || alias.isBlank() || toPath.isBlank()) return false
+        // 别名不得与已注册路由（静态/动态）同名：静态优先语义 → 静态命中时别名永不生效，故直接拒绝
+        if (routeTable.find(alias) != null) {
+            log("[route][alias][register][conflict] alias=$alias（与已注册路由同名）")
+            return false
+        }
+        val ok = synchronized(aliasLock) {
+            if (aliasTable.containsKey(alias)) false else {
+                aliasTable[alias] = toPath
+                true
+            }
+        }
+        if (ok) log("[route][alias][register] alias=$alias to=$toPath") else log("[route][alias][register][conflict] alias=$alias")
+        return ok
+    }
+
+    /** 注销路由别名（G5）。@return true = 确有移除。 */
+    fun unregisterRouteAlias(alias: String): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(aliasLock) { aliasTable.remove(alias) }
+        if (removed != null) log("[route][alias][unregister] alias=$alias")
+        return removed != null
+    }
+
+    /** 已注册别名只读快照（G5）。 */
+    fun registeredRouteAliases(): Map<String, String> =
+        synchronized(aliasLock) { LinkedHashMap(aliasTable) }
+
+    private fun resolveAlias(path: String): String? {
+        val snapshot = synchronized(aliasLock) { LinkedHashMap(aliasTable) }
+        snapshot[path]?.let { return it }
+        for ((alias, target) in snapshot) {
+            if (!alias.startsWith(ALIAS_REGEX_PREFIX)) continue
+            val patternText = alias.removePrefix(ALIAS_REGEX_PREFIX)
+            try {
+                if (Regex(patternText).matches(path)) return target
+            } catch (ignored: Exception) {
+                // 非法正则别名：跳过并交由注册期提示（此处不崩溃）
+            }
+        }
+        return null
+    }
+
     // ------------------------------------------------------------------ 动态路由与图谱（V5.0）
 
     /**
@@ -641,6 +729,7 @@ object TRouter {
         remoteRouter.disconnect()
         synchronized(liveInterceptorsLock) { liveInterceptors.clear() }
         synchronized(targetBindingsLock) { targetBindings.clear() }
+        synchronized(aliasLock) { aliasTable.clear() }
         lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
         lifecycleApp = null
         activityListener = null

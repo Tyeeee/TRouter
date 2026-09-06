@@ -22,6 +22,9 @@ import android.content.ComponentName
  * L3 新增（目标级拦截器）：
  * - [targetInterceptorResolver]：由宿主注入「目标类 → @Interceptor 标识名」解析函数
  *   （通常引用 KSP 生成的 TRouterTargetInterceptorNames.namesOf）；null = 无目标级拦截。
+ *
+ * 差距收敛新增：
+ * - [deeplinkSchemes]：允许经 navigateUri 进入路由的 scheme 白名单（G1）；空集合 = 未启用深链。
  */
 open class TRouterConfig(
     val isDebug: Boolean = false,
@@ -31,4 +34,5 @@ open class TRouterConfig(
     val remoteService: ComponentName? = null,
     val remoteWhitelist: Set<String>? = null,
     val targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
+    val deeplinkSchemes: Set<String> = emptySet(),
 )
