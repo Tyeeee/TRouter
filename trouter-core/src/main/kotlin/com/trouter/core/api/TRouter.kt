@@ -65,6 +65,10 @@ object TRouter {
     private val aliasLock = Any()
     private val aliasTable = LinkedHashMap<String, String>()
 
+    // G2：进程内服务注册表（接口 Class -> 实现实例）
+    private val servicesLock = Any()
+    private val servicesTable = LinkedHashMap<Class<*>, Any>()
+
     // F（动态路由热更/持久化）：动态注册路径集合（用于导出/恢复；静态路由不入集）
     private val dynamicPathsLock = Any()
     private val dynamicPaths = LinkedHashSet<String>()
@@ -478,6 +482,53 @@ object TRouter {
         return applyRouteConfig(removes = removes, adds = adds)
     }
 
+    // ------------------------------------------------------------------ 路由表 JSON（G6）与服务层（G2）
+
+    /** G6：把当前全部路由（静态+动态）导出为规范 JSON（供下发/审计）。 */
+    fun exportRouteMapJson(): String = RouteMapCodec.toJson(registeredRoutes())
+
+    /**
+     * G6：导入路由表 JSON 作为**动态覆盖层**：先清当前动态路由，再原子注册导入内容；
+     * 导入与静态路由冲突或格式非法 → 整批失败、零变更。
+     * @return true = 导入并覆盖成功。
+     */
+    fun importRouteMapJson(text: String): Boolean {
+        if (!initialized) return false
+        val metas = RouteMapCodec.fromJson(text) ?: return false
+        val removes = exportDynamicRoutes().map { it.path }
+        return applyRouteConfig(removes = removes, adds = metas)
+    }
+
+    /** G2：注册进程内服务（接口 key → 实现实例）。重复接口返回 false。 */
+    fun <T : Any> registerService(serviceClass: Class<T>, instance: T): Boolean {
+        if (!initialized) return false
+        val ok = synchronized(servicesLock) {
+            if (servicesTable.containsKey(serviceClass)) false else {
+                servicesTable[serviceClass] = instance
+                true
+            }
+        }
+        if (ok) log("[service][register] interface=${serviceClass.name} impl=${instance.javaClass.name}") else log("[service][register][conflict] interface=${serviceClass.name}")
+        return ok
+    }
+
+    /** G2：注销进程内服务。@return true = 确有移除。 */
+    fun unregisterService(serviceClass: Class<*>): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(servicesLock) { servicesTable.remove(serviceClass) }
+        if (removed != null) log("[service][unregister] interface=${serviceClass.name}")
+        return removed != null
+    }
+
+    /** G2：按接口查找服务实例；未注册返回 null（调用方自行判空，不抛异常）。 */
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> findService(serviceClass: Class<T>): T? =
+        synchronized(servicesLock) { servicesTable[serviceClass] as T? }
+
+    /** G2：已注册服务接口快照。 */
+    fun registeredServices(): List<Class<*>> =
+        synchronized(servicesLock) { ArrayList(servicesTable.keys) }
+
     // ------------------------------------------------------------------ 拦截器运行时增删（L2）
 
     /**
@@ -730,6 +781,7 @@ object TRouter {
         synchronized(liveInterceptorsLock) { liveInterceptors.clear() }
         synchronized(targetBindingsLock) { targetBindings.clear() }
         synchronized(aliasLock) { aliasTable.clear() }
+        synchronized(servicesLock) { servicesTable.clear() }
         lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
         lifecycleApp = null
         activityListener = null
