@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import com.trouter.annotation.Route
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteLaunch
+import com.trouter.core.api.DemoParams
 import com.trouter.core.api.Ui
 
 /**

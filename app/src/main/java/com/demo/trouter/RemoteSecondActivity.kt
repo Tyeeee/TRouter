@@ -1,5 +1,6 @@
 package com.demo.trouter
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Process
@@ -13,6 +14,7 @@ import com.trouter.annotation.Interceptor
 import com.trouter.annotation.Route
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteLaunch
+import com.trouter.core.api.DemoParams
 import com.trouter.core.api.Ui
 
 /**
@@ -57,6 +59,22 @@ class RemoteSecondActivity : ComponentActivity() {
         root.addView(line("路径 /remote-second · group=default · kind=ACTIVITY · @CrossProcess"))
         root.addView(line("本页运行在独立进程 :remote · pid=${Process.myPid()}（与 host 进程 pid 不同即证明跨进程）", 14f, Color.rgb(128, 0, 128)))
         root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        // 参数透传证据（跨进程）：调用方 bundle 经 AIDL 到达 :remote 进程的 intent extras
+        val msg = intent.getStringExtra(DemoParams.KEY_MSG)
+        if (msg != null) {
+            val count = intent.getIntExtra(DemoParams.KEY_COUNT, -1)
+            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
+        }
+        // 跨进程参数回读（host 测试侧 SharedPreferences 校验用，同文件跨进程共享；MULTI_PROCESS 强制磁盘重载）
+        runCatching {
+            @Suppress("DEPRECATION")
+            applicationContext.getSharedPreferences(DemoParams.PREF_NAME, Context.MODE_MULTI_PROCESS)
+                .edit()
+                .putString(DemoParams.PREF_LAST_PATH, path ?: "")
+                .putString(DemoParams.PREF_LAST_MSG, msg ?: "-")
+                .putInt(DemoParams.PREF_LAST_COUNT, intent.getIntExtra(DemoParams.KEY_COUNT, -1))
+                .commit()
+        }
         root.addView(TextView(this).apply {
             text = "Remote Second 页面（第二进程）"
             textSize = 20f

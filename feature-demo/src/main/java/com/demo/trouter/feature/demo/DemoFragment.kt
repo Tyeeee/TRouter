@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.trouter.annotation.Route
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteLaunch
+import com.trouter.core.api.DemoParams
 import com.trouter.core.api.Ui
 
 /**
@@ -54,6 +55,12 @@ class DemoFragment : Fragment() {
             addView(line("承载：core 内置 FragmentContainerActivity（系统栏已避让）"))
             addView(line("期望：navigate 返回 Success(kind=FRAGMENT)"))
             addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+            // 参数透传证据（Fragment）：调用方 bundle 经容器克隆为 arguments 送达
+            val msg = args?.getString(DemoParams.KEY_MSG)
+            if (msg != null) {
+                val count = args?.getInt(DemoParams.KEY_COUNT, -1) ?: -1
+                addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
+            }
             addView(TextView(requireContext()).apply {
                 text = "Fragment 演示页面"
                 textSize = 20f

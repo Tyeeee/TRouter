@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import com.trouter.annotation.Route
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteLaunch
+import com.trouter.core.api.DemoParams
 import com.trouter.core.api.Ui
 
 /**
@@ -50,6 +51,12 @@ class SecondActivity : ComponentActivity() {
         root.addView(line("路径 /second · group=default · kind=ACTIVITY"))
         root.addView(line("期望：本页由 TRouter.navigate 打开，返回 Success(meta=/second)"))
         root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        // 参数透传证据（单进程 Activity）：调用方 bundle 已作为 intent extras 送达
+        val msg = intent.getStringExtra(DemoParams.KEY_MSG)
+        if (msg != null) {
+            val count = intent.getIntExtra(DemoParams.KEY_COUNT, -1)
+            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
+        }
         root.addView(TextView(this).apply {
             text = "Second 页面"
             textSize = 20f

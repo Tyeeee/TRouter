@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.trouter.annotation.Route
+import com.trouter.core.api.DemoParams
 import com.trouter.core.api.RouteMeta
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteTargetKind
@@ -202,6 +203,30 @@ class MainActivity : ComponentActivity() {
             open(RouterContract.PATH_DYNAMIC_DEMO)
         }
 
+        sectionTitle("H · 参数透传（单进程 Activity/Fragment · 跨进程）")
+        infoLine("以下行导航时携带 bundle（msg/count）；目标页会展示收到的参数，跨进程经 AIDL Bundle 送达 :remote。")
+        scenarioRow(
+            R.id.scenario_s19,
+            "S19 单进程参数 → Second（Activity）",
+            "${RouterContract.PATH_SECOND} + bundle(msg,count) · 期望：Second 页展示「参数透传 ✓」",
+        ) {
+            open(RouterContract.PATH_SECOND, demoParamsBundle())
+        }
+        scenarioRow(
+            R.id.scenario_s20,
+            "S20 单进程参数 → Fragment",
+            "${RouterContract.PATH_FRAGMENT_DEMO} + bundle(msg,count) · 期望：Fragment 页展示收到的参数",
+        ) {
+            open(RouterContract.PATH_FRAGMENT_DEMO, demoParamsBundle())
+        }
+        scenarioRow(
+            R.id.scenario_s21,
+            "S21 跨进程参数 → :remote 页",
+            "${RouterContract.PATH_REMOTE_SECOND} + bundle(msg,count) · 期望：第二进程页展示参数（经 AIDL）",
+        ) {
+            openRemote(RouterContract.PATH_REMOTE_SECOND, demoParamsBundle())
+        }
+
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
@@ -241,6 +266,12 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
+    /** S19–S21 参数透传：构造一组确定性的演示参数（msg/count）。 */
+    private fun demoParamsBundle(): Bundle = Bundle().apply {
+        putString(DemoParams.KEY_MSG, "来自主页的参数字符串")
+        putInt(DemoParams.KEY_COUNT, 42)
+    }
+
     /** S13（V5.0）：切换注册/注销动态路由（目标页未标 @Route），并刷新图谱摘要。 */
     private fun toggleDynamic() {
         val path = RouterContract.PATH_DYNAMIC_DEMO
@@ -273,12 +304,12 @@ class MainActivity : ComponentActivity() {
         graphText.text = "图谱摘要：节点 ${g.nodes.size}（目标类）· 边 ${g.edges.size}（已注册路由）· 静态+动态同图"
     }
 
-    /** S11：经跨进程通道导航（V4.0）——先即时反馈"请求中"，结果异步回调再回显最终状态。 */
-    private fun openRemote(path: String) {
+    /** S11/S21：经跨进程通道导航（V4.0，可携带 bundle 参数）——先即时反馈"请求中"，结果异步回调再回显。 */
+    private fun openRemote(path: String, bundle: Bundle? = null) {
         // 立即反馈：bind/远端执行是异步的，先让用户看到"已在处理"
         statusText.text = "跨进程请求中…（:remote）"
         Toast.makeText(this, "正在向 :remote 进程发起导航：$path", Toast.LENGTH_SHORT).show()
-        TRouter.navigateRemote(path) { result ->
+        TRouter.navigateRemote(path, bundle) { result ->
             runOnUiThread {
                 when (result) {
                     is TRouterResult.Success -> {
@@ -299,9 +330,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** 统一经 TRouter 导航；结果 Toast + 状态栏回显（与 S04 的 NotFound Toast 对称）。 */
-    private fun open(path: String) {
-        when (val result = TRouter.navigate(path)) {
+    /** 统一经 TRouter 导航（可携带 bundle 参数）；结果 Toast + 状态栏回显。 */
+    private fun open(path: String, bundle: Bundle? = null) {
+        when (val result = TRouter.navigate(path, bundle)) {
             is TRouterResult.Success -> {
                 statusText.text = "已打开:${result.meta.path}"
                 Toast.makeText(this, "✓ 已打开:${result.meta.path}（${result.meta.kind}）", Toast.LENGTH_SHORT).show()
