@@ -48,6 +48,9 @@ object RouterContract {
     /** V5.0 动态路由演示：/dynamic-demo（运行时 registerRoute 注册；页面本身不标 @Route） */
     const val PATH_DYNAMIC_DEMO: String = "/dynamic-demo"
 
+    /** 差距收敛 G3 演示：navigateForResult 结果回传目标页 */
+    const val PATH_RESULT_DEMO: String = "/result-demo"
+
     /**
      * 刻意未注册的路径，仅用于演示/测试 NotFound 降级（testLostNavigation）。
      * 注意：本常量不允许被任何 @Route 引用。

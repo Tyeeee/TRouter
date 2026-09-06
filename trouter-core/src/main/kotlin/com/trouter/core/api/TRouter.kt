@@ -162,14 +162,33 @@ object TRouter {
     fun navigate(path: String, bundle: Bundle? = null): TRouterResult {
         if (!initialized) return TRouterResult.NotInitialized
         val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
-        return navigateInternal(path, bundle, traceId, redirectHop = 0)
+        return navigateInternal(path, bundle, traceId, redirectHop = 0, requestCode = null)
+    }
+
+    /**
+     * 带结果回调的导航（G3）：以 startActivityForResult 发起，结果由调用方 Activity 的
+     * onActivityResult/ResultLauncher 接收（与系统语义一致）；无前台 Activity 时返回 Blocked。
+     */
+    fun navigateForResult(path: String, requestCode: Int, bundle: Bundle? = null): TRouterResult {
+        if (!initialized) return TRouterResult.NotInitialized
+        if (currentActivity() == null) {
+            return TRouterResult.Blocked(path, "navigateForResult 需要前台 Activity（当前无 resumed Activity）")
+        }
+        val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
+        return navigateInternal(path, bundle, traceId, redirectHop = 0, requestCode = requestCode)
     }
 
     /**
      * 单跳导航实现（Redirect 重入复用本方法，同一 traceId 贯穿各跳）。
      * 每跳独立记录 navigate 入口/出口日志，hop 标注跳数（0 = 用户首次导航）。
      */
-    private fun navigateInternal(path: String, bundle: Bundle?, traceId: String, redirectHop: Int): TRouterResult {
+    private fun navigateInternal(
+        path: String,
+        bundle: Bundle?,
+        traceId: String,
+        redirectHop: Int,
+        requestCode: Int? = null,
+    ): TRouterResult {
         val startMs = SystemClock.elapsedRealtime()
 
         // 埋点：navigate 入口（每跳一条）
@@ -190,7 +209,7 @@ object TRouter {
         // 链末端（或 wrapper 调 proceed()）打开目标。空列表 = 直接打开（零日志，行为与 V1.0 一致）。
         // 打开/包装期间抛出的异常在链外统一按「打开失败」处理（Error 出口 + onLost），与 V1 语义一致。
         val outcome = try {
-            runChain(meta, bundle, traceId)
+            runChain(meta, bundle, traceId, requestCode)
         } catch (e: Throwable) {
             val cost = SystemClock.elapsedRealtime() - startMs
             log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Error(${e.javaClass.simpleName}: ${e.message}) costMs=$cost")
@@ -219,7 +238,7 @@ object TRouter {
                     // 本跳以重定向收尾：出口日志记 Redirect，再由目标 path 发起新跳（同 traceId）
                     val cost = SystemClock.elapsedRealtime() - startMs
                     log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${outcome.targetPath}) costMs=$cost")
-                    return navigateInternal(outcome.targetPath, bundle, traceId, redirectHop + 1)
+                    return navigateInternal(outcome.targetPath, bundle, traceId, redirectHop + 1, requestCode)
                 }
             }
         }
@@ -230,15 +249,15 @@ object TRouter {
      * 单次 navigate 的执行是同步调用栈推进（无并发交错）；拦截器内部抛异常按
      * 「该拦截器故障 = Blocked」处理（不打开、不触发 onLost、不崩溃）。
      */
-    private fun runChain(meta: RouteMeta, bundle: Bundle?, traceId: String): ChainOutcome {
+    private fun runChain(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): ChainOutcome {
         val members = combinedMembers(meta, traceId)
             ?: return ChainOutcome.Blocked(meta.path, "目标拦截器未注册（@Interceptor names 需先 bindTargetInterceptor）")
-        if (members.isEmpty()) return openTargetOutcome(meta, bundle, traceId)
+        if (members.isEmpty()) return openTargetOutcome(meta, bundle, traceId, requestCode)
 
         val startMs = SystemClock.elapsedRealtime()
         log("[interceptor][start] traceId=$traceId path=${meta.path} interceptors=${members.size}")
 
-        val outcome = stepChain(members, 0, meta, bundle, traceId)
+        val outcome = stepChain(members, 0, meta, bundle, traceId, requestCode)
 
         val cost = SystemClock.elapsedRealtime() - startMs
         log("[interceptor][end] traceId=$traceId decision=${describeOutcome(outcome)} costMs=$cost")
@@ -284,8 +303,9 @@ object TRouter {
         meta: RouteMeta,
         bundle: Bundle?,
         traceId: String,
+        requestCode: Int? = null,
     ): ChainOutcome {
-        if (index >= members.size) return openTargetOutcome(meta, bundle, traceId)
+        if (index >= members.size) return openTargetOutcome(meta, bundle, traceId, requestCode)
 
         val member = members[index]
         return when (member) {
@@ -298,7 +318,7 @@ object TRouter {
                 }
                 log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=${describeDecision(decision)}")
                 when (decision) {
-                    InterceptorDecision.Continue -> stepChain(members, index + 1, meta, bundle, traceId)
+                    InterceptorDecision.Continue -> stepChain(members, index + 1, meta, bundle, traceId, requestCode)
                     is InterceptorDecision.Block -> ChainOutcome.Blocked(meta.path, decision.reason)
                     is InterceptorDecision.Redirect -> ChainOutcome.Redirected(decision.targetPath)
                 }
@@ -317,7 +337,7 @@ object TRouter {
                             throw IllegalStateException("InterceptorChain.proceed 只能调用一次（防止重复打开目标）")
                         }
                         consumed = true
-                        return stepChain(members, nextIndex, meta, bundle, traceId)
+                        return stepChain(members, nextIndex, meta, bundle, traceId, requestCode)
                     }
                 }
                 try {
@@ -332,8 +352,8 @@ object TRouter {
     }
 
     /** 链末端：真正打开目标（异常向上冒泡，由 navigateInternal 按打开失败处理）。 */
-    private fun openTargetOutcome(meta: RouteMeta, bundle: Bundle?, traceId: String): ChainOutcome {
-        val opened = openTarget(meta, bundle, traceId)
+    private fun openTargetOutcome(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): ChainOutcome {
+        val opened = openTarget(meta, bundle, traceId, requestCode)
         return ChainOutcome.Opened(opened)
     }
 
@@ -634,7 +654,7 @@ object TRouter {
 
     // ------------------------------------------------------------------ 内部实现
 
-    private fun openTarget(meta: RouteMeta, bundle: Bundle?, traceId: String): RouteMeta {
+    private fun openTarget(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): RouteMeta {
         val ctx = requireNotNull(appContext) { "TRouter.init(context, config) 必须先行调用" }
         // 页面类在此刻才真正加载（惰性：init/install 不加载页面类）
         val startMs = SystemClock.elapsedRealtime()
@@ -663,7 +683,13 @@ object TRouter {
         // 无前台 UI（如通知/无界面场景）时才回退 applicationContext + NEW_TASK。
         val current = currentActivity()
         if (current != null && !current.isFinishing) {
-            current.startActivity(intent)
+            if (requestCode != null) {
+                current.startActivityForResult(intent, requestCode)
+            } else {
+                current.startActivity(intent)
+            }
+        } else if (requestCode != null) {
+            throw IllegalStateException("navigateForResult 需要前台 Activity（当前无 resumed Activity）")
         } else {
             intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
             ctx.startActivity(intent)

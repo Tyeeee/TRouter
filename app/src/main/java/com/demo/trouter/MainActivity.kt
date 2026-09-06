@@ -1,6 +1,8 @@
 package com.demo.trouter
 
+import android.app.Activity
 import android.graphics.Color
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
@@ -227,6 +229,13 @@ class MainActivity : ComponentActivity() {
         ) {
             openRemote(RouterContract.PATH_REMOTE_SECOND, demoParamsBundle())
         }
+        scenarioRow(
+            R.id.scenario_s22,
+            "S22 导航结果回传（G3）",
+            "navigateForResult(${RouterContract.PATH_RESULT_DEMO}) · 期望：返回后状态栏显示结果页回传的数据",
+        ) {
+            openForResult(RouterContract.PATH_RESULT_DEMO)
+        }
 
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
@@ -272,6 +281,34 @@ class MainActivity : ComponentActivity() {
         putString(DemoParams.KEY_MSG, "来自主页的参数字符串")
         putInt(DemoParams.KEY_COUNT, 42)
         putString(RouteLaunch.EXTRA_PATH, "HACKED-BUNDLE-OVERRIDE") // 探针：路由元数据不得被用户参数覆盖
+    }
+
+    /** S22（G3）：navigateForResult 发起，结果在 onActivityResult 接收。 */
+    private fun openForResult(path: String) {
+        when (val r = TRouter.navigateForResult(path, REQUEST_RESULT_DEMO)) {
+            is TRouterResult.Success -> {
+                statusText.text = "已发起(等待返回):${r.meta.path}"
+            }
+            is TRouterResult.Blocked -> {
+                statusText.text = "发起失败:${r.reason}"
+                Toast.makeText(this, r.reason, Toast.LENGTH_LONG).show()
+            }
+            TRouterResult.NotInitialized -> statusText.text = "TRouter 未初始化"
+            is TRouterResult.NotFound -> statusText.text = "未找到:${r.path}"
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_RESULT_DEMO && resultCode == Activity.RESULT_OK) {
+            val text = data?.getStringExtra(ResultDemoKeys.EXTRA_RESULT_TEXT) ?: "(无数据)"
+            statusText.text = "收到返回结果: $text"
+            Toast.makeText(this, "收到返回结果: $text", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private companion object {
+        const val REQUEST_RESULT_DEMO = 1001
     }
 
     /** S13（V5.0）：切换注册/注销动态路由（目标页未标 @Route），并刷新图谱摘要。 */

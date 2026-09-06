@@ -20,8 +20,8 @@
 |---|---|---|---|---|
 | G1 | **无 URI/Scheme/DeepLink 解析层**：外部链接/浏览器/H5 无法进路由 | ARouter/WMRouter/TheRouter 全支持 | 高 | P1：加“URI/Scheme → path”适配入口（可配置 scheme 前缀解析），不改导航内核 |
 | G2 | **无跨模块服务/依赖注入层**（IProvider/ServiceProvider/ServiceLoader） | 三者全支持 | 高（若定位=组件化全家桶） | P2：新增独立服务注册层（接口+实现绑定），与页面路由解耦 |
-| G3 | **导航结果无 requestCode/ActivityResult 回调**；只有同步 sealed result | TheRouter requestCode / ARouter NavigationCallback | 中高 | P1：`navigate(path,bundle, requestCode?)` + onActivityResult 转发 + 统一回调 |
-| G4 | **参数自动注入(@Autowired)/对象传参**缺失：需手工读 extras；对象只支持同 App Parcelable | ARouter @Autowired；TheRouter 任意 object | 中 | P1：提供“收参模板 + Serializable/Parcelable 便捷 + 自定义序列化扩展点” |
+| G3 | 导航结果回调 | TheRouter requestCode / ARouter NavigationCallback | — | ✅ 已实施（批2）：`TRouter.navigateForResult(path, requestCode)`，全链贯穿 requestCode，无前台=明确 Blocked；ResultEcho 页 S22 全链路演示 |
+| G4 | 参数收参便利 | ARouter @Autowired | — | ✅ 已实施（批2）：`RouteArgs` 类型化收参（str/int/long/double/bool/strings/Serializable/Parcelable，含跨进程边界说明），页面已采用 |
 | G5 | **path 匹配粒度**：仅精确字符串；无正则、无“多 path↔一页” | TheRouter/WMRouter | 中 | P2（多端统一需要时再做） |
 | G6 | **远端路由表下发/H5 降级**只有本地底座（registerRoute/apply/save），无 assets 导出 json 与下发覆盖 | TheRouter 完整链路 | 中 | P2：补 RouteMap JSON 导出 + 导入覆盖(复用 apply)即可得大部分能力 |
 | G7 | 路由目标合法性检查 | TheRouter 校验 | — | ✅ 已实施（批1）：`TRouter.checkRouteTargets()` 检出动态注册错类名等迟发现问题并告警） |

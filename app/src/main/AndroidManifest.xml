@@ -40,6 +40,11 @@
             android:name=".DynamicDemoActivity"
             android:exported="false"
             android:theme="@style/Theme.TRouterDemo" />
+        <!-- G3 结果回传演示 -->
+        <activity
+            android:name=".ResultEchoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterDemo" />
     </application>
 
 </manifest>
