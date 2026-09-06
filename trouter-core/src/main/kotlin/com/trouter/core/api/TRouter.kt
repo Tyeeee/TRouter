@@ -69,6 +69,11 @@ object TRouter {
     private val servicesLock = Any()
     private val servicesTable = LinkedHashMap<Class<*>, Any>()
 
+    // G2-remote：跨进程服务端点注册表（名称 -> (Bundle)->String，各进程独立注册）
+    private val endpointLock = Any()
+    private val endpoints = LinkedHashMap<String, (Bundle) -> String>()
+    private const val REMOTE_ERR_PREFIX = "-ERR"
+
     // F（动态路由热更/持久化）：动态注册路径集合（用于导出/恢复；静态路由不入集）
     private val dynamicPathsLock = Any()
     private val dynamicPaths = LinkedHashSet<String>()
@@ -529,6 +534,44 @@ object TRouter {
     fun registeredServices(): List<Class<*>> =
         synchronized(servicesLock) { ArrayList(servicesTable.keys) }
 
+    /**
+     * G2-remote：注册跨进程服务端点（各进程独立注册表；名称重复拒绝）。
+     * 端点签名：入参 Bundle（基础类型）→ 返回结构化字符串（默认协议自定，host 原样回传）。
+     */
+    fun registerRemoteEndpoint(name: String, handler: (Bundle) -> String): Boolean {
+        if (!initialized || name.isBlank()) return false
+        val ok = synchronized(endpointLock) {
+            if (endpoints.containsKey(name)) false else {
+                endpoints[name] = handler
+                true
+            }
+        }
+        if (ok) log("[service][remote][register] name=$name") else log("[service][remote][register][conflict] name=$name")
+        return ok
+    }
+
+    fun unregisterRemoteEndpoint(name: String): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(endpointLock) { endpoints.remove(name) }
+        if (removed != null) log("[service][remote][unregister] name=$name")
+        return removed != null
+    }
+
+    /** 服务进程侧（RemoteRouterService 内）按名称调用本进程端点；未注册返回 [REMOTE_ERR_PREFIX] 串。 */
+    fun invokeRemoteEndpoint(name: String, args: Bundle): String {
+        val handler = synchronized(endpointLock) { endpoints[name] }
+        if (handler == null) return REMOTE_ERR_PREFIX + " unregistered:" + name
+        return try {
+            handler.invoke(args)
+        } catch (e: Throwable) {
+            REMOTE_ERR_PREFIX + " " + e.javaClass.simpleName + ": " + (e.message ?: "")
+        }
+    }
+
+    /** @return true 表示该串为服务错误（未注册/异常）。 */
+    fun isRemoteEndpointError(reply: String): Boolean = reply.startsWith(REMOTE_ERR_PREFIX)
+
+
     // ------------------------------------------------------------------ 拦截器运行时增删（L2）
 
     /**
@@ -764,6 +807,23 @@ object TRouter {
         }
     }
 
+    /**
+     * G2-remote：跨进程调用远端进程注册的服务端点（结果原样 String 回传主线程；
+     * 失败以 RemoteReplyCodec.SERVICE_ERROR_PREFIX 前缀串表达）。
+     */
+    fun callRemoteService(name: String, args: Bundle? = null, onResult: (String) -> Unit) {
+        if (!initialized) {
+            onResult(REMOTE_ERR_PREFIX + "TRouter 未初始化")
+            return
+        }
+        val ctx = appContext
+        if (ctx == null) {
+            onResult(REMOTE_ERR_PREFIX + "remote 通道未初始化（TRouter.init 未完成）")
+            return
+        }
+        remoteRouter.callService(ctx, config.remoteService, name, args, onResult) { log(it) }
+    }
+
     // ------------------------------------------------------------------ 测试支持
 
     /**
@@ -782,6 +842,7 @@ object TRouter {
         synchronized(targetBindingsLock) { targetBindings.clear() }
         synchronized(aliasLock) { aliasTable.clear() }
         synchronized(servicesLock) { servicesTable.clear() }
+        synchronized(endpointLock) { endpoints.clear() }
         lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
         lifecycleApp = null
         activityListener = null

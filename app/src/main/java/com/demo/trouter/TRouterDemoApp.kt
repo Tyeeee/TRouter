@@ -2,6 +2,8 @@ package com.demo.trouter
 
 import android.app.Application
 import android.content.ComponentName
+import android.os.Bundle
+import android.os.Process
 import com.demo.trouter.generated.CrossProcessPaths
 import com.demo.trouter.generated.TRouterTargetInterceptorNames
 import com.trouter.core.api.ChainOutcome
@@ -34,6 +36,13 @@ class TRouterDemoApp : Application() {
         )
         TRouter.init(this, config)
         TRouter.install(DemoRouteRegistry)
+        // G2-remote：仅在 :remote 进程注册跨进程服务端点（host 不注册 → 测试可证明走的是真实跨进程调用）
+        if (Process.myProcessName().endsWith(":remote")) {
+            TRouter.registerRemoteEndpoint("demoClock") { args ->
+                val q = args?.getString("q") ?: "none"
+                "clock-v1 q=$q pid=${Process.myPid()}"
+            }
+        }
         // L3：给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）
         TRouter.bindTargetInterceptor(
             "remoteAudit",

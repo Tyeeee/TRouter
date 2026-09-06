@@ -27,6 +27,11 @@ class RemoteRouterService : Service() {
             // 传输层参数回显：把收到的 bundle 基础类型摘要带回 host，供“参数确实跨进程送达”的自动化校验
             return RemoteReplyCodec.encode(result, remoteTraceId, costMs, paramEcho(bundle))
         }
+
+        override fun callService(name: String?, args: Bundle?): String {
+            // G2-remote：调用远端进程内注册的服务端点（端点返回结构化字符串）
+            return TRouter.invokeRemoteEndpoint(name ?: "", args ?: Bundle())
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder = binder

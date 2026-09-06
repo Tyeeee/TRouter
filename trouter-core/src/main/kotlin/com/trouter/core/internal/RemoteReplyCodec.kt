@@ -14,6 +14,9 @@ import com.trouter.core.api.TRouterResult
 object RemoteReplyCodec {
 
     private const val SEP = "\u001F"
+
+    /** 服务调用错误串前缀（G2-remote，host/服务端共用同一协议前缀）。 */
+    const val SERVICE_ERROR_PREFIX = "-ERR "
     private const val KIND_SUCCESS = "SUCCESS"
     private const val KIND_NOT_FOUND = "NOT_FOUND"
     private const val KIND_BLOCKED = "BLOCKED"

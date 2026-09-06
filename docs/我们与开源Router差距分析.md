@@ -19,7 +19,7 @@
 | # | 差距 | 主流参照 | 严重 | 建议 |
 |---|---|---|---|---|
 | G1 | **无 URI/Scheme/DeepLink 解析层**：外部链接/浏览器/H5 无法进路由 | ARouter/WMRouter/TheRouter 全支持 | 高 | P1：加“URI/Scheme → path”适配入口（可配置 scheme 前缀解析），不改导航内核 |
-| G2 | 服务层 | ARouter/WMRouter/TheRouter/DRouter | 部分 | ✅ 进程内服务注册/查找已实施（批3：registerService/findService，接口 key、重复拒绝）；**跨进程服务**未做（依赖自有代理/共享内存协议，工程量大）→ 登记 backlog 由你定 |
+| G2 | 服务层 | ARouter/WMRouter/TheRouter/DRouter | — | ✅ 已实施（批3）：进程内 `registerService/findService` + **跨进程服务** `callRemoteService`/`registerRemoteEndpoint`（真实 AIDL，:remote 注册端点、host 调用并校验执行 pid；失败=统一错误串） |
 | G3 | 导航结果回调 | TheRouter requestCode / ARouter NavigationCallback | — | ✅ 已实施（批2）：`TRouter.navigateForResult(path, requestCode)`，全链贯穿 requestCode，无前台=明确 Blocked；ResultEcho 页 S22 全链路演示 |
 | G4 | 参数收参便利 | ARouter @Autowired | — | ✅ 已实施（批2）：`RouteArgs` 类型化收参（str/int/long/double/bool/strings/Serializable/Parcelable，含跨进程边界说明），页面已采用 |
 | G5 | **path 匹配粒度**：仅精确字符串；无正则、无“多 path↔一页” | TheRouter/WMRouter | 中 | P2（多端统一需要时再做） |

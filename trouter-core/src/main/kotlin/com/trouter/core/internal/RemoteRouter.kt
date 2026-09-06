@@ -14,27 +14,34 @@ import com.trouter.core.api.TRouterResult
 import java.util.UUID
 
 /**
- * host 侧跨进程通道客户端（V4.0，重写版）。
+ * host 侧跨进程通道客户端（V4.0 + G2-remote）。
  *
- * 设计原则（回应「不能靠调用顺序保证成功」）：
- * 1. **单后台线程串行处理**：所有操作——入队、连接回调、超时、派发——都投递到同一个
- *    HandlerThread（trouter-remote）上串行执行。不存在并发交错，也就不需要锁与"时序巧合"；
- * 2. **派发由状态驱动，而非调用顺序**：任何可能让待处理请求得以执行的状态迁移
- *    （请求入队后、onServiceConnected 后）都主动调用 dispatch()；请求一旦入队，
- *    只可能走向「连接就绪→真实执行」或「超时/断开→明确 Blocked」，没有"无人派发"的盲区；
- * 3. **主线程零阻塞**：bindService 回调在系统线程到达后投递到 worker；stub 跨进程调用在
- *    worker 上执行；结果/失败经 Handler 投回主线程回调调用方；
- * 4. 失败均映射为 [TRouterResult.Blocked]（不触发 onLost），并记录 [remote][fail] 日志。
+ * 设计（防「顺序/时机依赖」缺陷）：
+ * 1. 单后台线程（trouter-remote）串行执行全部操作：入队/连接回调/超时/派发；
+ * 2. 派发由状态驱动：请求入队后与连接建立后都主动 dispatch；无“无人派发”终态；
+ * 3. 主线程零阻塞（binder 调用在 worker 执行，回调投回主线程）；
+ * 4. 导航失败映射 [TRouterResult.Blocked]；服务失败以 [RemoteReplyCodec.SERVICE_ERROR_PREFIX] 串表达。
+ * 导航与服务共用一个连接与同一队列（统一 Task），保证顺序与重连语义一致。
  */
 class RemoteRouter {
 
-    private class Pending(
-        val path: String,
-        val bundle: Bundle?,
-        val traceId: String,
-        val log: (String) -> Unit,
-        val onResult: (TRouterResult) -> Unit,
-    )
+    private sealed class Task(val traceId: String, val log: (String) -> Unit) {
+        class Nav(
+            val path: String,
+            val bundle: Bundle?,
+            traceId: String,
+            log: (String) -> Unit,
+            val onResult: (TRouterResult) -> Unit,
+        ) : Task(traceId, log)
+
+        class Svc(
+            val name: String,
+            val args: Bundle?,
+            traceId: String,
+            log: (String) -> Unit,
+            val onResult: (String) -> Unit,
+        ) : Task(traceId, log)
+    }
 
     private val main = Handler(Looper.getMainLooper())
 
@@ -51,7 +58,7 @@ class RemoteRouter {
     }
 
     // 以下字段仅允许在 worker 线程访问
-    private val pending = ArrayDeque<Pending>()
+    private val queue = ArrayDeque<Task>()
     private var appContext: Context? = null
     private var component: ComponentName? = null
     private var service: IRouterService? = null
@@ -60,7 +67,6 @@ class RemoteRouter {
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            // 系统回调可能在任意线程到达：投递到 worker 串行处理
             worker().post { onConnected(binder) }
         }
 
@@ -79,8 +85,6 @@ class RemoteRouter {
         logMessage: (String) -> Unit,
     ) {
         val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
-
-        // 同步守卫（不依赖通道状态，保证调用方第一时间得到明确结果）
         if (component == null) {
             logMessage("[remote][fail] traceId=$traceId path=$path reason=remote 服务未配置（TRouterConfig.remoteService）")
             onResult(TRouterResult.Blocked(path, "remote 服务未配置（TRouterConfig.remoteService）"))
@@ -91,22 +95,45 @@ class RemoteRouter {
             onResult(TRouterResult.Blocked(path, "path 未标注 @CrossProcess，禁止跨进程导航"))
             return
         }
+        worker().post {
+            enqueue(context, component, Task.Nav(path, bundle, traceId, logMessage, onResult))
+        }
+    }
 
-        val p = Pending(path, bundle, traceId, logMessage, onResult)
-        worker().post { enqueue(context, component, p) }
+    fun callService(
+        context: Context,
+        component: ComponentName?,
+        name: String,
+        args: Bundle?,
+        onResult: (String) -> Unit,
+        logMessage: (String) -> Unit,
+    ) {
+        val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
+        if (component == null) {
+            logMessage("[remote][fail] traceId=$traceId name=$name reason=remote 服务未配置（TRouterConfig.remoteService）")
+            onResult(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 服务未配置（TRouterConfig.remoteService）")
+            return
+        }
+        worker().post {
+            enqueue(context, component, Task.Svc(name, args, traceId, logMessage, onResult))
+        }
     }
 
     // ---------------- worker 线程内执行 ----------------
 
-    private fun enqueue(context: Context, component: ComponentName, p: Pending) {
-        val app = context.applicationContext
-        appContext = app
+    private fun enqueue(context: Context, component: ComponentName, task: Task) {
+        appContext = context.applicationContext
         this.component = component
-        pending.addLast(p)
-        p.log("[remote][send] traceId=${p.traceId} path=${p.path} targetProcess=${component.flattenToString()}")
-        armTimeout(p)
+        queue.addLast(task)
+        when (task) {
+            is Task.Nav ->
+                task.log("[remote][send] traceId=${task.traceId} path=${task.path} targetProcess=${component.flattenToString()}")
+            is Task.Svc ->
+                task.log("[remote][service][send] traceId=${task.traceId} name=${task.name} targetProcess=${component.flattenToString()}")
+        }
+        armTimeout(task)
         ensureBinding()
-        dispatch()   // ① 入队后若已连接，立即派发
+        dispatch() // ① 入队后若已连接，立即派发
     }
 
     private fun ensureBinding() {
@@ -122,67 +149,95 @@ class RemoteRouter {
         boundAttempt = ok
         if (!ok) {
             connecting = false
-            failAll("remote 服务不可用（bind 失败）")
+            failAll(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 服务不可用（bind 失败）", navBlockedReason = "remote 服务不可用（bind 失败）")
         }
     }
 
     private fun dispatch() {
-        if (service == null || pending.isEmpty()) return
-        val batch = ArrayList(pending)
-        pending.clear()
-        for (p in batch) execute(p)
+        if (service == null || queue.isEmpty()) return
+        val batch = ArrayList(queue)
+        queue.clear()
+        for (task in batch) execute(task)
     }
 
     private fun onConnected(binder: IBinder?) {
         val stub = binder?.let { IRouterService.Stub.asInterface(it) }
-        // D：AIDL 透明代理封装——后续调用统一经动态代理，为入参清洗/统计留单一扩展点
+        // D：AIDL 透明代理封装（导航与服务调用统一经代理）
         service = stub?.let { RemoteProxies.delegating(it) }
         connecting = false
-        dispatch()   // ② 连接建立后，派发等待中的请求
+        dispatch() // ② 连接建立后派发全部等待任务
     }
 
     private fun onDisconnected() {
-        // 服务中途断开：对仍等待的请求给出明确失败，未来 navigate 会重新 bind
         service = null
-        failAll("remote 服务已断开")
+        failAll(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 服务已断开", navBlockedReason = "remote 服务已断开")
     }
 
-    private fun execute(p: Pending) {
+    private fun execute(task: Task) {
         val stub = service
         if (stub == null) {
-            // 极端竞态兜底：不应发生（dispatch 只在 service!=null 时清队），防御处理
-            pending.addFirst(p)
+            queue.addFirst(task) // 防御：不应发生（dispatch 仅在 service!=null 时清队）
             return
         }
+        when (task) {
+            is Task.Nav -> executeNav(stub, task)
+            is Task.Svc -> executeSvc(stub, task)
+        }
+    }
+
+    private fun executeNav(stub: IRouterService, task: Task.Nav) {
         val startMs = SystemClock.elapsedRealtime()
         val raw = try {
-            stub.navigate(p.path, p.bundle)
+            stub.navigate(task.path, task.bundle)
         } catch (t: Throwable) {
             null
         }
         val costMs = SystemClock.elapsedRealtime() - startMs
         val reply = raw?.let { RemoteReplyCodec.parse(it) }
         if (reply == null) {
-            p.log("[remote][fail] traceId=${p.traceId} path=${p.path} reason=remote 调用异常/回包解析失败")
-            postMain { p.onResult(TRouterResult.Blocked(p.path, "remote 调用异常")) }
+            task.log("[remote][fail] traceId=${task.traceId} path=${task.path} reason=remote 调用异常/回包解析失败")
+            postMain { task.onResult(TRouterResult.Blocked(task.path, "remote 调用异常")) }
             return
         }
-        p.log(
-            "[remote][recv] traceId=${reply.remoteTraceId} origin=${p.traceId} result=${RemoteReplyCodec.describe(reply)} costMs=$costMs" +
+        task.log(
+            "[remote][recv] traceId=${reply.remoteTraceId} origin=${task.traceId} result=${RemoteReplyCodec.describe(reply)} costMs=$costMs" +
                 if (reply.paramEcho.isNotEmpty()) " params=[${reply.paramEcho.joinToString("; ")}]" else "",
         )
-        postMain { p.onResult(RemoteReplyCodec.toLocalResult(reply)) }
+        postMain { task.onResult(RemoteReplyCodec.toLocalResult(reply)) }
     }
 
-    private fun armTimeout(p: Pending) {
+    private fun executeSvc(stub: IRouterService, task: Task.Svc) {
+        val startMs = SystemClock.elapsedRealtime()
+        val raw = try {
+            stub.callService(task.name, task.args)
+        } catch (t: Throwable) {
+            null
+        }
+        val costMs = SystemClock.elapsedRealtime() - startMs
+        if (raw == null) {
+            task.log("[remote][service][fail] traceId=${task.traceId} name=${task.name} reason=remote 调用异常")
+            postMain { task.onResult(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 调用异常") }
+            return
+        }
+        task.log("[remote][service][recv] traceId=${task.traceId} name=${task.name} costMs=$costMs reply=${if (raw.length > 120) raw.take(120) + "…" else raw}")
+        postMain { task.onResult(raw) }
+    }
+
+    private fun armTimeout(task: Task) {
         worker().postDelayed({
-            val removed = pending.remove(p)
+            val removed = queue.remove(task)
             if (!removed) return@postDelayed
-            p.log("[remote][fail] traceId=${p.traceId} path=${p.path} reason=remote 服务连接超时")
-            postMain { p.onResult(TRouterResult.Blocked(p.path, "remote 服务连接超时")) }
-            // 若还悬在“正在连接”且已无等待请求（如系统未回调 onServiceConnected），
-            // 主动撤销这次 bind，避免 connecting 永久悬挂、后续请求无法重连
-            if (connecting && service == null && pending.isEmpty() && boundAttempt) {
+            when (task) {
+                is Task.Nav -> {
+                    task.log("[remote][fail] traceId=${task.traceId} path=${task.path} reason=remote 服务连接超时")
+                    postMain { task.onResult(TRouterResult.Blocked(task.path, "remote 服务连接超时")) }
+                }
+                is Task.Svc -> {
+                    task.log("[remote][service][fail] traceId=${task.traceId} name=${task.name} reason=remote 服务连接超时")
+                    postMain { task.onResult(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 服务连接超时") }
+                }
+            }
+            if (connecting && service == null && queue.isEmpty() && boundAttempt) {
                 try {
                     appContext?.unbindService(connection)
                 } catch (t: Throwable) {
@@ -194,13 +249,21 @@ class RemoteRouter {
         }, CONNECT_TIMEOUT_MS)
     }
 
-    private fun failAll(reason: String) {
-        if (pending.isEmpty()) return
-        val batch = ArrayList(pending)
-        pending.clear()
-        for (p in batch) {
-            p.log("[remote][fail] traceId=${p.traceId} path=${p.path} reason=$reason")
-            postMain { p.onResult(TRouterResult.Blocked(p.path, reason)) }
+    private fun failAll(errorSuffix: String, navBlockedReason: String) {
+        if (queue.isEmpty()) return
+        val batch = ArrayList(queue)
+        queue.clear()
+        for (task in batch) {
+            when (task) {
+                is Task.Nav -> {
+                    task.log("[remote][fail] traceId=${task.traceId} path=${task.path} reason=$navBlockedReason")
+                    postMain { task.onResult(TRouterResult.Blocked(task.path, navBlockedReason)) }
+                }
+                is Task.Svc -> {
+                    task.log("[remote][service][fail] traceId=${task.traceId} name=${task.name} reason=$navBlockedReason")
+                    postMain { task.onResult(errorSuffix) }
+                }
+            }
         }
     }
 
@@ -208,7 +271,7 @@ class RemoteRouter {
         main.post { block() }
     }
 
-    /** 测试底座 reset：断开连接并丢弃待处理请求（不回调）。 */
+    /** 测试底座 reset：断开连接并丢弃待处理任务（不回调）。 */
     fun disconnect() {
         worker().post {
             val ctx = appContext
@@ -222,7 +285,7 @@ class RemoteRouter {
             boundAttempt = false
             connecting = false
             service = null
-            pending.clear()
+            queue.clear()
             appContext = null
             component = null
         }
