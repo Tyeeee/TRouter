@@ -134,7 +134,9 @@ class RemoteRouter {
     }
 
     private fun onConnected(binder: IBinder?) {
-        service = binder?.let { IRouterService.Stub.asInterface(it) }
+        val stub = binder?.let { IRouterService.Stub.asInterface(it) }
+        // D：AIDL 透明代理封装——后续调用统一经动态代理，为入参清洗/统计留单一扩展点
+        service = stub?.let { RemoteProxies.delegating(it) }
         connecting = false
         dispatch()   // ② 连接建立后，派发等待中的请求
     }

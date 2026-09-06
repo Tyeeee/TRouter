@@ -1,0 +1,66 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Reusing configuration cache.
+> Task :app:preBuild UP-TO-DATE
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature-about:preBuild UP-TO-DATE
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :feature-about:preDebugBuild UP-TO-DATE
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :feature-about:generateDebugResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :feature-about:packageDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :feature-demo:javaPreCompileDebug UP-TO-DATE
+> Task :feature-about:javaPreCompileDebug UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-demo:kspDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:kspDebugKotlin
+> Task :feature-about:compileDebugKotlin
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-about:bundleLibCompileToJarDebug
+> Task :app:kspDebugKotlin
+
+> Task :app:verifyCrossModuleRouteConflicts
+TRouter L1 校验通过：跨模块无重复 path（共扫描 6 条路由清单项）
+
+BUILD SUCCESSFUL in 5s
+40 actionable tasks: 5 executed, 35 up-to-date
+Configuration cache entry reused.

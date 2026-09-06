@@ -9,20 +9,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.trouter.annotation.CrossProcess
+import com.trouter.annotation.Interceptor
 import com.trouter.annotation.Route
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteLaunch
 import com.trouter.core.api.Ui
 
 /**
- * S11 跨进程目标页（@Route /remote-second · default · ACTIVITY + @CrossProcess）。
+ * S11 跨进程目标页（@Route /remote-second · default · ACTIVITY + @CrossProcess + @Interceptor(remoteAudit)）。
  *
  * 本页在 manifest 中声明到独立进程 android:process=":remote"：
  * - 经 host 的 TRouter.navigateRemote（AIDL 通道）由 **:remote 进程自己的 TRouter** 打开；
- * - 横幅运行时证据来自远端 TRouter.openTarget 写入的 RouteLaunch 元数据（远端 traceId）。
+ * - 横幅运行时证据来自远端 TRouter.openTarget 写入的 RouteLaunch 元数据（远端 traceId）；
+ * - @Interceptor(remoteAudit)：目标级拦截器演示（L3），真实 app 绑定 no-op 观察者，测试可替换。
  */
 @Route(path = RouterContract.PATH_REMOTE_SECOND)
 @CrossProcess
+@Interceptor(names = ["remoteAudit"])
 class RemoteSecondActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

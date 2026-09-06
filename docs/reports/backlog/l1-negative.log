@@ -1,0 +1,84 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as configuration cache cannot be reused because file 'app/build.gradle.kts' has changed.
+
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :feature-about:preBuild UP-TO-DATE
+> Task :feature-about:preDebugBuild UP-TO-DATE
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :feature-about:generateDebugResources UP-TO-DATE
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :feature-about:packageDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :feature-about:javaPreCompileDebug
+> Task :feature-demo:javaPreCompileDebug
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:kspDebugKotlin
+> Task :feature-demo:kspDebugKotlin
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:compileDebugKotlin
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-about:bundleLibCompileToJarDebug
+> Task :app:kspDebugKotlin
+
+> Task :app:verifyCrossModuleRouteConflicts FAILED
+TRouter L1 跨模块路由 path 冲突：/second ← feature-demo(GroupLoader_default.kt) / feature-about(GroupLoader_default.kt)。请统一到 RouterContract 后修正。
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:verifyCrossModuleRouteConflicts' (registered in build file 'app/build.gradle.kts').
+> Process 'command '/Users/tye/Library/Java/JavaVirtualMachines/jbr-17.0.14/Contents/Home/bin/java'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 7s
+40 actionable tasks: 8 executed, 32 up-to-date
+Configuration cache entry stored.

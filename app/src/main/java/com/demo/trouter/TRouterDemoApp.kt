@@ -3,8 +3,12 @@ package com.demo.trouter
 import android.app.Application
 import android.content.ComponentName
 import com.demo.trouter.generated.CrossProcessPaths
+import com.demo.trouter.generated.TRouterTargetInterceptorNames
+import com.trouter.core.api.ChainOutcome
+import com.trouter.core.api.InterceptorChain
 import com.trouter.core.api.TRouter
 import com.trouter.core.api.TRouterConfig
+import com.trouter.core.api.WrappingInterceptor
 import com.trouter.core.internal.RemoteRouterService
 
 /**
@@ -26,8 +30,16 @@ class TRouterDemoApp : Application() {
             interceptors = DemoInterceptors.demoList,
             remoteService = ComponentName(this, RemoteRouterService::class.java),
             remoteWhitelist = CrossProcessPaths.paths,
+            targetInterceptorResolver = { className -> TRouterTargetInterceptorNames.namesOf(className) },
         )
         TRouter.init(this, config)
         TRouter.install(DemoRouteRegistry)
+        // L3：给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）
+        TRouter.bindTargetInterceptor(
+            "remoteAudit",
+            object : WrappingInterceptor {
+                override fun intercept(chain: InterceptorChain): ChainOutcome = chain.proceed()
+            },
+        )
     }
 }

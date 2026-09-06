@@ -1,6 +1,7 @@
 package com.trouter.core.testing
 
-import com.trouter.core.api.RouteInterceptor
+import android.content.ComponentName
+import com.trouter.core.api.RouteChainMember
 import com.trouter.core.api.TRouterConfig
 
 /**
@@ -12,10 +13,16 @@ class TestConfig(
     isDebug: Boolean = true,
     logSink: ((String) -> Unit)? = null,
     onLost: ((path: String) -> Unit)? = null,
-    interceptors: List<RouteInterceptor> = emptyList(),
+    interceptors: List<RouteChainMember> = emptyList(),
+    remoteService: ComponentName? = null,
+    remoteWhitelist: Set<String>? = null,
+    targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
 ) : TRouterConfig(
     isDebug = isDebug,
     logSink = logSink,
     onLost = onLost,
     interceptors = interceptors,
+    remoteService = remoteService,
+    remoteWhitelist = remoteWhitelist,
+    targetInterceptorResolver = targetInterceptorResolver,
 )

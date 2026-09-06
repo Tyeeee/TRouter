@@ -18,12 +18,17 @@ import android.content.ComponentName
  * - [remoteService]：remote 进程 AIDL 服务组件；null = 未启用跨进程导航（navigateRemote 返回 Blocked）；
  * - [remoteWhitelist]：@CrossProcess 白名单（KSP 生成 CrossProcessPaths.paths）；null = 不校验（全部放行），
  *   非 null = 只允许集合内 path 走跨进程通道。
+ *
+ * L3 新增（目标级拦截器）：
+ * - [targetInterceptorResolver]：由宿主注入「目标类 → @Interceptor 标识名」解析函数
+ *   （通常引用 KSP 生成的 TRouterTargetInterceptorNames.namesOf）；null = 无目标级拦截。
  */
 open class TRouterConfig(
     val isDebug: Boolean = false,
     val logSink: ((String) -> Unit)? = null,
     val onLost: ((path: String) -> Unit)? = null,
-    val interceptors: List<RouteInterceptor> = emptyList(),
+    val interceptors: List<RouteChainMember> = emptyList(),
     val remoteService: ComponentName? = null,
     val remoteWhitelist: Set<String>? = null,
+    val targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
 )

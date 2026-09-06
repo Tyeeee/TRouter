@@ -66,3 +66,29 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
+
+// ---------------------------------------------------------------------------
+// L1：跨模块路由 path 冲突 —— 构建期校验（debug 变体）。
+// 逻辑在 :trouter-processor 的 CrossModuleConflictScanner（JVM main，避免 DSL 闭包生成 bug）；
+// 本脚本只接线：kspDebugKotlin 完成后以 JavaExec 扫描各模块生成目录，冲突则以非零退出使构建失败。
+// ---------------------------------------------------------------------------
+val verifyCrossModuleRouteConflicts = tasks.register<JavaExec>("verifyCrossModuleRouteConflicts") {
+    group = "verification"
+    description = "跨模块路由 path 冲突检测（构建期，L1）"
+    dependsOn(":trouter-processor:jar")
+    classpath = project(":trouter-processor").sourceSets["main"].runtimeClasspath
+    mainClass.set("com.trouter.processor.CrossModuleConflictScanner")
+    val moduleDirs = listOf(
+        "app" to File(rootDir, "app/build/generated/ksp/debug/kotlin").absolutePath,
+        "feature-demo" to File(rootDir, "feature-demo/build/generated/ksp/debug/kotlin").absolutePath,
+        "feature-about" to File(rootDir, "feature-about/build/generated/ksp/debug/kotlin").absolutePath,
+    )
+    for ((moduleName, dirPath) in moduleDirs) {
+        args(moduleName, dirPath)
+    }
+}
+
+// kspDebugKotlin 跑完（生成完毕）后立即执行校验；JavaExec 无环（finalizer 语义）。
+tasks.matching { it.name == "kspDebugKotlin" }.configureEach {
+    finalizedBy(verifyCrossModuleRouteConflicts)
+}

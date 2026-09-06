@@ -69,6 +69,20 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
                 )
             }
         }
+        // @Interceptor 校验：必须同时标注 @Route（目标级拦截器依附于路由目标）
+        for (symbol in resolver.getSymbolsWithAnnotation(ANNOTATION_TARGET_INTERCEPTOR)) {
+            val decl = symbol as? KSClassDeclaration
+            if (decl == null) {
+                logger.error("@Interceptor 只能标注在类上", symbol)
+                continue
+            }
+            if (decl.annotations.none { it.shortName.asString() == ROUTE_SHORT_NAME }) {
+                logger.error(
+                    "@Interceptor 目标必须同时标注 @Route：${decl.qualifiedName?.asString()}",
+                    decl,
+                )
+            }
+        }
         // 不在本轮生成：全部收集完成后在 finish() 统一校验与生成
         return emptyList()
     }
@@ -144,6 +158,60 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
                 .distinct()
                 .toTypedArray()
             emitCrossProcessPaths(crossRoutes.map { it.pathEval.value }.distinct(), crossSources)
+        }
+
+        // @Interceptor 目标级映射（L3）：className -> 拦截器标识名列表（无标注模块也生成空表，保证宿主可引用）
+        val interceptorRoutes = routesByGroup.values.flatten()
+            .filter { route -> route.decl.annotations.any { it.shortName.asString() == INTERCEPTOR_SHORT_NAME } }
+        val targetMap = LinkedHashMap<String, List<String>>()
+        for (route in interceptorRoutes) {
+            val names = extractInterceptorNames(route.decl)
+            if (names.isNotEmpty()) targetMap[route.className] = names
+        }
+        val interceptorSources: Array<KSFile> = interceptorRoutes
+            .mapNotNull { it.decl.containingFile }
+            .distinct()
+            .toTypedArray()
+        emitTargetInterceptorNames(targetMap, interceptorSources)
+    }
+
+    /** 从 @Interceptor 注解读取 names（非空去重字符串列表；异常时返回空）。 */
+    private fun extractInterceptorNames(decl: KSClassDeclaration): List<String> {
+        val annotation = decl.annotations.firstOrNull { it.shortName.asString() == INTERCEPTOR_SHORT_NAME }
+            ?: return emptyList()
+        val raw = annotation.arguments.firstOrNull { it.name?.asString() == "names" }?.value
+        return when (raw) {
+            is List<*> -> raw.mapNotNull { it?.toString()?.takeIf { s -> s.isNotBlank() } }.distinct()
+            else -> emptyList()
+        }
+    }
+
+    private fun emitTargetInterceptorNames(targetMap: Map<String, List<String>>, sources: Array<KSFile>) {
+        val branches = if (targetMap.isEmpty()) {
+            "        else -> emptyList()"
+        } else {
+            targetMap.entries.joinToString("\n") { (cls, names) ->
+                "        ${q(cls)} -> listOf(${names.joinToString(", ") { q(it) }})"
+            } + "\n        else -> emptyList()"
+        }
+        val content = """
+            |// 本文件由 TRouter KSP 处理器生成，请勿手改。
+            |package $modulePackage.generated
+            |
+            |/**
+            | * 目标级拦截器映射（L3）：targetClassName -> @Interceptor names。
+            | * 宿主把本表与 TRouter.bindTargetInterceptor(name, ...) 配合使用。
+            | */
+            |object TRouterTargetInterceptorNames {
+            |    fun namesOf(targetClassName: String): List<String> = when (targetClassName) {
+            |$branches
+            |    }
+            |}
+            |
+        """.trimMargin()
+        val deps = Dependencies(aggregating = true, *sources)
+        codeGenerator.createNewFile(deps, "$modulePackage.generated", "TRouterTargetInterceptorNames").use { out ->
+            out.write(content.toByteArray(Charsets.UTF_8))
         }
     }
 
@@ -426,6 +494,8 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         const val ROUTE_SHORT_NAME: String = "Route"
         const val ANNOTATION_CROSS: String = "com.trouter.annotation.CrossProcess"
         const val CROSS_SHORT_NAME: String = "CrossProcess"
+        const val ANNOTATION_TARGET_INTERCEPTOR: String = "com.trouter.annotation.Interceptor"
+        const val INTERCEPTOR_SHORT_NAME: String = "Interceptor"
         const val RouteDefaultGroup: String = "default"
         const val UNRESOLVED_CONSTANT: String = "__UNRESOLVED_CONSTANT__"
         val LITERAL_PATH_REGEX = Regex("""path\s*=\s*"[^"]*"""")

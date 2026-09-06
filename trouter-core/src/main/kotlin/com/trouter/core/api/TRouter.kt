@@ -45,6 +45,20 @@ object TRouter {
     private var config: TRouterConfig = TRouterConfig()
     private val routeTable = RouteTable()
 
+    // L2：运行时拦截器注册表。读写均在锁内做「快照或原子替换」，navigate 每次取不可变快照：
+    // 增删绝不打断进行中的链，只影响下一次 navigate（吸取「顺序/时机依赖」缺陷教训）。
+    private val liveInterceptorsLock = Any()
+    private val liveInterceptors = ArrayList<RouteChainMember>()
+
+    // L3：目标级拦截器绑定表（name -> member）。CopyOnWrite 快照语义与 liveInterceptors 一致。
+    private val targetBindingsLock = Any()
+    private val targetBindings = LinkedHashMap<String, RouteChainMember>()
+
+    // F（动态路由热更/持久化）：动态注册路径集合（用于导出/恢复；静态路由不入集）
+    private val dynamicPathsLock = Any()
+    private val dynamicPaths = LinkedHashSet<String>()
+    private val dynamicApplyLock = Any()
+
     // 生命周期绑定：追踪当前 resumed Activity，用于同任务内导航（返回键可回到调用页）
     private var lifecycleApp: Application? = null
     private var activityListener: Application.ActivityLifecycleCallbacks? = null
@@ -64,6 +78,10 @@ object TRouter {
         val app = context.applicationContext
         this.appContext = app
         this.config = config
+        synchronized(liveInterceptorsLock) {
+            liveInterceptors.clear()
+            liveInterceptors.addAll(config.interceptors)
+        }
         this.initialized = true
         // Timber：进程内只 plant 一次
         if (!timberPlanted) {
@@ -165,32 +183,11 @@ object TRouter {
             return TRouterResult.NotFound(path)
         }
 
-        // V2.0 拦截链：解析后、打开前；空列表 = 直接放行（零日志，行为与 V1.0 一致）
-        when (val decision = runInterceptors(meta, bundle, traceId)) {
-            is InterceptorDecision.Block -> {
-                val cost = SystemClock.elapsedRealtime() - startMs
-                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${meta.path}, reason=${decision.reason}) costMs=$cost")
-                return TRouterResult.Blocked(meta.path, decision.reason)
-            }
-            is InterceptorDecision.Redirect -> {
-                if (redirectHop + 1 > MAX_REDIRECTS) {
-                    val cost = SystemClock.elapsedRealtime() - startMs
-                    val reason = "redirect loop（>=${MAX_REDIRECTS + 1} 跳）: ${decision.targetPath}"
-                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${meta.path}, reason=$reason) costMs=$cost")
-                    return TRouterResult.Blocked(meta.path, reason)
-                }
-                // 本跳以重定向收尾：出口日志记 Redirect，再由目标 path 发起新跳（同 traceId）
-                val cost = SystemClock.elapsedRealtime() - startMs
-                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${decision.targetPath}) costMs=$cost")
-                return navigateInternal(decision.targetPath, bundle, traceId, redirectHop + 1)
-            }
-            InterceptorDecision.Continue -> {
-                // 全部放行 → 打开目标
-            }
-        }
-
-        val opened = try {
-            openTarget(meta, bundle, traceId)
+        // L4 拦截链：原子拦截器（RouteInterceptor）+ 洋葱包裹拦截器（WrappingInterceptor）统一执行，
+        // 链末端（或 wrapper 调 proceed()）打开目标。空列表 = 直接打开（零日志，行为与 V1.0 一致）。
+        // 打开/包装期间抛出的异常在链外统一按「打开失败」处理（Error 出口 + onLost），与 V1 语义一致。
+        val outcome = try {
+            runChain(meta, bundle, traceId)
         } catch (e: Throwable) {
             val cost = SystemClock.elapsedRealtime() - startMs
             log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Error(${e.javaClass.simpleName}: ${e.message}) costMs=$cost")
@@ -198,49 +195,303 @@ object TRouter {
             return TRouterResult.NotFound(path)
         }
 
-        val cost = SystemClock.elapsedRealtime() - startMs
-        // 埋点：navigate 出口（成功）
-        log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Success(meta=${meta.path}, kind=${meta.kind}) costMs=$cost")
-        return TRouterResult.Success(opened)
-    }
-
-    /** 拦截链执行：按 config.interceptors 顺序求值，任一非 Continue 短路；空列表零日志。 */
-    private fun runInterceptors(meta: RouteMeta, bundle: Bundle?, traceId: String): InterceptorDecision {
-        val interceptors = config.interceptors
-        if (interceptors.isEmpty()) return InterceptorDecision.Continue
-
-        val startMs = SystemClock.elapsedRealtime()
-        // 埋点：拦截器开始
-        log("[interceptor][start] traceId=$traceId path=${meta.path} interceptors=${interceptors.size}")
-
-        var finalDecision: InterceptorDecision = InterceptorDecision.Continue
-        try {
-            for ((index, interceptor) in interceptors.withIndex()) {
-                val decision = interceptor.intercept(meta, bundle)
-                // 埋点：单个拦截器求值（顺序/短路可据此断言）
-                log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${interceptor.javaClass.simpleName} decision=${describe(decision)}")
-                if (decision !== InterceptorDecision.Continue) {
-                    finalDecision = decision
-                    break
+        return when (outcome) {
+            is ChainOutcome.Opened -> {
+                val cost = SystemClock.elapsedRealtime() - startMs
+                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Success(meta=${outcome.meta.path}, kind=${outcome.meta.kind}) costMs=$cost")
+                TRouterResult.Success(outcome.meta)
+            }
+            is ChainOutcome.Blocked -> {
+                val cost = SystemClock.elapsedRealtime() - startMs
+                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${outcome.path}, reason=${outcome.reason}) costMs=$cost")
+                TRouterResult.Blocked(outcome.path, outcome.reason)
+            }
+            is ChainOutcome.Redirected -> {
+                if (redirectHop + 1 > MAX_REDIRECTS) {
+                    val cost = SystemClock.elapsedRealtime() - startMs
+                    val reason = "redirect loop（>=${MAX_REDIRECTS + 1} 跳）: ${outcome.targetPath}"
+                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${meta.path}, reason=$reason) costMs=$cost")
+                    TRouterResult.Blocked(meta.path, reason)
+                } else {
+                    // 本跳以重定向收尾：出口日志记 Redirect，再由目标 path 发起新跳（同 traceId）
+                    val cost = SystemClock.elapsedRealtime() - startMs
+                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${outcome.targetPath}) costMs=$cost")
+                    return navigateInternal(outcome.targetPath, bundle, traceId, redirectHop + 1)
                 }
             }
-        } catch (e: Throwable) {
-            // 拦截器自身故障 = 视为拦截：不打开目标、不触发 onLost、不崩溃
-            log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
-            finalDecision = InterceptorDecision.Block("interceptor error: ${e.javaClass.simpleName}: ${e.message}")
         }
-
-        val cost = SystemClock.elapsedRealtime() - startMs
-        // 埋点：拦截器结束
-        log("[interceptor][end] traceId=$traceId decision=${describe(finalDecision)} costMs=$cost")
-        return finalDecision
     }
 
-    private fun describe(decision: InterceptorDecision): String = when (decision) {
+    /**
+     * L4 链执行入口：取 config.interceptors 快照后递归执行；链末端打开目标。
+     * 单次 navigate 的执行是同步调用栈推进（无并发交错）；拦截器内部抛异常按
+     * 「该拦截器故障 = Blocked」处理（不打开、不触发 onLost、不崩溃）。
+     */
+    private fun runChain(meta: RouteMeta, bundle: Bundle?, traceId: String): ChainOutcome {
+        val members = combinedMembers(meta, traceId)
+            ?: return ChainOutcome.Blocked(meta.path, "目标拦截器未注册（@Interceptor names 需先 bindTargetInterceptor）")
+        if (members.isEmpty()) return openTargetOutcome(meta, bundle, traceId)
+
+        val startMs = SystemClock.elapsedRealtime()
+        log("[interceptor][start] traceId=$traceId path=${meta.path} interceptors=${members.size}")
+
+        val outcome = stepChain(members, 0, meta, bundle, traceId)
+
+        val cost = SystemClock.elapsedRealtime() - startMs
+        log("[interceptor][end] traceId=$traceId decision=${describeOutcome(outcome)} costMs=$cost")
+        return outcome
+    }
+
+    /**
+     * 组装一次导航的链快照 = 全局运行时拦截器(L2) + 目标级拦截器(L3，按 resolver 解析并按名取绑定)。
+     * @return null 表示解析失败/存在未注册的目标拦截器名（调用方转为 Blocked）。
+     */
+    private fun combinedMembers(meta: RouteMeta, traceId: String): List<RouteChainMember>? {
+        val global = interceptorSnapshot()
+        val resolver = config.targetInterceptorResolver ?: return global
+        val names = try {
+            resolver.invoke(meta.targetClassName)
+        } catch (e: Throwable) {
+            log("[interceptor][target][error] traceId=$traceId class=${meta.targetClassName} ${e.javaClass.simpleName}: ${e.message}")
+            return null
+        }
+        if (names.isEmpty()) return global
+
+        val result = ArrayList<RouteChainMember>(global.size + names.size)
+        result.addAll(global)
+        val missing = ArrayList<String>()
+        synchronized(targetBindingsLock) {
+            for (name in names) {
+                val member = targetBindings[name]
+                if (member == null) missing.add(name) else result.add(member)
+            }
+        }
+        if (missing.isNotEmpty()) {
+            log("[interceptor][target][missing] traceId=$traceId class=${meta.targetClassName} names=$missing")
+            return null
+        }
+        return result
+    }
+
+    /** 递归推进：index 到达成员末尾 = 打开目标；否则按成员类型执行（旧原子 or 洋葱包裹）。 */
+    private fun stepChain(
+        members: List<RouteChainMember>,
+        index: Int,
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+    ): ChainOutcome {
+        if (index >= members.size) return openTargetOutcome(meta, bundle, traceId)
+
+        val member = members[index]
+        return when (member) {
+            is RouteInterceptor -> {
+                val decision = try {
+                    member.intercept(meta, bundle)
+                } catch (e: Throwable) {
+                    log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+                    return ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
+                }
+                log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=${describeDecision(decision)}")
+                when (decision) {
+                    InterceptorDecision.Continue -> stepChain(members, index + 1, meta, bundle, traceId)
+                    is InterceptorDecision.Block -> ChainOutcome.Blocked(meta.path, decision.reason)
+                    is InterceptorDecision.Redirect -> ChainOutcome.Redirected(decision.targetPath)
+                }
+            }
+            is WrappingInterceptor -> {
+                log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=Wrap")
+                val nextIndex = index + 1
+                val singleShotChain = object : InterceptorChain {
+                    override val meta: RouteMeta = meta
+                    override val bundle: Bundle? = bundle
+                    private var consumed = false
+
+                    override fun proceed(): ChainOutcome {
+                        if (consumed) {
+                            // 同一条链二次放行 = 重复打开目标的隐患，直接抛错（由外层按拦截器故障处理）
+                            throw IllegalStateException("InterceptorChain.proceed 只能调用一次（防止重复打开目标）")
+                        }
+                        consumed = true
+                        return stepChain(members, nextIndex, meta, bundle, traceId)
+                    }
+                }
+                try {
+                    member.intercept(singleShotChain)
+                } catch (e: Throwable) {
+                    log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+                    ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
+                }
+            }
+            else -> ChainOutcome.Blocked(meta.path, "未知拦截器类型: ${member.javaClass.name}")
+        }
+    }
+
+    /** 链末端：真正打开目标（异常向上冒泡，由 navigateInternal 按打开失败处理）。 */
+    private fun openTargetOutcome(meta: RouteMeta, bundle: Bundle?, traceId: String): ChainOutcome {
+        val opened = openTarget(meta, bundle, traceId)
+        return ChainOutcome.Opened(opened)
+    }
+
+    private fun describeDecision(decision: InterceptorDecision): String = when (decision) {
         InterceptorDecision.Continue -> "Continue"
         is InterceptorDecision.Block -> "Block(reason=${decision.reason})"
         is InterceptorDecision.Redirect -> "Redirect(target=${decision.targetPath})"
     }
+
+    private fun describeOutcome(outcome: ChainOutcome): String = when (outcome) {
+        is ChainOutcome.Opened -> "Continue"
+        is ChainOutcome.Blocked -> "Block(reason=${outcome.reason})"
+        is ChainOutcome.Redirected -> "Redirect(target=${outcome.targetPath})"
+    }
+
+    // ------------------------------------------------------------------ 动态路由热更 / 持久化（F）
+
+    /**
+     * 导出当前**动态**路由（不含静态）——供持久化/热更下发。
+     */
+    fun exportDynamicRoutes(): List<RouteMeta> {
+        if (!initialized) return emptyList()
+        val paths = synchronized(dynamicPathsLock) { LinkedHashSet(dynamicPaths) }
+        return routeTable.snapshot().filter { it.path in paths }
+    }
+
+    /**
+     * 原子应用一批动态路由变更（热更）：removes 先移除、adds 再注册。
+     * 任一条 add 与「移除后仍存在的路径 / 本批 add」重复、或字段非法 → **整批失败**（不改动任何状态）。
+     * @return true 全量成功；false 校验失败或未初始化（此时无任何变更落地）。
+     */
+    fun applyRouteConfig(removes: List<String>, adds: List<RouteMeta>): Boolean {
+        if (!initialized) return false
+        synchronized(dynamicApplyLock) {
+            // 1) 预校验（在“移除后剩余表 + 本批 add”上模拟，不触碰真实表）
+            val planned = LinkedHashMap<String, RouteMeta>()
+            routeTable.snapshot().forEach { planned[it.path] = it }
+            val removeSet = LinkedHashSet(removes.filter { it.isNotBlank() })
+            removeSet.forEach { planned.remove(it) }
+            val seen = HashSet<String>()
+            for (add in adds) {
+                if (add.path.isBlank() || add.targetClassName.isBlank()) return false
+                if (planned.containsKey(add.path) || !seen.add(add.path)) return false
+                planned[add.path] = add
+            }
+            // 2) 落地
+            for (p in removeSet) {
+                if (routeTable.remove(p)) synchronized(dynamicPathsLock) { dynamicPaths.remove(p) }
+            }
+            for (add in adds) {
+                if (routeTable.register(add)) synchronized(dynamicPathsLock) { dynamicPaths.add(add.path) }
+            }
+            log("[route][apply] removes=${removeSet.size} adds=${adds.size}")
+            return true
+        }
+    }
+
+    /** 持久化：把当前动态路由写入 [file]（UTF-8）。@return 是否写成功。 */
+    fun saveDynamicRoutes(file: java.io.File): Boolean {
+        if (!initialized) return false
+        return try {
+            file.writeText(DynamicRouteCodec.encode(exportDynamicRoutes()))
+            log("[route][save] file=${file.name} routes=${exportDynamicRoutes().size}")
+            true
+        } catch (t: Throwable) {
+            false
+        }
+    }
+
+    /** 恢复：读取 [file]，用其内容**原子替换**当前动态路由集（先清当前动态、再导入）。 */
+    fun loadDynamicRoutes(file: java.io.File): Boolean {
+        if (!initialized) return false
+        val adds = try {
+            DynamicRouteCodec.decode(file.readText())
+        } catch (t: Throwable) {
+            return false
+        }
+        val removes = exportDynamicRoutes().map { it.path }
+        return applyRouteConfig(removes = removes, adds = adds)
+    }
+
+    // ------------------------------------------------------------------ 拦截器运行时增删（L2）
+
+    /**
+     * 运行时追加拦截器（L2）。立即对**下一次** navigate 生效（本次进行中的链不受影响）。
+     * 同一实例重复注册返回 false（拒绝重复），并输出重复日志。
+     * @return true = 已加入；false = 未初始化 或 重复实例。
+     */
+    fun addInterceptor(interceptor: RouteChainMember): Boolean {
+        if (!initialized) return false
+        val added = synchronized(liveInterceptorsLock) {
+            if (liveInterceptors.any { it === interceptor }) false else {
+                liveInterceptors.add(interceptor)
+                true
+            }
+        }
+        if (added) {
+            log("[interceptor][register] class=${interceptor.javaClass.simpleName} count=${interceptorSnapshot().size}")
+        } else {
+            log("[interceptor][register][duplicate] class=${interceptor.javaClass.simpleName}")
+        }
+        return added
+    }
+
+    /**
+     * 运行时移除拦截器（L2，按实例引用）。
+     * @return true = 确有移除；false = 未初始化 或 不存在。
+     */
+    fun removeInterceptor(interceptor: RouteChainMember): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(liveInterceptorsLock) {
+            val sizeBefore = liveInterceptors.size
+            liveInterceptors.removeAll { it === interceptor }
+            liveInterceptors.size < sizeBefore
+        }
+        if (removed) log("[interceptor][unregister] class=${interceptor.javaClass.simpleName} count=${interceptorSnapshot().size}")
+        return removed
+    }
+
+    /** 已注册拦截器只读快照（L2，可观测）。 */
+    fun registeredInterceptors(): List<RouteChainMember> {
+        if (!initialized) return emptyList()
+        return interceptorSnapshot()
+    }
+
+    /** 拦截器链使用的不可变快照（单线程锁内拷贝；navigate 各次互不干扰）。 */
+    private fun interceptorSnapshot(): List<RouteChainMember> =
+        synchronized(liveInterceptorsLock) { ArrayList(liveInterceptors) }
+
+    // ------------------------------------------------------------------ 目标级拦截器绑定（L3）
+
+    /**
+     * 把标识名绑定到拦截器实例（L3，与 @Interceptor(names) 配套）。
+     * @return true 绑定成功；false = 未初始化 或 该 name 已被占用（需先 unbind）。
+     */
+    fun bindTargetInterceptor(name: String, interceptor: RouteChainMember): Boolean {
+        if (!initialized) return false
+        val bound = synchronized(targetBindingsLock) {
+            if (targetBindings.containsKey(name)) false else {
+                targetBindings[name] = interceptor
+                true
+            }
+        }
+        if (bound) {
+            log("[interceptor][target][bind] name=$name class=${interceptor.javaClass.simpleName}")
+        } else {
+            log("[interceptor][target][bind][conflict] name=$name")
+        }
+        return bound
+    }
+
+    /** 解绑标识名（L3）。@return true = 确有解绑。 */
+    fun unbindTargetInterceptor(name: String): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(targetBindingsLock) { targetBindings.remove(name) }
+        if (removed != null) log("[interceptor][target][unbind] name=$name")
+        return removed != null
+    }
+
+    /** 已绑定目标拦截器只读快照（L3）。 */
+    fun registeredTargetInterceptors(): Map<String, RouteChainMember> =
+        synchronized(targetBindingsLock) { LinkedHashMap(targetBindings) }
 
     // ------------------------------------------------------------------ 动态路由与图谱（V5.0）
 
@@ -254,6 +505,7 @@ object TRouter {
         if (!initialized) return false
         val registered = routeTable.register(meta)
         if (registered) {
+            synchronized(dynamicPathsLock) { dynamicPaths.add(meta.path) }
             log("[route][register] path=${meta.path} group=${meta.group} kind=${meta.kind} target=${meta.targetClassName}")
         } else {
             val keep = routeTable.find(meta.path)
@@ -269,7 +521,10 @@ object TRouter {
     fun unregisterRoute(path: String): Boolean {
         if (!initialized) return false
         val removed = routeTable.remove(path)
-        if (removed) log("[route][unregister] path=$path")
+        if (removed) {
+            synchronized(dynamicPathsLock) { dynamicPaths.remove(path) }
+            log("[route][unregister] path=$path")
+        }
         return removed
     }
 
@@ -336,6 +591,8 @@ object TRouter {
     /** 测试底座专用：清空路由表与状态（core internal，同模块 debug 源码集可见）。 */
     internal fun resetForTest() {
         remoteRouter.disconnect()
+        synchronized(liveInterceptorsLock) { liveInterceptors.clear() }
+        synchronized(targetBindingsLock) { targetBindings.clear() }
         lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
         lifecycleApp = null
         activityListener = null
