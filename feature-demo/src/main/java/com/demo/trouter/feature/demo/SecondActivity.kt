@@ -22,13 +22,9 @@ class SecondActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun line(text: String, size: Float = 14f, color: Int = Color.rgb(102, 102, 102)) =
-            TextView(this).apply {
-                this.text = text
-                this.textSize = size
-                setTextColor(color)
-                setPadding(0, 4, 0, 4)
-            }
+        fun line(text: String, size: Float = 14f, color: Int = Ui.COLOR_TEXT_GRAY) =
+            Ui.lineText(this, text, size, color)
+
 
         val d = Ui.dp(this, 1)
         val root = LinearLayout(this).apply {
@@ -38,24 +34,17 @@ class SecondActivity : ComponentActivity() {
 
         // 运行时证据：本页是否由 TRouter 打开（S01 Success 的可见反馈）
         val path = intent.getStringExtra(RouteLaunch.EXTRA_PATH)
-        val runtime = if (path != null) {
-            "✓ 本次由 TRouter 打开 · path=$path · kind=${intent.getStringExtra(RouteLaunch.EXTRA_KIND)} · " +
-                "group=${intent.getStringExtra(RouteLaunch.EXTRA_GROUP)} · " +
-                "traceId=${intent.getStringExtra(RouteLaunch.EXTRA_TRACE_ID)} · " +
-                "解析 ${intent.getLongExtra(RouteLaunch.EXTRA_COST_MS, -1)}ms"
-        } else {
-            "（直连/系统启动：本页未带 TRouter 路由元数据）"
-        }
+        val runtime = RouteLaunch.describe(intent)
 
-        root.addView(line("场景 S01 · 基础页面跳转（Activity）", 15f, Color.rgb(0, 102, 204)))
+        root.addView(line("场景 S01 · 基础页面跳转（Activity）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /second · group=default · kind=ACTIVITY"))
         root.addView(line("期望：本页由 TRouter.navigate 打开，返回 Success(meta=/second)"))
-        root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         // 参数透传证据（单进程 Activity）：调用方 bundle 已作为 intent extras 送达
         val msg = intent.getStringExtra(DemoParams.KEY_MSG)
         if (msg != null) {
             val count = intent.getIntExtra(DemoParams.KEY_COUNT, -1)
-            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
+            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Ui.COLOR_EVIDENCE_GREEN))
         }
         root.addView(TextView(this).apply {
             text = "Second 页面"

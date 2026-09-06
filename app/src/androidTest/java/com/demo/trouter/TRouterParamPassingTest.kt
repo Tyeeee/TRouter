@@ -33,48 +33,32 @@ class TRouterParamPassingTest : BaseTRouterTest() {
 
     override fun provideRegistry(): GroupLoaderRegistry = DemoRouteRegistry
 
-    private fun visibleClick(id: Int) {
-        var visible = false
-        for (i in 1..14) {
-            try {
-                onView(withId(id)).check(matches(isDisplayed()))
-                visible = true
-                break
-            } catch (ignored: AssertionError) {
-                onView(withId(R.id.main_scroll)).perform(swipeUp())
-            }
-        }
-        assertTrue("滚动后行应可见 id=$id", visible)
-        onView(withId(id)).perform(click())
-    }
-
     private val expectedText = "参数透传 ✓ msg=来自主页的参数字符串 · count=42"
 
-    /** S19（单进程 Activity 参数）：点击带 bundle 的 S19 → Second 页展示收到的参数。 */
+    /** S19（单进程 Activity 参数 + 保留键防覆盖）：点击带 bundle 的 S19 → Second 页展示参数，且路由元数据未被 bundle 冒名。 */
     @Test
     fun activityParamsDeliveredToSecond() {
         ActivityScenario.launch(MainActivity::class.java).use {
-            visibleClick(R.id.scenario_s19)
+            DemoUiClicks.visibleClick(R.id.scenario_s19)
             onView(withText(expectedText)).check(matches(isDisplayed()))
+            onView(withText(containsString("· path=/second · kind="))).check(matches(isDisplayed())) // 保留键仍为真实 path
         }
     }
 
-    /** S20（单进程 Fragment 参数）：点击带 bundle 的 S20 → Fragment 页展示收到的参数。 */
+    /** S20（单进程 Fragment 参数 + 保留键防覆盖）：Fragment 页展示参数，路由元数据未被覆盖。 */
     @Test
     fun fragmentParamsDelivered() {
         ActivityScenario.launch(MainActivity::class.java).use {
-            visibleClick(R.id.scenario_s20)
+            DemoUiClicks.visibleClick(R.id.scenario_s20)
             onView(withText(expectedText)).check(matches(isDisplayed()))
+            onView(withText(containsString("· path=/fragment-demo · kind="))).check(matches(isDisplayed()))
         }
     }
 
-    /** S21（跨进程参数）：点击带 bundle 的 S21 → AIDL 送达 :remote，remote 页把参数写入跨进程共享 prefs 文件，host 侧直接读文件校验。 */
+    /** S21（跨进程参数）：点击带 bundle 的 S21 → AIDL 送达 :remote；服务回包携带 params echo，host 日志断言参数原样到达。 */
     @Test
     fun remoteParamsDeliveredCrossProcess() {
         val ctx = ApplicationProvider.getApplicationContext<android.content.Context>()
-        // 直接读写 shared_prefs 文件：SharedPreferences 实例按进程缓存，跨进程读文件最可靠
-        val echoFile = java.io.File(ctx.dataDir, "shared_prefs/${DemoParams.PREF_NAME}.xml")
-        echoFile.delete()
         reInit(
             TRouterConfig(
                 isDebug = true,
@@ -86,25 +70,23 @@ class TRouterParamPassingTest : BaseTRouterTest() {
         )
 
         ActivityScenario.launch(MainActivity::class.java).use {
-            visibleClick(R.id.scenario_s21)
+            DemoUiClicks.visibleClick(R.id.scenario_s21)
 
-            fun readEcho(): String? = runCatching { echoFile.readText() }.getOrNull()
-            fun echoHasPath(): Boolean = readEcho()?.contains("\"${DemoParams.PREF_LAST_PATH}\">${RouterContract.PATH_REMOTE_SECOND}") == true
-
+            // 等待携带 params echo 的 recv 日志（跨进程冷启动 <20s）
             val deadline = System.currentTimeMillis() + 20_000
-            while (System.currentTimeMillis() < deadline && !echoHasPath()) {
+            while (System.currentTimeMillis() < deadline &&
+                logs.lines.none { it.contains("[remote][recv]") && it.contains("params=[") }
+            ) {
                 Thread.sleep(200)
             }
 
-            val xml = readEcho()
-            assertTrue("remote 页应已写入参数回读文件（当前: $xml）", xml != null)
-            assertTrue("path 应正确", xml!!.contains("\"${DemoParams.PREF_LAST_PATH}\">${RouterContract.PATH_REMOTE_SECOND}"))
-            assertTrue("msg 应正确", xml.contains("\"${DemoParams.PREF_LAST_MSG}\">来自主页的参数字符串"))
-            assertTrue("count 应正确", xml.contains("\"${DemoParams.PREF_LAST_COUNT}\" value=\"42\""))
-
             val join = logs.lines.joinToString("\n")
-            assertTrue("应有跨进程回包:\n$join", join.contains("[remote][recv]"))
-            echoFile.delete()
+            assertTrue("recv 应携带 params echo:\n$join",
+                join.contains("[remote][recv]") && join.contains("params=["))
+            assertTrue("msg 应原样到达 :remote:\n$join", join.contains("demo.param.msg=来自主页的参数字符串"))
+            assertTrue("count 应原样到达 :remote:\n$join", join.contains("demo.param.count=42"))
+            assertTrue("保留键同名用户参数也应原样跨进程（传输层不改写）:\n$join",
+                join.contains("com.trouter.core.extra.PATH=HACKED-BUNDLE-OVERRIDE"))
         }
     }
 }

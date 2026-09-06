@@ -40,8 +40,10 @@ class FragmentContainerActivity : FragmentActivity() {
             @Suppress("UNCHECKED_CAST")
             val clazz = Class.forName(className) as Class<out Fragment>
             clazz.getDeclaredConstructor().newInstance().apply {
-                // 导航 bundle 透传为 Fragment 参数（含内部 class extra，无害）
-                arguments = (intent.extras?.clone()) as? Bundle ?: Bundle()
+                // 导航 bundle 透传为 Fragment 参数；剥离容器内部键，避免泄漏到业务参数
+                arguments = (intent.extras?.clone() as? Bundle ?: Bundle()).apply {
+                    remove(EXTRA_FRAGMENT_CLASS)
+                }
             }
         } catch (e: Exception) {
             finish()

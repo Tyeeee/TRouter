@@ -168,7 +168,8 @@ class RemoteRouter {
             return
         }
         p.log(
-            "[remote][recv] traceId=${reply.remoteTraceId} origin=${p.traceId} result=${RemoteReplyCodec.describe(reply)} costMs=$costMs",
+            "[remote][recv] traceId=${reply.remoteTraceId} origin=${p.traceId} result=${RemoteReplyCodec.describe(reply)} costMs=$costMs" +
+                if (reply.paramEcho.isNotEmpty()) " params=[${reply.paramEcho.joinToString("; ")}]" else "",
         )
         postMain { p.onResult(RemoteReplyCodec.toLocalResult(reply)) }
     }

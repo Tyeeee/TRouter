@@ -24,9 +24,34 @@ class RemoteRouterService : Service() {
             val remoteTraceId = UUID.randomUUID().toString().replace("-", "").take(8)
             val result = TRouter.navigate(path ?: "", bundle)
             val costMs = SystemClock.elapsedRealtime() - startMs
-            return RemoteReplyCodec.encode(result, remoteTraceId, costMs)
+            // 传输层参数回显：把收到的 bundle 基础类型摘要带回 host，供“参数确实跨进程送达”的自动化校验
+            return RemoteReplyCodec.encode(result, remoteTraceId, costMs, paramEcho(bundle))
         }
     }
 
     override fun onBind(intent: Intent?): IBinder = binder
+
+    private companion object {
+        /** bundle 基础类型有序摘要（String/数值/布尔；单个值截断，防止回包被用户长文本撑爆）。 */
+        private const val MAX_ECHO_ENTRIES = 100
+        private const val MAX_VALUE_LEN = 200
+
+        private fun paramEcho(bundle: Bundle?): List<String> {
+            if (bundle == null) return emptyList()
+            val out = ArrayList<String>()
+            val keys = bundle.keySet()?.sorted() ?: emptyList()
+            for (key in keys) {
+                if (out.size >= MAX_ECHO_ENTRIES) break
+                val value = bundle.get(key)
+                val text = when (value) {
+                    is String -> value
+                    is CharSequence -> value.toString()
+                    is Int, is Long, is Boolean, is Double, is Float -> value.toString()
+                    else -> null
+                } ?: continue
+                out.add("$key=${text.take(MAX_VALUE_LEN)}")
+            }
+            return out
+        }
+    }
 }

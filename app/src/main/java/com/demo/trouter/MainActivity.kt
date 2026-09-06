@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.trouter.annotation.Route
 import com.trouter.core.api.DemoParams
+import com.trouter.core.api.RouteLaunch
 import com.trouter.core.api.RouteMeta
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteTargetKind
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
             root.addView(TextView(this).apply {
                 text = title
                 textSize = 14f
-                setTextColor(Color.rgb(0, 102, 204))
+                setTextColor(Ui.COLOR_TITLE_BLUE)
                 setPadding(0, 24, 0, 8)
             }, contentWidth)
         }
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 addView(TextView(this@MainActivity).apply {
                     text = subtitle
                     textSize = 12f
-                    setTextColor(Color.rgb(102, 102, 102))
+                    setTextColor(Ui.COLOR_TEXT_GRAY)
                 })
             }
             val chevron = TextView(this).apply {
@@ -94,7 +95,7 @@ class MainActivity : ComponentActivity() {
             root.addView(row, contentWidth)
         }
 
-        fun infoLine(text: String, color: Int = Color.rgb(102, 102, 102)) {
+        fun infoLine(text: String, color: Int = Ui.COLOR_TEXT_GRAY) {
             root.addView(TextView(this).apply {
                 this.text = text
                 textSize = 12f
@@ -231,7 +232,7 @@ class MainActivity : ComponentActivity() {
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
         if (routes.isEmpty()) {
-            infoLine("（未注册任何路由——请检查 TRouter.init/install 是否执行）", Color.rgb(200, 60, 60))
+            infoLine("（未注册任何路由——请检查 TRouter.init/install 是否执行）", Ui.COLOR_ERROR_RED)
         } else {
             routes.forEach { meta ->
                 infoLine(
@@ -243,7 +244,7 @@ class MainActivity : ComponentActivity() {
 
         graphText = TextView(this).apply {
             textSize = 12f
-            setTextColor(Color.rgb(102, 102, 102))
+            setTextColor(Ui.COLOR_TEXT_GRAY)
             setPadding(0, 8, 0, 4)
         }
         root.addView(graphText, contentWidth)
@@ -266,10 +267,11 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
-    /** S19–S21 参数透传：构造一组确定性的演示参数（msg/count）。 */
+    /** S19–S21 参数透传：一组确定性参数 + 保留键覆盖探针（RouteLaunch.EXTRA_PATH 冒名"成功"即失败）。 */
     private fun demoParamsBundle(): Bundle = Bundle().apply {
         putString(DemoParams.KEY_MSG, "来自主页的参数字符串")
         putInt(DemoParams.KEY_COUNT, 42)
+        putString(RouteLaunch.EXTRA_PATH, "HACKED-BUNDLE-OVERRIDE") // 探针：路由元数据不得被用户参数覆盖
     }
 
     /** S13（V5.0）：切换注册/注销动态路由（目标页未标 @Route），并刷新图谱摘要。 */
@@ -282,7 +284,7 @@ class MainActivity : ComponentActivity() {
             TRouter.registerRoute(
                 RouteMeta(
                     path = path,
-                    group = "dynamic",
+                    group = RouterContract.GROUP_DYNAMIC,
                     targetClassName = DynamicDemoActivity::class.java.name,
                     kind = RouteTargetKind.ACTIVITY,
                 ),

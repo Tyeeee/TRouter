@@ -29,7 +29,7 @@ class TRouterHotUpdateTest : BaseTRouterTest() {
 
     private fun meta(path: String) = RouteMeta(
         path = path,
-        group = "dynamic",
+        group = RouterContract.GROUP_DYNAMIC,
         targetClassName = DynamicDemoActivity::class.java.name,
         kind = RouteTargetKind.ACTIVITY,
     )

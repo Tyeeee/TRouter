@@ -15,6 +15,18 @@ package com.trouter.core.api
  */
 object RouterContract {
 
+    /** 默认分组名（与 @Route.DEFAULT_GROUP 语义对齐的单一来源）。 */
+    const val GROUP_DEFAULT: String = "default"
+
+    /** 分组路由演示：secondary group（About 页）。 */
+    const val GROUP_SECONDARY: String = "secondary"
+
+    /** Mock 拦截器演示分组（Mock 页）。 */
+    const val GROUP_MOCK: String = "mock"
+
+    /** 动态路由演示分组（运行时 registerRoute 使用）。 */
+    const val GROUP_DYNAMIC: String = "dynamic"
+
     /** 主页（Launcher，同时注册为可路由页面） */
     const val PATH_MAIN: String = "/main"
 

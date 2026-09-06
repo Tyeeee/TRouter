@@ -1,6 +1,5 @@
 package com.demo.trouter
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Process
@@ -33,13 +32,9 @@ class RemoteSecondActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun line(text: String, size: Float = 14f, color: Int = Color.rgb(102, 102, 102)) =
-            TextView(this).apply {
-                this.text = text
-                this.textSize = size
-                setTextColor(color)
-                setPadding(0, 4, 0, 4)
-            }
+        fun line(text: String, size: Float = 14f, color: Int = Ui.COLOR_TEXT_GRAY) =
+            Ui.lineText(this, text, size, color)
+
 
         val d = Ui.dp(this, 1)
         val root = LinearLayout(this).apply {
@@ -48,32 +43,17 @@ class RemoteSecondActivity : ComponentActivity() {
         }
 
         val path = intent.getStringExtra(RouteLaunch.EXTRA_PATH)
-        val runtime = if (path != null) {
-            "✓ 本次由 remote 进程 TRouter 打开 · path=$path · kind=${intent.getStringExtra(RouteLaunch.EXTRA_KIND)} · " +
-                "traceId=${intent.getStringExtra(RouteLaunch.EXTRA_TRACE_ID)}"
-        } else {
-            "（直连/系统启动：本页未带 TRouter 路由元数据）"
-        }
+        val runtime = RouteLaunch.describe(intent)
 
-        root.addView(line("场景 S11 · 跨进程导航（AIDL → :remote 进程）", 15f, Color.rgb(0, 102, 204)))
+        root.addView(line("场景 S11 · 跨进程导航（AIDL → :remote 进程）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /remote-second · group=default · kind=ACTIVITY · @CrossProcess"))
-        root.addView(line("本页运行在独立进程 :remote · pid=${Process.myPid()}（与 host 进程 pid 不同即证明跨进程）", 14f, Color.rgb(128, 0, 128)))
-        root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        root.addView(line("本页运行在独立进程 :remote · pid=${Process.myPid()}（与 host 进程 pid 不同即证明跨进程）", 14f, Ui.COLOR_REMOTE_PURPLE))
+        root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         // 参数透传证据（跨进程）：调用方 bundle 经 AIDL 到达 :remote 进程的 intent extras
         val msg = intent.getStringExtra(DemoParams.KEY_MSG)
         if (msg != null) {
             val count = intent.getIntExtra(DemoParams.KEY_COUNT, -1)
-            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
-        }
-        // 跨进程参数回读（host 测试侧 SharedPreferences 校验用，同文件跨进程共享；MULTI_PROCESS 强制磁盘重载）
-        runCatching {
-            @Suppress("DEPRECATION")
-            applicationContext.getSharedPreferences(DemoParams.PREF_NAME, Context.MODE_MULTI_PROCESS)
-                .edit()
-                .putString(DemoParams.PREF_LAST_PATH, path ?: "")
-                .putString(DemoParams.PREF_LAST_MSG, msg ?: "-")
-                .putInt(DemoParams.PREF_LAST_COUNT, intent.getIntExtra(DemoParams.KEY_COUNT, -1))
-                .commit()
+            root.addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Ui.COLOR_EVIDENCE_GREEN))
         }
         root.addView(TextView(this).apply {
             text = "Remote Second 页面（第二进程）"

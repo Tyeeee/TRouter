@@ -1,5 +1,6 @@
 package com.trouter.processor
 
+import com.trouter.annotation.Route
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -224,7 +225,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         val pathArg = annotation.arguments.firstOrNull { it.name?.asString() == "path" }
         val groupArg = annotation.arguments.firstOrNull { it.name?.asString() == "group" }
         val group = (groupArg?.value as? String)?.takeIf { it.isNotBlank() }
-            ?: RouteDefaultGroup
+            ?: Route.DEFAULT_GROUP
 
         val pathEval = evaluatePath(decl, pathArg)
 
@@ -496,7 +497,6 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         const val CROSS_SHORT_NAME: String = "CrossProcess"
         const val ANNOTATION_TARGET_INTERCEPTOR: String = "com.trouter.annotation.Interceptor"
         const val INTERCEPTOR_SHORT_NAME: String = "Interceptor"
-        const val RouteDefaultGroup: String = "default"
         const val UNRESOLVED_CONSTANT: String = "__UNRESOLVED_CONSTANT__"
         val LITERAL_PATH_REGEX = Regex("""path\s*=\s*"[^"]*"""")
     }

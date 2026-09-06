@@ -22,13 +22,9 @@ class DynamicDemoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun line(text: String, size: Float = 14f, color: Int = Color.rgb(102, 102, 102)) =
-            TextView(this).apply {
-                this.text = text
-                this.textSize = size
-                setTextColor(color)
-                setPadding(0, 4, 0, 4)
-            }
+        fun line(text: String, size: Float = 14f, color: Int = Ui.COLOR_TEXT_GRAY) =
+            Ui.lineText(this, text, size, color)
+
 
         val d = Ui.dp(this, 1)
         val root = LinearLayout(this).apply {
@@ -37,17 +33,12 @@ class DynamicDemoActivity : ComponentActivity() {
         }
 
         val path = intent.getStringExtra(RouteLaunch.EXTRA_PATH)
-        val runtime = if (path != null) {
-            "✓ 本次由 TRouter 打开 · path=$path · group=${intent.getStringExtra(RouteLaunch.EXTRA_GROUP)} · " +
-                "kind=${intent.getStringExtra(RouteLaunch.EXTRA_KIND)} · traceId=${intent.getStringExtra(RouteLaunch.EXTRA_TRACE_ID)}"
-        } else {
-            "（直连/系统启动：本页未带 TRouter 路由元数据）"
-        }
+        val runtime = RouteLaunch.describe(intent)
 
-        root.addView(line("场景 S13 · 动态路由目标页（运行时注册）", 15f, Color.rgb(0, 102, 204)))
+        root.addView(line("场景 S13 · 动态路由目标页（运行时注册）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /dynamic-demo · group=dynamic · kind=ACTIVITY · 本页未标注 @Route"))
         root.addView(line("期望：由 TRouter.registerRoute 注册后，navigate 打开本页；注销后回到 NotFound"))
-        root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         root.addView(TextView(this).apply {
             text = "DynamicDemo 页面"
             textSize = 20f

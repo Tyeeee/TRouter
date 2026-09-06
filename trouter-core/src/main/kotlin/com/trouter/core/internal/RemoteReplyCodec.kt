@@ -27,14 +27,17 @@ object RemoteReplyCodec {
         val reason: String,
         val remoteTraceId: String,
         val costMs: Long,
+        /** 传输层参数回显（host 校验「bundle 确实跨进程送达」用，见 RemoteRouterService）。 */
+        val paramEcho: List<String>,
     )
 
     /**
      * 编码远端 TRouterResult（remote 进程侧调用）。
+     * [paramEcho] 为调用方 bundle 的传输层回显（String/数值等基础类型的有序摘要，非完整 bundle）。
      * 注意：远端 NotInitialized 会被映射为 Blocked("remote 未初始化")，
      * 保证 host 侧不会收到语义错位的 NotInitialized。
      */
-    fun encode(result: TRouterResult, remoteTraceId: String, costMs: Long): String {
+    fun encode(result: TRouterResult, remoteTraceId: String, costMs: Long, paramEcho: List<String> = emptyList()): String {
         val kind: String
         val path: String
         val group: String
@@ -75,13 +78,16 @@ object RemoteReplyCodec {
                 reason = "remote 未初始化（远端 TRouter 未 init）"
             }
         }
-        return listOf(kind, path, group, className, kindName, reason, remoteTraceId, costMs.toString())
-            .joinToString(SEP)
+        return listOf(
+            kind, path, group, className, kindName, reason, remoteTraceId, costMs.toString(),
+            paramEcho.joinToString("\u0002"),
+        ).joinToString(SEP)
     }
 
     fun parse(raw: String): Reply? {
         val parts = raw.split(SEP)
-        if (parts.size < 8) return null
+        if (parts.size < 9) return null
+        val echoRaw = parts.getOrElse(8) { "" }
         return Reply(
             kind = parts[0],
             path = parts[1],
@@ -91,6 +97,7 @@ object RemoteReplyCodec {
             reason = parts[5],
             remoteTraceId = parts[6],
             costMs = parts[7].toLongOrNull() ?: -1L,
+            paramEcho = if (echoRaw.isEmpty()) emptyList() else echoRaw.split("\u0002"),
         )
     }
 

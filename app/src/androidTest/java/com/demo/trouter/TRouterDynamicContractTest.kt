@@ -30,7 +30,7 @@ class TRouterDynamicContractTest : BaseTRouterTest() {
 
     private fun dynamicMeta(otherClass: String = dynamicClass) = RouteMeta(
         path = RouterContract.PATH_DYNAMIC_DEMO,
-        group = "dynamic",
+        group = RouterContract.GROUP_DYNAMIC,
         targetClassName = otherClass,
         kind = RouteTargetKind.ACTIVITY,
     )
@@ -70,7 +70,7 @@ class TRouterDynamicContractTest : BaseTRouterTest() {
         val clash = TRouter.registerRoute(
             RouteMeta(
                 path = RouterContract.PATH_DYNAMIC_DEMO,
-                group = "dynamic",
+                group = RouterContract.GROUP_DYNAMIC,
                 targetClassName = "com.demo.trouter.AnotherClashTarget",
                 kind = RouteTargetKind.ACTIVITY,
             ),

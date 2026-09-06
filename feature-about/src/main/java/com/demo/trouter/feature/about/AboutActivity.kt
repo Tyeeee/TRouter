@@ -15,19 +15,15 @@ import com.trouter.core.api.Ui
  * S03 目标页（@Route /about · secondary · ACTIVITY）。
  * 验证非默认分组的路由声明/加载器生成/导航；横幅含运行时证据。
  */
-@Route(path = RouterContract.PATH_ABOUT, group = "secondary")
+@Route(path = RouterContract.PATH_ABOUT, group = RouterContract.GROUP_SECONDARY)
 class AboutActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun line(text: String, size: Float = 14f, color: Int = Color.rgb(102, 102, 102)) =
-            TextView(this).apply {
-                this.text = text
-                this.textSize = size
-                setTextColor(color)
-                setPadding(0, 4, 0, 4)
-            }
+        fun line(text: String, size: Float = 14f, color: Int = Ui.COLOR_TEXT_GRAY) =
+            Ui.lineText(this, text, size, color)
+
 
         val d = Ui.dp(this, 1)
         val root = LinearLayout(this).apply {
@@ -36,19 +32,12 @@ class AboutActivity : ComponentActivity() {
         }
 
         val path = intent.getStringExtra(RouteLaunch.EXTRA_PATH)
-        val runtime = if (path != null) {
-            "✓ 本次由 TRouter 打开 · path=$path · kind=${intent.getStringExtra(RouteLaunch.EXTRA_KIND)} · " +
-                "group=${intent.getStringExtra(RouteLaunch.EXTRA_GROUP)} · " +
-                "traceId=${intent.getStringExtra(RouteLaunch.EXTRA_TRACE_ID)} · " +
-                "解析 ${intent.getLongExtra(RouteLaunch.EXTRA_COST_MS, -1)}ms"
-        } else {
-            "（直连/系统启动：本页未带 TRouter 路由元数据）"
-        }
+        val runtime = RouteLaunch.describe(intent)
 
-        root.addView(line("场景 S03 · 分组路由（secondary group）", 15f, Color.rgb(0, 102, 204)))
+        root.addView(line("场景 S03 · 分组路由（secondary group）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /about · group=secondary · kind=ACTIVITY"))
         root.addView(line("期望：页面展示；日志出现 [GroupLoader][load][start/end] group=secondary"))
-        root.addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+        root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         root.addView(TextView(this).apply {
             text = "About 页面（secondary group）"
             textSize = 20f

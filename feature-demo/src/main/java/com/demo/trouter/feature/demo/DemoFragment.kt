@@ -27,39 +27,28 @@ class DemoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fun line(text: String, size: Float = 14f, color: Int = Color.rgb(102, 102, 102)) =
-            TextView(requireContext()).apply {
-                this.text = text
-                this.textSize = size
-                setTextColor(color)
-                setPadding(0, 4, 0, 4)
-            }
+        fun line(text: String, size: Float = 14f, color: Int = Ui.COLOR_TEXT_GRAY) =
+            Ui.lineText(requireContext(), text, size, color)
+
 
         val args = arguments
         val path = args?.getString(RouteLaunch.EXTRA_PATH)
-        val runtime = if (path != null) {
-            "✓ 本次由 TRouter 打开 · path=$path · kind=${args.getString(RouteLaunch.EXTRA_KIND)} · " +
-                "group=${args.getString(RouteLaunch.EXTRA_GROUP)} · " +
-                "traceId=${args.getString(RouteLaunch.EXTRA_TRACE_ID)} · " +
-                "解析 ${args.getLong(RouteLaunch.EXTRA_COST_MS, -1)}ms"
-        } else {
-            "（直连/系统启动：本页未带 TRouter 路由元数据）"
-        }
+        val runtime = RouteLaunch.describe(args)
 
         val d = Ui.dp(requireActivity(), 1)
         val view = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(24 * d, 12 * d, 24 * d, 16 * d)
-            addView(line("场景 S02 · Fragment 目标承载", 15f, Color.rgb(0, 102, 204)))
+            addView(line("场景 S02 · Fragment 目标承载", 15f, Ui.COLOR_TITLE_BLUE))
             addView(line("路径 /fragment-demo · group=default · kind=FRAGMENT"))
             addView(line("承载：core 内置 FragmentContainerActivity（系统栏已避让）"))
             addView(line("期望：navigate 返回 Success(kind=FRAGMENT)"))
-            addView(line(runtime, 14f, Color.rgb(27, 127, 59)))
+            addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
             // 参数透传证据（Fragment）：调用方 bundle 经容器克隆为 arguments 送达
             val msg = args?.getString(DemoParams.KEY_MSG)
             if (msg != null) {
                 val count = args?.getInt(DemoParams.KEY_COUNT, -1) ?: -1
-                addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Color.rgb(27, 127, 59)))
+                addView(line("参数透传 ✓ msg=$msg · count=$count", 14f, Ui.COLOR_EVIDENCE_GREEN))
             }
             addView(TextView(requireContext()).apply {
                 text = "Fragment 演示页面"

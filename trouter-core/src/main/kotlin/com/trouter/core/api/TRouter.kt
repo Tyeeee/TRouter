@@ -617,14 +617,18 @@ object TRouter {
             RouteTargetKind.FRAGMENT ->
                 FragmentContainerActivity.intent(ctx, meta.targetClassName)
         }
-        // 携带路由元数据：目标页据此渲染「由 TRouter 成功打开」的运行时证据
+        // 顺序（审核修复）：先并入调用方 bundle，再写路由元数据 —— 保留键(RouteLaunch.*)永远不被用户参数覆盖；
+        // FRAGMENT 目标的容器内部键(EXTRA_FRAGMENT_CLASS)在用户 bundle 之后再次断言，防冒充。
+        if (bundle != null) intent.putExtras(bundle)
         intent
             .putExtra(RouteLaunch.EXTRA_PATH, meta.path)
             .putExtra(RouteLaunch.EXTRA_GROUP, meta.group)
             .putExtra(RouteLaunch.EXTRA_KIND, meta.kind.name)
             .putExtra(RouteLaunch.EXTRA_TRACE_ID, traceId)
             .putExtra(RouteLaunch.EXTRA_COST_MS, SystemClock.elapsedRealtime() - startMs)
-        if (bundle != null) intent.putExtras(bundle)
+        if (meta.kind == RouteTargetKind.FRAGMENT) {
+            intent.putExtra(FragmentContainerActivity.EXTRA_FRAGMENT_CLASS, meta.targetClassName)
+        }
 
         // 优先在当前（前台）Activity 的任务内打开 → 返回键/返回栈语义正确；
         // 无前台 UI（如通知/无界面场景）时才回退 applicationContext + NEW_TASK。
