@@ -3,7 +3,15 @@ package com.trouter.core.api
 import android.os.Bundle
 
 /** 拦截器注册成员标记：config.interceptors 里只允许 [RouteInterceptor]（V2 原子）与 [WrappingInterceptor]（L4 洋葱）。 */
-interface RouteChainMember
+interface RouteChainMember {
+    /**
+     * 全局拦截优先级（G11，与 ARouter 对齐）。
+     * 越大越先执行；默认 0 = 保持注册/声明顺序（稳定排序）。
+     * 语义：仅在同批全局链内按优先级排序，目标级链仍按 @Interceptor(names) 顺序排在全局后。
+     */
+    val priority: Int
+        get() = 0
+}
 
 /**
  * 拦截器决策（V2.0）：拦截链中单个拦截器的求值结果，禁止 null。

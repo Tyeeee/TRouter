@@ -45,6 +45,9 @@ object TRouter {
     private var config: TRouterConfig = TRouterConfig()
     private val routeTable = RouteTable()
 
+    // G8：目标 Class 按进程缓存（首次 navigate 时加载一次，后续命中缓存）
+    private val classCache = java.util.concurrent.ConcurrentHashMap<String, Class<*>>()
+
     // L2：运行时拦截器注册表。读写均在锁内做「快照或原子替换」，navigate 每次取不可变快照：
     // 增删绝不打断进行中的链，只影响下一次 navigate（吸取「顺序/时机依赖」缺陷教训）。
     private val liveInterceptorsLock = Any()
@@ -247,7 +250,8 @@ object TRouter {
      * @return null 表示解析失败/存在未注册的目标拦截器名（调用方转为 Blocked）。
      */
     private fun combinedMembers(meta: RouteMeta, traceId: String): List<RouteChainMember>? {
-        val global = interceptorSnapshot()
+        // G11：全局链按 priority 降序稳定排序（默认 0 = 保持声明顺序）
+        val global = interceptorSnapshot().sortedByDescending { it.priority }
         val resolver = config.targetInterceptorResolver ?: return global
         val names = try {
             resolver.invoke(meta.targetClassName)
@@ -331,6 +335,30 @@ object TRouter {
     private fun openTargetOutcome(meta: RouteMeta, bundle: Bundle?, traceId: String): ChainOutcome {
         val opened = openTarget(meta, bundle, traceId)
         return ChainOutcome.Opened(opened)
+    }
+
+    /** G8：目标类加载（带进程内缓存）；失败抛 ClassNotFoundException（由调用方按打开失败处理）。 */
+    @Suppress("UNCHECKED_CAST")
+    private fun loadTargetClass(className: String): Class<*> =
+        classCache.computeIfAbsent(className) { Class.forName(it) }
+
+    /**
+     * G7：路由目标合法性校验（可观测/测试/构建辅助）。
+     * 逐条尝试加载已注册路由的目标类，返回**无法加载**的路由清单（不含那些成功的）。
+     * 静态路由目标类由 KSP 保证存在；本方法主要用于捕获**动态注册传错类名**这类迟发现问题。
+     */
+    fun checkRouteTargets(): List<RouteMeta> {
+        if (!initialized) return emptyList()
+        val missing = ArrayList<RouteMeta>()
+        for (meta in routeTable.snapshot()) {
+            try {
+                loadTargetClass(meta.targetClassName)
+            } catch (t: Throwable) {
+                missing.add(meta)
+                log("[route][verify][missing] path=${meta.path} target=${meta.targetClassName} error=${t.javaClass.simpleName}")
+            }
+        }
+        return missing
     }
 
     private fun describeDecision(decision: InterceptorDecision): String = when (decision) {
@@ -598,6 +626,7 @@ object TRouter {
         activityListener = null
         resumedActivity = null
         routeTable.clear()
+        classCache.clear()
         initialized = false
         appContext = null
         config = TRouterConfig()
@@ -609,7 +638,7 @@ object TRouter {
         val ctx = requireNotNull(appContext) { "TRouter.init(context, config) 必须先行调用" }
         // 页面类在此刻才真正加载（惰性：init/install 不加载页面类）
         val startMs = SystemClock.elapsedRealtime()
-        Class.forName(meta.targetClassName)
+        loadTargetClass(meta.targetClassName)
 
         val intent = when (meta.kind) {
             RouteTargetKind.ACTIVITY ->

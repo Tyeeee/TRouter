@@ -24,11 +24,11 @@
 | G4 | **参数自动注入(@Autowired)/对象传参**缺失：需手工读 extras；对象只支持同 App Parcelable | ARouter @Autowired；TheRouter 任意 object | 中 | P1：提供“收参模板 + Serializable/Parcelable 便捷 + 自定义序列化扩展点” |
 | G5 | **path 匹配粒度**：仅精确字符串；无正则、无“多 path↔一页” | TheRouter/WMRouter | 中 | P2（多端统一需要时再做） |
 | G6 | **远端路由表下发/H5 降级**只有本地底座（registerRoute/apply/save），无 assets 导出 json 与下发覆盖 | TheRouter 完整链路 | 中 | P2：补 RouteMap JSON 导出 + 导入覆盖(复用 apply)即可得大部分能力 |
-| G7 | **路由合法性无编译期检查**：目标类只在 navigate 时 Class.forName 才失败 | TheRouter 支持 warn/error 校验目标存在 | 中 | **P0（低成本高价值）**：构建期扫描 @Route 目标类是否存在 |
-| G8 | **每次 navigate 都 Class.forName**，无按进程缓存 | 通用工程实践 | 低 | **P0**：Class 按类名缓存（demo/测试可见耗时下降） |
+| G7 | 路由目标合法性检查 | TheRouter 校验 | — | ✅ 已实施（批1）：`TRouter.checkRouteTargets()` 检出动态注册错类名等迟发现问题并告警） |
+| G8 | 目标类重复加载 | — | — | ✅ 已实施（批1）：ConcurrentHashMap 按进程缓存（首次加载一次） |
 | G9 | 模块初始化编排（自动/懒加载/依赖图循环检测）缺失 | TheRouter FlowTaskExecutor | 低（scope 外） | 不入本期 |
 | G10 | 无 Action/全局回调事件系统 | TheRouter ActionManager | 低 | 不入本期 |
-| G11 | 拦截器缺“全局优先级数值/运行时可调权” | ARouter priority | 低 | 可延后：现有顺序语义 + L2 动态增删已覆盖主要诉求 |
+| G11 | 拦截器优先级 | ARouter priority | — | ✅ 已实施（批1）：`RouteChainMember.priority`（默认 0 保持顺序，稳定降序），与 L2/L4 并存 |
 
 ## C. 结论与建议路线
 
