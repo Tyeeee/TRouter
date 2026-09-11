@@ -288,6 +288,14 @@ class MainActivity : ComponentActivity() {
             sendPojoToThirdProcess()
         }
 
+        scenarioRow(
+            R.id.scenario_s29,
+            "S29 类型化远程接口（@RemoteApi · 动态代理）",
+            "连续三次类型化调用 count / summarize / report（含枚举、List、POJO 结果）· 期望：结果逐项正确且带远端 pid",
+        ) {
+            callTypedRemoteApi()
+        }
+
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
@@ -425,6 +433,28 @@ class MainActivity : ComponentActivity() {
         TRouter.callRemoteService("pojoEcho", bundle, TRouterDemoApp.REMOTE_TARGET_SECOND) { reply ->
             statusText.text = "S28 本地往返相等=$localRoundTrip ｜ 跨进程 $reply"
             Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** S29（批次 C）：类型化远程接口——调用点看不到 Bundle/字符串协议，只有接口方法。 */
+    private fun callTypedRemoteApi() {
+        val api = TRouter.remoteApi(
+            DemoStatsApi::class.java,
+            TRouterDemoApp.REMOTE_TARGET_SECOND,
+        ) { reason ->
+            statusText.text = "S29 类型化调用失败: $reason"
+            Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+        }
+        statusText.text = "S29 类型化调用中（count → summarize → report）…"
+
+        api.count("abcd") { n ->
+            api.summarize("s29", DemoLevel.HIGH, listOf(1, 2, 3)) { summary ->
+                api.report("X") { report ->
+                    statusText.text = "S29 ✓ count=$n ｜ $summary ｜ report=${report.id}/count=${report.count}/" +
+                        "tags=${report.tags.joinToString("|")}/inner=${report.inner?.name}"
+                    Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 

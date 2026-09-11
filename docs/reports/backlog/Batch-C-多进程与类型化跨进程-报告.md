@@ -109,11 +109,50 @@
 
 （KSP 只生成代码、不编译生成代码，所以这两处只有在 `:app:compileDebugKotlin` 阶段才暴露 —— 生成器改动后必须编译整模块，不能只看 KSP 成功。）
 
-## 三、第 2 部分 · 2.2 类型化远程服务代理（待办）
+## 三、第 2 部分 · 2.2 类型化远程服务代理（已完成）
 
-计划：接口 + 注解 → 客户端侧用 JDK 动态代理（复用既有 `RemoteProxies` 地基）把方法调用编码为 AIDL 调用；
-远端侧由生成的分发器按方法名解包并调用实现；AIDL 增加一个原生返回 `Bundle` 的类型化通道（避免字符串二次编码）；
-方法形态 `fun name(args..., onResult: (Ret) -> Unit)`，参数/返回值支持基础类型、String 与上述 POJO。
-demo 增加场景行，用例覆盖正常调用与错误路径。
+### 2.2.1 做了什么
 
-完成后执行**统一全量回测**并出总报告。
+| 位置 | 内容 |
+|---|---|
+| `@RemoteApi`（annotation） | 标注接口；方法约定：最后一个参数是 `(T) -> Unit` 回调，其余参数与 T 走统一类型白名单 |
+| `RemoteTypeClassifier`（processor，新） | `@RemotePojo` 字段与 `@RemoteApi` 参数/返回值**共用同一套类型判定**（不再两套白名单各说各话） |
+| `RemoteApiEmitter`（processor，新） | 为接口生成 `TRouterRemoteApi_<接口名>`：方法编解码器、`registerClient()`、`register(impl)`（按方法名分发，binder 线程等待实现回调，超时 5s）；另生成 `TRouterRemoteApiRegistry` |
+| `IRouterService.callTyped(...)`（AIDL） | 类型化通道：入参与结果都走**原生 Bundle**，不做字符串二次编码 |
+| `TRouterRemoteApiCodec` / `TRouterRemoteMethodCodec` / `TRouterTypedReply`（core api） | 编解码契约与回包约定（`__trouter_ok` / `__trouter_error`） |
+| `TRouter.remoteApi(iface, target, onError)`（core） | 返回 **JDK 动态代理**：调用方写 `api.count("abcd") { n -> ... }`，框架在 worker 线程发 AIDL、主线程回调；远端失败/超时/未实现走 `onError`；Object 方法本地处理 |
+| `RemoteRouter` | 新增 `Task.Typed`（含 send/recv/fail/超时全链路日志与失败回执） |
+
+### 2.2.2 证据
+
+**自动化**：新增 `TRouterTypedApiCrossProcessTest`（6 条，**6/6 通过**，`run-batchC-typedapi.log`）
+
+| 用例 | 断言 |
+|---|---|
+| `typedPrimitiveCallTravelsAcrossProcess` | `count("abcd")` → 8 + `[remote][typed][recv] method=count` 日志 |
+| `typedMultiParamEnumAndListTravel` | 多参数 + 枚举 + `List<Int>` → 远端汇总含 `tag=s29` / `level=HIGH` / `sum=6` / 远端 pid |
+| `typedPojoResultComesBackDecoded` | 结果 `@RemotePojo` 逐字段一致（id/count/ok/tags/嵌套/枚举） |
+| `unregisteredImplementationGoesToOnError` | 目标进程没登记实现 → 走 `onError`（reason 含"未注册"），不静默、不崩 |
+| `proxyObjectMethodsAreHandledLocally` | `toString/equals/hashCode` 本地处理，无跨进程调用 |
+| `missingClientCodecThrowsImmediately` | 未注册编解码器 → 立即抛错且提示 `registerClient()` |
+
+**回归**：跨进程 7 个套件（契约/服务/参数/多进程/POJO/类型化/代理）**28/28 通过**（`run-batchC-crossprocess-regression.log`）。
+
+**人工可见**（`run-batchC-typedapi-ui.log`）：点 S29 后状态栏
+```
+S29 ✓ count=8 ｜ 远端汇总 tag=s29 level=HIGH sum=6 pid=9023 ｜ report=remote-X/count=99/tags=remote|typed/inner=远端内层对象
+```
+其中 `pid=9023` 正是 `:remote2` 进程 —— 三次类型化调用确实在第三个进程执行。
+
+### 2.2.3 生成器又踩到并修掉的四个问题（KSP 成功 ≠ 生成代码可编译）
+
+1. **回调参数类型判定**：Kotlin 的 `(T) -> Unit` 在 KSP 里是 `kotlin.Function1<T, Unit>`（**两个**泛型实参），只判 `size == 1` 会全部报错；
+2. **实参需要强转**：`values[i]` 是 `Any?`，必须按声明类型生成 `(values[0] as String)` 这类转换；
+3. **Bundle key 必须加引号**：`putString(a0, …)` 会被当成标识符（本次两处：encode 与 dispatch 结果 key）；
+4. **`object` 内不能声明 `companion object`**：`const val` 直接作为 object 成员即可。
+
+## 四、批次 C 小结
+
+- 多进程：host / `:remote` / `:remote2` 三个真实进程，各自独立路由表 + 端点表 + 类型化 API 实现，均有自动化与人工证据；
+- 类型化：`@RemotePojo`（POJO 零反射编解码）与 `@RemoteApi`（接口 → 动态代理 + 生成分发器）都已落地并覆盖错误路径；
+- 待办：**统一全量回测 + 总报告 + README 同步**（下一轮执行）。

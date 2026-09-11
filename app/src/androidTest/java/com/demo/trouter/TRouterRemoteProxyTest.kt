@@ -40,6 +40,10 @@ class TRouterRemoteProxyTest {
             // G2 跨进程服务：本用例只验证 navigate 的透明委托，服务通道按协议返回"未注册"错误串即可
             override fun callService(name: String?, args: Bundle?): String =
                 "-ERR unregistered:${name ?: "null"}"
+
+            // 批次 C 类型化通道：本用例不覆盖，返回失败回包
+            override fun callTyped(service: String?, method: String?, args: Bundle?): Bundle =
+                com.trouter.core.api.TRouterTypedReply.failure("proxy-test-not-supported")
         }
 
         val proxy = RemoteProxies.delegating(fake)

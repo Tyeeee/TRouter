@@ -1247,6 +1247,179 @@ object TRouter {
         remoteRouterFor(component, target).callService(ctx, component, name, args, onResult) { log(it) }
     }
 
+    // ------------------------------------------------------------------ 类型化远程 API（批次 C）
+
+    /** 远端进程侧：api 名 → 分发器（由 @RemoteApi 生成物登记）。 */
+    private val remoteApiLock = Any()
+    private val remoteApiDispatchers = LinkedHashMap<String, (method: String, args: Bundle) -> Bundle>()
+
+    /** 客户端进程侧：接口 Class → 编解码器。 */
+    private val remoteApiCodecLock = Any()
+    private val remoteApiCodecs = LinkedHashMap<Class<*>, TRouterRemoteApiCodec>()
+
+    /**
+     * 登记一个类型化远程 API 的实现（**在远端进程**调用，通常来自 Application）。
+     * @return true 登记成功；false = 未初始化 / 名称为空 / 重名。
+     */
+    fun registerRemoteApi(name: String, dispatcher: (method: String, args: Bundle) -> Bundle): Boolean {
+        if (!initialized || name.isBlank()) return false
+        val ok = synchronized(remoteApiLock) {
+            if (remoteApiDispatchers.containsKey(name)) {
+                false
+            } else {
+                remoteApiDispatchers[name] = dispatcher
+                true
+            }
+        }
+        if (ok) log("[remote][typed][register] service=$name") else log("[remote][typed][register][conflict] service=$name")
+        return ok
+    }
+
+    fun unregisterRemoteApi(name: String): Boolean {
+        if (!initialized) return false
+        val removed = synchronized(remoteApiLock) { remoteApiDispatchers.remove(name) }
+        if (removed != null) log("[remote][typed][unregister] service=$name")
+        return removed != null
+    }
+
+    /** 服务进程侧（RemoteRouterService 内）按名称分发类型化调用；未登记返回失败回包。 */
+    fun invokeRemoteApi(name: String, method: String, args: Bundle): Bundle {
+        val dispatcher = synchronized(remoteApiLock) { remoteApiDispatchers[name] }
+            ?: return TRouterTypedReply.failure("远端未注册该 API：$name")
+        return try {
+            dispatcher.invoke(method, args)
+        } catch (e: Throwable) {
+            TRouterTypedReply.failure("${e.javaClass.simpleName}: ${e.message ?: ""}")
+        }
+    }
+
+    /**
+     * 客户端进程侧注册编解码器（**在调用方进程**调用，通常一行：
+     * `TRouter.registerRemoteApiClients(TRouterRemoteApiRegistry.all())`）。
+     * @return 本次成功登记的个数
+     */
+    fun registerRemoteApiClients(codecs: List<TRouterRemoteApiCodec>): Int {
+        if (!initialized) return 0
+        var count = 0
+        synchronized(remoteApiCodecLock) {
+            for (codec in codecs) {
+                remoteApiCodecs[codec.apiClass] = codec
+                count++
+            }
+        }
+        log("[remote][typed][client-register] count=$count")
+        return count
+    }
+
+    /**
+     * 取类型化远程 API 的动态代理（批次 C）：
+     * ```
+     * val api = TRouter.remoteApi(DemoStatsApi::class.java, target = "remote2") { err -> ... }
+     * api.count("abc") { n -> statusBar("远端返回 $n") }   // 结果回主线程
+     * ```
+     * - 未注册编解码器 → 抛 [IllegalStateException]（配置错误应当显性）；
+     * - 远端失败/超时/未实现 → 走 [onError]（主线程）；成功才回调接口声明的回调；
+     * - 调用方**不会**在主线程被阻塞：实际 AIDL 调用在框架的 worker 线程执行。
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> remoteApi(iface: Class<T>, target: String? = null, onError: ((String) -> Unit)? = null): T {
+        val codec = synchronized(remoteApiCodecLock) { remoteApiCodecs[iface] }
+            ?: throw IllegalStateException(
+                "未注册 ${iface.name} 的远程 API 编解码器：请在调用方进程调用生成物" +
+                    " TRouterRemoteApi_${iface.simpleName}.registerClient()（或 TRouter.registerRemoteApiClients(TRouterRemoteApiRegistry.all())）",
+            )
+        val handler = java.lang.reflect.InvocationHandler { proxy, method, rawArgs ->
+            when (method.name) {
+                "equals" -> proxy === rawArgs?.firstOrNull()
+                "hashCode" -> System.identityHashCode(proxy)
+                "toString" -> "TRouterRemoteApiProxy(${codec.apiName} → ${target ?: "default"})"
+                else -> {
+                    val last = rawArgs?.lastOrNull()
+                    if (last !is Function1<*, *>) {
+                        throw IllegalStateException(
+                            "${iface.simpleName}.${method.name} 的最后一个参数必须是 (结果) -> Unit 回调（类型化接口约定）",
+                        )
+                    }
+                    val methodCodec = codec.methods[method.name]
+                        ?: throw IllegalStateException("生成物缺少方法编解码：${codec.apiName}#${method.name}")
+                    dispatchTypedCall(
+                        codec = codec,
+                        methodCodec = methodCodec,
+                        methodName = method.name,
+                        values = rawArgs.dropLast(1),
+                        target = target,
+                        callback = last as (Any?) -> Unit,
+                        onError = onError,
+                    )
+                    null
+                }
+            }
+        }
+        return java.lang.reflect.Proxy.newProxyInstance(iface.classLoader, arrayOf(iface), handler) as T
+    }
+
+    /** 编码实参 → 经类型化通道发出 → 主线程解包并回调（失败走 onError）。 */
+    private fun dispatchTypedCall(
+        codec: TRouterRemoteApiCodec,
+        methodCodec: TRouterRemoteMethodCodec,
+        methodName: String,
+        values: List<Any?>,
+        target: String?,
+        callback: (Any?) -> Unit,
+        onError: ((String) -> Unit)?,
+    ) {
+        val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
+
+        fun fail(reason: String) {
+            log("[remote][typed][error] traceId=$traceId service=${codec.apiName} method=$methodName reason=$reason")
+            runOnMain { onError?.invoke(reason) }
+        }
+
+        val ctx = appContext
+        if (ctx == null) {
+            fail("remote 通道未初始化（TRouter.init 未完成）")
+            return
+        }
+        val component = resolveRemoteComponent(target)
+        if (target != null && component == null) {
+            fail(remoteTargetMissingReason(target))
+            return
+        }
+
+        val args = Bundle()
+        try {
+            methodCodec.encode(args, values)
+        } catch (t: Throwable) {
+            fail("参数编码失败：${t.javaClass.simpleName}: ${t.message}")
+            return
+        }
+
+        remoteRouterFor(component, target).callTyped(
+            context = ctx,
+            component = component,
+            service = codec.apiName,
+            method = methodName,
+            args = args,
+            onResult = { reply ->
+                runOnMain {
+                    if (reply == null || !TRouterTypedReply.ok(reply)) {
+                        fail(TRouterTypedReply.errorOf(reply))
+                        return@runOnMain
+                    }
+                    val value = try {
+                        methodCodec.decode(reply)
+                    } catch (t: Throwable) {
+                        fail("结果解码失败：${t.javaClass.simpleName}: ${t.message}")
+                        return@runOnMain
+                    }
+                    log("[remote][typed][done] traceId=$traceId service=${codec.apiName} method=$methodName")
+                    callback.invoke(value)
+                }
+            },
+            logMessage = { log(it) },
+        )
+    }
+
     // ------------------------------------------------------------------ 测试支持
 
     /**
@@ -1269,6 +1442,8 @@ object TRouter {
         synchronized(aliasLock) { aliasTable.clear() }
         synchronized(servicesLock) { servicesTable.clear() }
         synchronized(endpointLock) { endpoints.clear() }
+        synchronized(remoteApiLock) { remoteApiDispatchers.clear() }
+        synchronized(remoteApiCodecLock) { remoteApiCodecs.clear() }
         lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
         lifecycleApp = null
         activityListener = null

@@ -20,6 +20,7 @@
     <item name="scenario_s26" type="id" />
     <item name="scenario_s27" type="id" />
     <item name="scenario_s28" type="id" />
+    <item name="scenario_s29" type="id" />
     <item name="status_text" type="id" />
     <item name="main_scroll" type="id" />
 </resources>

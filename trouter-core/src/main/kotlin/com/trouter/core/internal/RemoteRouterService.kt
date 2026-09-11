@@ -35,6 +35,11 @@ open class RemoteRouterService : Service() {
             // G2-remote：调用远端进程内注册的服务端点（端点返回结构化字符串）
             return TRouter.invokeRemoteEndpoint(name ?: "", args ?: Bundle())
         }
+
+        override fun callTyped(service: String?, method: String?, args: Bundle?): Bundle {
+            // 批次 C：类型化调用——由 @RemoteApi 生成物登记的分发器处理，结果仍走原生 Bundle
+            return TRouter.invokeRemoteApi(service ?: "", method ?: "", args ?: Bundle())
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder = binder

@@ -41,6 +41,16 @@ class RemoteRouter {
             log: (String) -> Unit,
             val onResult: (String) -> Unit,
         ) : Task(traceId, log)
+
+        /** 批次 C：类型化调用（原生返回 Bundle，结果由调用方按生成物解包）。 */
+        class Typed(
+            val service: String,
+            val method: String,
+            val args: Bundle,
+            traceId: String,
+            log: (String) -> Unit,
+            val onResult: (Bundle?) -> Unit,
+        ) : Task(traceId, log)
     }
 
     private val main = Handler(Looper.getMainLooper())
@@ -119,6 +129,30 @@ class RemoteRouter {
         }
     }
 
+    /**
+     * 批次 C：类型化跨进程调用（返回原生 Bundle）。
+     * 失败统一回 null，由调用方（生成的客户端代理）转为错误回调。
+     */
+    fun callTyped(
+        context: Context,
+        component: ComponentName?,
+        service: String,
+        method: String,
+        args: Bundle,
+        onResult: (Bundle?) -> Unit,
+        logMessage: (String) -> Unit,
+    ) {
+        val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
+        if (component == null) {
+            logMessage("[remote][typed][fail] traceId=$traceId service=$service reason=remote 服务未配置")
+            onResult(null)
+            return
+        }
+        worker().post {
+            enqueue(context, component, Task.Typed(service, method, args, traceId, logMessage, onResult))
+        }
+    }
+
     // ---------------- worker 线程内执行 ----------------
 
     private fun enqueue(context: Context, component: ComponentName, task: Task) {
@@ -130,6 +164,11 @@ class RemoteRouter {
                 task.log("[remote][send] traceId=${task.traceId} path=${task.path} targetProcess=${component.flattenToString()}")
             is Task.Svc ->
                 task.log("[remote][service][send] traceId=${task.traceId} name=${task.name} targetProcess=${component.flattenToString()}")
+            is Task.Typed ->
+                task.log(
+                    "[remote][typed][send] traceId=${task.traceId} service=${task.service} method=${task.method} " +
+                        "targetProcess=${component.flattenToString()}",
+                )
         }
         armTimeout(task)
         ensureBinding()
@@ -182,6 +221,7 @@ class RemoteRouter {
         when (task) {
             is Task.Nav -> executeNav(stub, task)
             is Task.Svc -> executeSvc(stub, task)
+            is Task.Typed -> executeTyped(stub, task)
         }
     }
 
@@ -223,6 +263,25 @@ class RemoteRouter {
         postMain { task.onResult(raw) }
     }
 
+    private fun executeTyped(stub: IRouterService, task: Task.Typed) {
+        val startMs = SystemClock.elapsedRealtime()
+        val raw = try {
+            stub.callTyped(task.service, task.method, task.args)
+        } catch (t: Throwable) {
+            null
+        }
+        val costMs = SystemClock.elapsedRealtime() - startMs
+        if (raw == null) {
+            task.log("[remote][typed][fail] traceId=${task.traceId} service=${task.service} reason=remote 调用异常/回包为空")
+        } else {
+            task.log(
+                "[remote][typed][recv] traceId=${task.traceId} service=${task.service} method=${task.method} " +
+                    "costMs=$costMs keys=${raw.keySet()?.size ?: 0}",
+            )
+        }
+        postMain { task.onResult(raw) }
+    }
+
     private fun armTimeout(task: Task) {
         worker().postDelayed({
             val removed = queue.remove(task)
@@ -235,6 +294,10 @@ class RemoteRouter {
                 is Task.Svc -> {
                     task.log("[remote][service][fail] traceId=${task.traceId} name=${task.name} reason=remote 服务连接超时")
                     postMain { task.onResult(RemoteReplyCodec.SERVICE_ERROR_PREFIX + "remote 服务连接超时") }
+                }
+                is Task.Typed -> {
+                    task.log("[remote][typed][fail] traceId=${task.traceId} service=${task.service} reason=remote 服务连接超时")
+                    postMain { task.onResult(null) }
                 }
             }
             if (connecting && service == null && queue.isEmpty() && boundAttempt) {
@@ -262,6 +325,10 @@ class RemoteRouter {
                 is Task.Svc -> {
                     task.log("[remote][service][fail] traceId=${task.traceId} name=${task.name} reason=$navBlockedReason")
                     postMain { task.onResult(errorSuffix) }
+                }
+                is Task.Typed -> {
+                    task.log("[remote][typed][fail] traceId=${task.traceId} service=${task.service} reason=$navBlockedReason")
+                    postMain { task.onResult(null) }
                 }
             }
         }

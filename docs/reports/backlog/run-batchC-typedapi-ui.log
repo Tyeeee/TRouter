@@ -1,0 +1,7 @@
+=== S29 类型化远程接口（人工可见证据） ===
+[找到 S29 行] True
+[状态栏] S29 ✓ count=8 ｜ 远端汇总 tag=s29 level=HIGH sum=6 pid=9023 ｜ report=remote-X/count=99/tags=remote|typed/inner=远端内层对象
+=== 进程 ===
+u0_a353       8907   461   16632672 185128 0                   0 S com.demo.trouter
+u0_a353       9023   461   16821488 132264 0                   0 S com.demo.trouter:remote2
+

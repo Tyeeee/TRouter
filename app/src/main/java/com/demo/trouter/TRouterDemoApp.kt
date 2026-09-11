@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Process
 import com.demo.trouter.generated.CrossProcessPaths
 import com.demo.trouter.generated.TRouterPojo_DemoReport
+import com.demo.trouter.generated.TRouterRemoteApiRegistry
+import com.demo.trouter.generated.TRouterRemoteApi_DemoStatsApi
 import com.demo.trouter.generated.TRouterTargetInterceptorNames
 import com.trouter.core.api.ChainOutcome
 import com.trouter.core.api.InterceptorChain
@@ -70,6 +72,12 @@ class TRouterDemoApp : Application() {
                     "tags=${report.tags.joinToString("|")} " +
                     "inner=${report.inner?.name ?: "null"}/${report.inner?.level?.name ?: "-"} pid=${Process.myPid()}"
             }
+        }
+        // 批次 C：客户端侧注册类型化远程 API 的编解码器（各进程都注册一份，客户端才用得到）
+        TRouter.registerRemoteApiClients(TRouterRemoteApiRegistry.all())
+        // 批次 C：:remote2 进程登记类型化 API 的实现（host/:remote 不登记 → 用默认 target 调它会拿到"未注册"错误）
+        if (DemoProcess.isInProcess(this, ":remote2")) {
+            TRouterRemoteApi_DemoStatsApi.register(DemoStatsApiImpl())
         }
         // L3：给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）
         TRouter.bindTargetInterceptor(

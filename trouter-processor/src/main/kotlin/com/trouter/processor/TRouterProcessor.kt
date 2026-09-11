@@ -52,6 +52,10 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             }
         }
 
+    /** @RemoteApi 待生成接口（批次 C） */
+    private val apiInterfaces = mutableListOf<KSClassDeclaration>()
+    private val seenApiInterfaces = LinkedHashSet<String>()
+
     /** @RemotePojo 待生成类（批次 C） */
     private val pojoClasses = mutableListOf<KSClassDeclaration>()
     private val seenPojoClasses = LinkedHashSet<String>()
@@ -115,6 +119,17 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             pojoClasses.add(decl)
         }
 
+        // @RemoteApi（批次 C）：收集待生成类型化远程 API 的接口
+        for (symbol in resolver.getSymbolsWithAnnotation(ANNOTATION_REMOTE_API)) {
+            val decl = symbol as? KSClassDeclaration
+            if (decl == null) {
+                logger.error("@RemoteApi 只能标注在 interface 上", symbol)
+                continue
+            }
+            if (!seenApiInterfaces.add(decl.qualifiedName?.asString() ?: continue)) continue
+            apiInterfaces.add(decl)
+        }
+
         // 不在本轮生成：全部收集完成后在 finish() 统一校验与生成
         return emptyList()
     }
@@ -154,6 +169,9 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
 
         // 批次 C：@RemotePojo 编解码器生成（与路由无关，即使本模块没有 @Route 也要生成）
         RemotePojoEmitter(codeGenerator, logger, modulePackage).emit(pojoClasses)
+
+        // 批次 C：@RemoteApi 类型化远程 API 生成（同样与路由无关）
+        RemoteApiEmitter(codeGenerator, logger, modulePackage).emit(apiInterfaces)
 
         // 生成（含 R-2：unresolved 的条目被跳过，不进入任何 GroupLoader）
         if (routesByGroup.isEmpty()) return
@@ -545,6 +563,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         const val ANNOTATION_TARGET_INTERCEPTOR: String = "com.trouter.annotation.Interceptor"
         const val INTERCEPTOR_SHORT_NAME: String = "Interceptor"
         const val ANNOTATION_REMOTE_POJO: String = "com.trouter.annotation.RemotePojo"
+        const val ANNOTATION_REMOTE_API: String = "com.trouter.annotation.RemoteApi"
         const val UNRESOLVED_CONSTANT: String = "__UNRESOLVED_CONSTANT__"
         val LITERAL_PATH_REGEX = Regex("""path\s*=\s*"[^"]*"""")
     }
