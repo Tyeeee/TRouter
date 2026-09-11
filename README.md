@@ -1,5 +1,8 @@
 # TRouter：Android 页面跳转框架
 
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android%20API%2024%2B-green.svg)](#9-现在有什么还没做什么)
+
 > 一句话：**让"打开某个页面"这件事，不再需要模块之间互相引用代码。**
 
 这份文档写给第一次接触本项目的人。全部用大白话写，出现的每个专业词都会当场解释。
@@ -20,6 +23,7 @@
 9. [现在有什么、还没做什么](#9-现在有什么还没做什么)
 10. [名词小词典](#10-名词小词典)
 11. [更多文档](#11-更多文档)
+12. [许可证](#12-许可证)
 
 ---
 
@@ -926,6 +930,20 @@ fun openUserCenter(activity: Activity) {
     }
 }
 ```
+
+---
+
+## 12. 许可证
+
+本项目采用 **Apache License 2.0**，全文见 [LICENSE](LICENSE)。
+
+Copyright 2026 Tyeeee
+
+简单说：可以自由使用、修改、商用、闭源分发，只要保留版权与许可声明；同时包含专利授权条款
+（这也是 Android 生态里最常用的许可证）。
+
+> 接入方式提醒：目前还没发布到 Maven 中央仓库，接入是把 `trouter-annotation` / `trouter-processor` / `trouter-core`
+> 三个模块的源码拷进你的工程（见[第 3 节](#3-5-分钟接入)）；拷贝时请一并保留 `LICENSE` 与版权声明。
 
 ---
 
