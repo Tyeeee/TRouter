@@ -77,16 +77,43 @@
 
 ---
 
-## 二、第 2 部分（待办）：POJO 编解码 + 类型化远程服务代理
+## 二、第 2 部分 · 2.1 POJO 编解码（已完成）
 
-计划实现：
+### 2.1.1 做了什么
 
-1. **POJO 编解码（KSP 生成，零反射）**：给需要跨进程传的数据类标注解，KSP 生成
-   `pack(Bundle, prefix, obj)` / `unpack(Bundle, prefix)`，字段逐个写进 Bundle
-   （基础类型 + String + 嵌套 POJO + List），避免手写 `Parcelable`；
-2. **类型化远程服务代理**：接口 + 注解 → 客户端侧由 JDK 动态代理（复用既有 `RemoteProxies` 地基）
-   把方法调用编码为 AIDL 调用，远端侧由生成的分发器按方法名解包并调用实现；
-   方法形态 `fun name(args..., onResult: (Ret) -> Unit)`，参数/返回值支持基础类型、String 与上述 POJO；
-3. demo 增加对应场景行与端点；用例覆盖"POJO 跨进程往返一致""类型化接口调用与错误路径"。
+| 位置 | 内容 |
+|---|---|
+| `@RemotePojo`（annotation） | 标注需要跨进程传输的数据类 |
+| `RemotePojoEmitter`（processor，新） | 为每个标注类生成 `TRouterPojo_<类名>`：零反射、逐字段写 Bundle；另生成模块级 `TRouterPojoRegistry`（按类名取 codec，供框架侧使用） |
+| `TRouterPojoCodec`（core api，新） | 通用编解码契约（`className` / `prefix` / `pack` / `unpack`），是后续"类型化代理"的框架侧入口 |
+| demo | `DemoReport` / `DemoInner` / `DemoLevel`（含 String、Int、Boolean、`List<String>`、枚举、**可空嵌套 POJO**）；`:remote2` 注册 `pojoEcho` 端点解包回显；主页新增 **S28** |
+
+支持类型白名单：String / Int / Long / Float / Double / Boolean（可空亦可）、枚举（按 name）、
+`List<String>` / `List<Int>` / `List<Long>`、**同模块**内另一个 `@RemotePojo`。
+可空字段用 `<key>.__null` 标志位表达 null（Bundle 无法区分"没写"与"写了 null"）。
+白名单之外的类型**直接编译报错**，不做静默降级；跨模块嵌套也明确报错并说明原因。
+
+### 2.1.2 证据
+
+| 证据 | 结果 | 日志 |
+|---|---|---|
+| 用例 `TRouterPojoCrossProcessTest`（4 条） | **4/4 通过**：本地往返相等、null 语义、注册表通用接口、**真实跨进程**（`:remote2` 解包回显 id/count/ok/tags/inner/level + pid） | `run-batchC-pojo.log` |
+| 负向编译闸门（探针用 `java.util.Date` 字段） | `e: [ksp] @RemotePojo 字段类型不受支持：… java.util.Date …支持：…` + **BUILD FAILED** | `run-batchC-pojo-negative.log` |
+| 删除探针后 | **BUILD SUCCESSFUL** | `run-batchC-pojo-restored.log` |
+
+### 2.1.3 生成器第一版的两个真问题（已修）
+
+1. **枚举字段缺少 import**：生成文件只 import 了 POJO 自身，`DemoLevel.valueOf(...)` 无法解析 → 补齐枚举 import；
+2. **接口实现冲突**：默认前缀的 `unpack(bundle)` 与 `TRouterPojoCodec.unpack(bundle): Any` 同时声明导致
+   "Conflicting overloads" → 改为让默认前缀版本**直接作为接口实现（返回类型协变）**，删掉重复声明。
+
+（KSP 只生成代码、不编译生成代码，所以这两处只有在 `:app:compileDebugKotlin` 阶段才暴露 —— 生成器改动后必须编译整模块，不能只看 KSP 成功。）
+
+## 三、第 2 部分 · 2.2 类型化远程服务代理（待办）
+
+计划：接口 + 注解 → 客户端侧用 JDK 动态代理（复用既有 `RemoteProxies` 地基）把方法调用编码为 AIDL 调用；
+远端侧由生成的分发器按方法名解包并调用实现；AIDL 增加一个原生返回 `Bundle` 的类型化通道（避免字符串二次编码）；
+方法形态 `fun name(args..., onResult: (Ret) -> Unit)`，参数/返回值支持基础类型、String 与上述 POJO。
+demo 增加场景行，用例覆盖正常调用与错误路径。
 
 完成后执行**统一全量回测**并出总报告。

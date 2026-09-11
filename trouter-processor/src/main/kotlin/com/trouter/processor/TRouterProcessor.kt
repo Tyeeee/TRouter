@@ -52,6 +52,10 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             }
         }
 
+    /** @RemotePojo 待生成类（批次 C） */
+    private val pojoClasses = mutableListOf<KSClassDeclaration>()
+    private val seenPojoClasses = LinkedHashSet<String>()
+
     /** group -> 该组路由 */
     private val routesByGroup = LinkedHashMap<String, MutableList<ParsedRoute>>()
     private val seenClasses = LinkedHashSet<String>()
@@ -100,6 +104,17 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
                 )
             }
         }
+        // @RemotePojo（批次 C）：收集待生成 POJO 编解码器的类
+        for (symbol in resolver.getSymbolsWithAnnotation(ANNOTATION_REMOTE_POJO)) {
+            val decl = symbol as? KSClassDeclaration
+            if (decl == null) {
+                logger.error("@RemotePojo 只能标注在类上", symbol)
+                continue
+            }
+            if (!seenPojoClasses.add(decl.qualifiedName?.asString() ?: continue)) continue
+            pojoClasses.add(decl)
+        }
+
         // 不在本轮生成：全部收集完成后在 finish() 统一校验与生成
         return emptyList()
     }
@@ -136,6 +151,9 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
                 }
             }
         }
+
+        // 批次 C：@RemotePojo 编解码器生成（与路由无关，即使本模块没有 @Route 也要生成）
+        RemotePojoEmitter(codeGenerator, logger, modulePackage).emit(pojoClasses)
 
         // 生成（含 R-2：unresolved 的条目被跳过，不进入任何 GroupLoader）
         if (routesByGroup.isEmpty()) return
@@ -526,6 +544,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         const val CROSS_SHORT_NAME: String = "CrossProcess"
         const val ANNOTATION_TARGET_INTERCEPTOR: String = "com.trouter.annotation.Interceptor"
         const val INTERCEPTOR_SHORT_NAME: String = "Interceptor"
+        const val ANNOTATION_REMOTE_POJO: String = "com.trouter.annotation.RemotePojo"
         const val UNRESOLVED_CONSTANT: String = "__UNRESOLVED_CONSTANT__"
         val LITERAL_PATH_REGEX = Regex("""path\s*=\s*"[^"]*"""")
     }

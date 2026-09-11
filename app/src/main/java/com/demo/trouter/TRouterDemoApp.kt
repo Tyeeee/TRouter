@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.os.Bundle
 import android.os.Process
 import com.demo.trouter.generated.CrossProcessPaths
+import com.demo.trouter.generated.TRouterPojo_DemoReport
 import com.demo.trouter.generated.TRouterTargetInterceptorNames
 import com.trouter.core.api.ChainOutcome
 import com.trouter.core.api.InterceptorChain
@@ -61,6 +62,13 @@ class TRouterDemoApp : Application() {
             TRouter.registerRemoteEndpoint("demoClock2") { args ->
                 val q = args?.getString("q") ?: "none"
                 "clock2-v1 q=$q pid=${Process.myPid()}"
+            }
+            // 批次 C：POJO 跨进程端点——用生成的编解码器把 Bundle 还原成业务对象（不要求 Parcelable）
+            TRouter.registerRemoteEndpoint("pojoEcho") { args ->
+                val report = TRouterPojo_DemoReport.unpack(args ?: Bundle())
+                "pojoEcho ✓ id=${report.id} count=${report.count} ok=${report.ok} " +
+                    "tags=${report.tags.joinToString("|")} " +
+                    "inner=${report.inner?.name ?: "null"}/${report.inner?.level?.name ?: "-"} pid=${Process.myPid()}"
             }
         }
         // L3：给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）

@@ -1,0 +1,76 @@
+Reusing configuration cache.
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :feature-about:preBuild UP-TO-DATE
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :feature-about:preDebugBuild UP-TO-DATE
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :feature-about:generateDebugResources UP-TO-DATE
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :feature-about:packageDebugResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :feature-about:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:kspDebugKotlin UP-TO-DATE
+> Task :feature-demo:kspDebugKotlin UP-TO-DATE
+> Task :feature-about:compileDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-about:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+
+> Task :app:kspDebugKotlin FAILED
+e: [ksp] @RemotePojo 字段类型不受支持：com.demo.trouter.BadPojoProbe.when0 的类型是 java.util.Date。支持：String/Int/Long/Float/Double/Boolean（可空亦可）、枚举、List<String>/List<Int>/List<Long>、同模块内另一个 @RemotePojo 类；其他类型请先在业务侧转换为白名单类型。
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:kspDebugKotlin' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing com.google.devtools.ksp.gradle.KspAAWorkerAction
+   > KSP failed with exit code: PROCESSING_ERROR
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 438ms
+39 actionable tasks: 1 executed, 38 up-to-date
+Configuration cache entry reused.

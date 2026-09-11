@@ -20,6 +20,7 @@ import com.trouter.core.api.RouterContract
 import com.trouter.core.api.RouteTargetKind
 import com.trouter.core.api.TRouter
 import com.trouter.core.api.TRouterResult
+import com.demo.trouter.generated.TRouterPojo_DemoReport
 import com.trouter.core.api.Ui
 
 /**
@@ -279,6 +280,14 @@ class MainActivity : ComponentActivity() {
             callSecondProcessEndpoint()
         }
 
+        scenarioRow(
+            R.id.scenario_s28,
+            "S28 POJO 跨进程（KSP 生成编解码 · 免手写 Parcelable）",
+            "DemoReport（含 List/枚举/可空嵌套 POJO）→ Bundle → AIDL 送到 :remote2 解包回显 · 期望：字段逐一一致",
+        ) {
+            sendPojoToThirdProcess()
+        }
+
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
@@ -397,6 +406,25 @@ class MainActivity : ComponentActivity() {
                 statusText.text = "S27 结果 · :remote2 → $secondText ｜ 默认(:remote) → $defaultText"
                 Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    /** S28（批次 C）：POJO 本地往返 + 跨进程往返（业务类不实现 Parcelable，编解码全部由 KSP 生成）。 */
+    private fun sendPojoToThirdProcess() {
+        val report = DemoReport(
+            id = "R-2026",
+            count = 42,
+            ok = true,
+            tags = listOf("alpha", "beta"),
+            inner = DemoInner("内层对象", DemoLevel.HIGH),
+        )
+        val bundle = Bundle().apply { TRouterPojo_DemoReport.pack(this, report) }
+        val localRoundTrip = TRouterPojo_DemoReport.unpack(bundle) == report
+        statusText.text = "S28 本地往返相等=$localRoundTrip，正在跨进程发送…"
+
+        TRouter.callRemoteService("pojoEcho", bundle, TRouterDemoApp.REMOTE_TARGET_SECOND) { reply ->
+            statusText.text = "S28 本地往返相等=$localRoundTrip ｜ 跨进程 $reply"
+            Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
         }
     }
 
