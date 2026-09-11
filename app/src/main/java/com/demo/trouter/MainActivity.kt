@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.trouter.annotation.Route
+import com.demo.trouter.backtest.BacktestContract
 import com.trouter.core.api.DemoParams
 import com.trouter.core.api.RouteLaunch
 import com.trouter.core.api.RouteMeta
@@ -294,6 +295,19 @@ class MainActivity : ComponentActivity() {
             "连续三次类型化调用 count / summarize / report（含枚举、List、POJO 结果）· 期望：结果逐项正确且带远端 pid",
         ) {
             callTypedRemoteApi()
+        }
+
+        sectionTitle("K · 回测台：把每个功能点都真的跑一遍（S30）")
+        infoLine(
+            "回测台是一组「测试节点」：每个节点对应一个功能点，点一下就真的发起跳转、真的打开页面、真的跨进程调用，" +
+                "再对照屏幕上究竟发生了什么给结论（通过/失败 + 证据行）。可以一键全跑，也可以只跑某一条。",
+        )
+        scenarioRow(
+            R.id.scenario_s30,
+            "S30 打开回测台（全部功能点逐条实测）",
+            "路径 ${BacktestContract.PATH_CONSOLE} · 期望：进入回测台，看到节点清单与「开始回测」按钮",
+        ) {
+            open(BacktestContract.PATH_CONSOLE)
         }
 
         sectionTitle("当前已注册的全部路径（只读）")

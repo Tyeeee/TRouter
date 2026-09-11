@@ -1,0 +1,75 @@
+Calculating task graph as configuration cache cannot be reused because file 'settings.gradle.kts' has changed.
+> Task :trouter-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :trouter-gradle-plugin:compileJava NO-SOURCE
+> Task :trouter-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :trouter-gradle-plugin:processResources UP-TO-DATE
+> Task :trouter-gradle-plugin:classes UP-TO-DATE
+> Task :trouter-gradle-plugin:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+
+> Task :feature-about:preBuild UP-TO-DATE
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :feature-about:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :feature-about:generateDebugResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :feature-about:packageDebugResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :feature-about:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:kspDebugKotlin
+> Task :feature-demo:kspDebugKotlin
+> Task :feature-about:compileDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-about:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin UP-TO-DATE
+
+BUILD SUCCESSFUL in 3s
+44 actionable tasks: 3 executed, 41 up-to-date
+Configuration cache entry stored.

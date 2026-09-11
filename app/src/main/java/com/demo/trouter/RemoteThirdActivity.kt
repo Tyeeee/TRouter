@@ -39,6 +39,8 @@ class RemoteThirdActivity : ComponentActivity() {
         }
 
         val processName = DemoProcess.name(this)
+        // 回测支撑：记录本页收到的路径与参数，并保留实例供"自己关自己"（跨进程页面的收尾）
+        RemoteOpenLog.record(this, intent)
         val args = RouteArgs.of(intent)
         val msg = args.str(DemoParams.KEY_MSG)
 

@@ -1,30 +1,18 @@
 package com.demo.trouter
 
 import android.app.Application
-import android.content.ComponentName
-import android.os.Bundle
-import android.os.Process
-import com.demo.trouter.generated.CrossProcessPaths
-import com.demo.trouter.generated.TRouterPojo_DemoReport
-import com.demo.trouter.generated.TRouterRemoteApiRegistry
-import com.demo.trouter.generated.TRouterRemoteApi_DemoStatsApi
-import com.demo.trouter.generated.TRouterTargetInterceptorNames
-import com.trouter.core.api.ChainOutcome
-import com.trouter.core.api.InterceptorChain
 import com.trouter.core.api.TRouter
-import com.trouter.core.api.TRouterConfig
-import com.trouter.core.api.WrappingInterceptor
-import com.trouter.core.internal.RemoteRouterService
 
 /**
- * 演示宿主初始化：统一入口装配（多模块版本 多模块 + 跨进程版本 跨进程）。
- * - TRouter.init(context, config)：核心初始化（isDebug=true；interceptors 注入 gate+mock 默认关闭；
- *   remoteService=core 的 RemoteRouterService（manifest 置 :remote 进程）；
- *   remoteWhitelist=KSP 生成的 @CrossProcess 白名单）；
- * - TRouter.install(DemoRouteRegistry)：聚合装配 :app + feature-demo + feature-about 三份注册表。
+ * 演示宿主初始化：统一入口装配（多模块 + 跨进程）。
  *
- * 注意：Application 在 :remote 进程同样执行（各进程独立 init/install 一份 TRouter 路由表），
- * 这正是「远端 TRouter 自己解析」的前提；测试环境先 resetForTest 再以 TestConfig 重建，互不冲突。
+ * 装配分三步，每一步都有单一来源，避免"真实跑的"和"回测跑的"出现偏差：
+ * 1. `DemoRouterConfig.create(this)` —— 配置（含日志口、深链白名单、远端进程表）；
+ * 2. `TRouter.init` + `TRouter.install(DemoRouteRegistry)` —— 核心初始化与三模块路由聚合；
+ * 3. `DemoProcessWiring.apply(this)` —— 各进程自己的端点/类型化接口/拦截器绑定。
+ *
+ * 注意：Application 在 :remote / :remote2 进程同样执行（各进程独立 init/install 一份 TRouter 路由表），
+ * 这正是「远端 TRouter 自己解析」的前提。
  */
 class TRouterDemoApp : Application() {
 
@@ -35,56 +23,9 @@ class TRouterDemoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val config = TRouterConfig(
-            isDebug = true,
-            interceptors = DemoInterceptors.demoList,
-            remoteService = ComponentName(this, RemoteRouterService::class.java),
-            remoteWhitelist = CrossProcessPaths.paths,
-            targetInterceptorResolver = { className -> TRouterTargetInterceptorNames.namesOf(className) },
-            // 异步拦截器超时（S25 演示用：异步耗时 3000ms > 本超时 → Blocked 收口）
-            asyncInterceptorTimeoutMs = 1_500L,
-            // 第二个跨进程目标（:remote2）。target=null 仍走上面的 remoteService（:remote）
-            remoteServices = mapOf(
-                REMOTE_TARGET_SECOND to ComponentName(this, RemoteRouterServiceSecond::class.java),
-            ),
-        )
-        TRouter.init(this, config)
+        // 配置的单一来源：回测台用同一个工厂重新装配，保证"回测跑的配置"与"真实运行的配置"逐字段相同
+        TRouter.init(this, DemoRouterConfig.create(this))
         TRouter.install(DemoRouteRegistry)
-        // 仅在 :remote 进程注册跨进程服务端点（host 不注册 → 测试可证明走的是真实跨进程调用）
-        // 进程判定收口在 DemoProcess（minSdk 24 下不能直接用 Process.myProcessName，需 API 33）
-        if (DemoProcess.isInProcess(this, ":remote")) {
-            TRouter.registerRemoteEndpoint("demoClock") { args ->
-                val q = args?.getString("q") ?: "none"
-                "clock-v1 q=$q pid=${Process.myPid()}"
-            }
-        }
-        // 第三个进程注册自己的端点——端点表按进程独立，
-        // 因此 host 用 target="remote2" 能调到 demoClock2，用默认 target 只会拿到"未注册"
-        if (DemoProcess.isInProcess(this, ":remote2")) {
-            TRouter.registerRemoteEndpoint("demoClock2") { args ->
-                val q = args?.getString("q") ?: "none"
-                "clock2-v1 q=$q pid=${Process.myPid()}"
-            }
-            // POJO 跨进程端点——用生成的编解码器把 Bundle 还原成业务对象（不要求 Parcelable）
-            TRouter.registerRemoteEndpoint("pojoEcho") { args ->
-                val report = TRouterPojo_DemoReport.unpack(args ?: Bundle())
-                "pojoEcho ✓ id=${report.id} count=${report.count} ok=${report.ok} " +
-                    "tags=${report.tags.joinToString("|")} " +
-                    "inner=${report.inner?.name ?: "null"}/${report.inner?.level?.name ?: "-"} pid=${Process.myPid()}"
-            }
-        }
-        // 客户端侧注册类型化远程 API 的编解码器（各进程都注册一份，客户端才用得到）
-        TRouter.registerRemoteApiClients(TRouterRemoteApiRegistry.all())
-        // :remote2 进程登记类型化 API 的实现（host/:remote 不登记 → 用默认 target 调它会拿到"未注册"错误）
-        if (DemoProcess.isInProcess(this, ":remote2")) {
-            TRouterRemoteApi_DemoStatsApi.register(DemoStatsApiImpl())
-        }
-        // 给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）
-        TRouter.bindTargetInterceptor(
-            "remoteAudit",
-            object : WrappingInterceptor {
-                override fun intercept(chain: InterceptorChain): ChainOutcome = chain.proceed()
-            },
-        )
+        DemoProcessWiring.apply(this)
     }
 }

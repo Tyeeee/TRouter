@@ -21,6 +21,31 @@
     <item name="scenario_s27" type="id" />
     <item name="scenario_s28" type="id" />
     <item name="scenario_s29" type="id" />
+    <!-- 回测台（S30）：节点清单 + 一键回测 -->
+    <item name="scenario_s30" type="id" />
     <item name="status_text" type="id" />
     <item name="main_scroll" type="id" />
+
+    <!-- 回测台主页 -->
+    <item name="backtest_scroll" type="id" />
+    <item name="backtest_summary" type="id" />
+    <item name="backtest_run_all" type="id" />
+    <item name="backtest_open_form" type="id" />
+    <item name="backtest_open_second" type="id" />
+    <item name="backtest_log" type="id" />
+
+    <!-- 参数操作页（/bt-form）：真实输入 + 真实点击发起跳转 -->
+    <item name="form_evidence" type="id" />
+    <item name="form_msg" type="id" />
+    <item name="form_count" type="id" />
+    <item name="form_go_sync" type="id" />
+    <item name="form_go_async" type="id" />
+    <item name="form_go_remote" type="id" />
+    <item name="form_go_notfound" type="id" />
+    <item name="form_result" type="id" />
+
+    <!-- 中继操作页（/bt-relay）：页面里再打开一个页面 -->
+    <item name="relay_target" type="id" />
+    <item name="relay_result" type="id" />
+    <item name="relay_return" type="id" />
 </resources>

@@ -342,8 +342,24 @@ object TRouter {
             }
         }
 
+        /**
+         * 打开失败统一收口（与 最早的基础版本 语义一致：Error 出口日志 + onLost + NotFound）。
+         *
+         * 抽成函数的原因（回测发现）：**同一次打开失败，链上有没有异步/包裹拦截器，结果不能不一样**。
+         * 之前同步分支靠外层 try/catch 兜住，异步分支（拦截器延后放行、包裹拦截器 proceed）里抛出的
+         * 打开失败却会被当成"拦截器自己出错"→ 返回 Blocked 且 onLost 不触发；
+         * 更糟的是异步续跑发生在主线程 Handler 里，没人兜就会**直接崩掉 App**。
+         * 现在三条路径（直接打开 / 同步链 / 异步续跑）都走这一个收口。
+         */
+        val handleOpenFailure: (Throwable) -> Unit = { e ->
+            val cost = SystemClock.elapsedRealtime() - startMs
+            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Error(${e.javaClass.simpleName}: ${e.message}) costMs=$cost")
+            config.onLost?.invoke(path)
+            settle(TRouterResult.NotFound(path))
+        }
+
         try {
-            executeChain(meta, bundle, traceId, requestCode, allowAsync, cancelled) { outcome ->
+            executeChain(meta, bundle, traceId, requestCode, allowAsync, cancelled, handleOpenFailure) { outcome ->
                 val cost = SystemClock.elapsedRealtime() - startMs
                 when (outcome) {
                     is ChainOutcome.Opened -> {
@@ -368,10 +384,7 @@ object TRouter {
             }
         } catch (e: Throwable) {
             // 打开/包裹期间抛出的异常统一按「打开失败」处理（Error 出口 + onLost），与 V1 语义一致
-            val cost = SystemClock.elapsedRealtime() - startMs
-            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Error(${e.javaClass.simpleName}: ${e.message}) costMs=$cost")
-            config.onLost?.invoke(path)
-            settle(TRouterResult.NotFound(path))
+            handleOpenFailure(e)
         }
     }
 
@@ -386,6 +399,7 @@ object TRouter {
         requestCode: Int?,
         allowAsync: Boolean,
         cancelled: () -> Boolean,
+        onOpenFailure: (Throwable) -> Unit,
         onOutcome: (ChainOutcome) -> Unit,
     ) {
         val members = combinedMembers(meta, traceId)
@@ -454,10 +468,29 @@ object TRouter {
                 once(outcome)
             }
 
+            /**
+             * 链末端打开失败：不是"拦截器的错"，也不是"没找到路径"，而是**这条路径打不开**
+             * （目标类加载不了、Activity 没在 manifest 声明等）。统一交回 [onOpenFailure] 收口。
+             *
+             * 必须在这里收的原因：异步续跑发生在主线程 Handler 里，
+             * 让异常逃出去就是**未捕获异常 → App 崩溃**（回测已复现过的形态）。
+             */
+            private fun failOpen(t: Throwable) {
+                if (settled) return
+                settled = true
+                onOpenFailure(t)
+            }
+
             private fun step(index: Int) {
                 if (settled) return
                 if (index >= members.size) {
-                    settle(ChainOutcome.Opened(openTarget(meta, bundle, traceId, requestCode)))
+                    val opened = try {
+                        openTarget(meta, bundle, traceId, requestCode)
+                    } catch (t: Throwable) {
+                        failOpen(t)
+                        return
+                    }
+                    settle(ChainOutcome.Opened(opened))
                     return
                 }
                 when (val member = members[index]) {
@@ -510,8 +543,15 @@ object TRouter {
                             return
                         }
                         postHooks.add(done)
-                        // 剩余链继续由同一执行器推进（可再遇异步成员）；恢复执行切回主线程
-                        runOnMainThread { step(index + 1) }
+                        // 剩余链继续由同一执行器推进（可再遇异步成员）；恢复执行切回主线程。
+                        // 续跑里的异常不能逃到主线程 Handler（会直接崩 App）：一律按打开失败收口。
+                        runOnMainThread {
+                            try {
+                                step(index + 1)
+                            } catch (t: Throwable) {
+                                failOpen(t)
+                            }
+                        }
                     }
 
                     override fun block(reason: String) {
@@ -631,6 +671,10 @@ object TRouter {
         var terminated = false
         var closed = false
         var outcome: ChainOutcome? = null
+        // 标记"异常是从放行之后的剩余链（即打开目标）里冒出来的"——那种异常不属于拦截器，
+        // 必须原样向上抛，由导航层按「打开失败」收口（Error 出口 + onLost + NotFound），
+        // 否则同一次打开失败会因为链上挂没挂异步拦截器而给出两种完全不同的结果。
+        var insideProceed = false
 
         fun once(action: String): Boolean {
             if (closed) return false // 已按"未立即放行"收口：迟到终止静默忽略
@@ -651,7 +695,11 @@ object TRouter {
 
             override fun proceed(done: (ChainOutcome) -> Unit) {
                 if (!once("proceed")) return
+                // 注意：这里**不能**用 finally 复位 insideProceed——finally 会先于外层 catch 执行，
+                // 复位之后外层就分不清"异常来自拦截器"还是"来自打开目标"了。
+                insideProceed = true
                 val rest = stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+                insideProceed = false
                 runCatching { done(rest) }
                 outcome = rest
             }
@@ -670,6 +718,11 @@ object TRouter {
         try {
             member.intercept(chain)
         } catch (e: Throwable) {
+            if (insideProceed) {
+                // 异常来自"放行之后的剩余链/打开目标"：不属于拦截器，交回导航层按打开失败收口
+                insideProceed = false
+                throw e
+            }
             log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
             return ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
         }
@@ -752,6 +805,8 @@ object TRouter {
         proceed: () -> ChainOutcome,
     ): ChainOutcome {
         log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=Wrap")
+        // 同 runAsyncMemberSynchronously：区分"拦截器自己抛的错"与"放行之后打开目标失败"
+        var insideProceed = false
         val singleShotChain = object : InterceptorChain {
             override val meta: RouteMeta = meta
             override val bundle: Bundle? = bundle
@@ -762,12 +817,20 @@ object TRouter {
                     throw IllegalStateException("InterceptorChain.proceed 只能调用一次（防止重复打开目标）")
                 }
                 consumed = true
-                return proceed()
+                // 同 runAsyncMemberSynchronously：复位不能放 finally（否则外层 catch 分不清异常来源）
+                insideProceed = true
+                val outcome = proceed()
+                insideProceed = false
+                return outcome
             }
         }
         return try {
             member.intercept(singleShotChain)
         } catch (e: Throwable) {
+            if (insideProceed) {
+                insideProceed = false
+                throw e
+            }
             log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
             ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
         }
@@ -1053,11 +1116,17 @@ object TRouter {
     /**
      * URI/Scheme 深链入口（从外部链接进入）：scheme 须在 config.deeplinkSchemes 白名单内；
      * uri.path 段即内部路由 path；query 并入导航参数（query 优先于入参 bundle）。
+     *
+     * scheme 比较**不区分大小写**（回测发现）：URI 的 scheme 按 RFC 3986 本身就不区分大小写，
+     * Android 的 intent-filter 匹配也不区分；从浏览器/短信/扫码进来的链接大小写完全不受 App 控制，
+     * 若按字面比较，`TROUTER://app/second` 这类链接会被白名单拒掉——表现是"链接点了没反应"。
      */
     fun navigateUri(uri: Uri, bundle: Bundle? = null): TRouterResult {
         if (!initialized) return TRouterResult.NotInitialized
         val scheme = uri.scheme
-        if (scheme.isNullOrEmpty() || scheme !in (config.deeplinkSchemes ?: emptySet())) {
+        val whitelist = config.deeplinkSchemes ?: emptySet()
+        val allowed = !scheme.isNullOrEmpty() && whitelist.any { it.equals(scheme, ignoreCase = true) }
+        if (!allowed) {
             return TRouterResult.Blocked(uri.toString(), "scheme 未启用（TRouterConfig.deeplinkSchemes 需包含 \"$scheme\"）")
         }
         val path = uri.path?.takeIf { it.isNotBlank() }

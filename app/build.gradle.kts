@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    // 批次 A3：跨模块路由 path 冲突校验（构建期闸门）。插件来自 trouter-gradle-plugin（settings 里 includeBuild）
+    // 批次 A3：跨模块路由 path 冲突校验（构建期闸门）。插件来自 com.trouter.gradle（settings 里 includeBuild）
     id("com.trouter.route-conflict")
 }
 
@@ -33,9 +32,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 // KSP：处理器据此推导生成包名（须与 android.namespace 保持一致）
@@ -51,31 +47,26 @@ dependencies {
     implementation(project(":feature-demo"))
     implementation(project(":feature-about"))
     ksp(project(":trouter-processor"))
+    // 回测台要检查 FRAGMENT 类路由是否真的把片段装进了容器页，因此宿主要能拿到 FragmentManager
+    implementation(libs.androidx.fragment)
     // 批次 A2：把 TRouter 的 Lint 规则挂到本模块的 Lint 检查里（调用点硬编码 → lint error）
     lintChecks(project(":trouter-lint"))
 
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    // 界面全部用平台 View 写（工程里没有一处 Compose），因此不引 compose 依赖；
+    // activity 是 ComponentActivity 的来源，页面基类离不开
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
 // ---------------------------------------------------------------------------
 // L1 跨模块路由 path 冲突校验：已由插件 com.trouter.route-conflict 提供
-// （见 trouter-gradle-plugin；自动发现各模块 KSP 生成目录，并挂到 check / assemble*）。
+// （见 com.trouter.gradle；自动发现各模块 KSP 生成目录，并挂到 check / assemble*）。
 // 命令：./gradlew :app:verifyTRouterRoutes   ；配置：trouterConflict { variants / autoWire / modules }
 // ---------------------------------------------------------------------------
 

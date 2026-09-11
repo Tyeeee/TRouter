@@ -1,0 +1,145 @@
+--------- beginning of main
+装配完成：isDebug=true、deep link scheme=trouter、拦截器链=3 个
+BT|DIAG|id=A01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=A01|status=PASS|feature=A · 基础跳转与页面落地|costMs=1476|title=打开 /second：页面真的出现，并带着路由元数据|detail=按预期完成
+BT|DIAG|id=A02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[FragmentContainerActivity, BacktestConsoleActivity]
+BT|NODE|id=A02|status=PASS|feature=A · 基础跳转与页面落地|costMs=1226|title=打开 /fragment-demo：容器页出现，片段真的被装进去且拿到参数|detail=按预期完成
+BT|DIAG|id=A03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[AboutActivity, BacktestConsoleActivity]
+BT|NODE|id=A03|status=PASS|feature=A · 基础跳转与页面落地|costMs=1246|title=跨模块打开 /about：另一个模块的页面被打开|detail=按预期完成
+BT|DIAG|id=A04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[MainActivity, BacktestConsoleActivity]
+BT|NODE|id=A04|status=PASS|feature=A · 基础跳转与页面落地|costMs=1452|title=自己也是路由页：打开 /main|detail=按预期完成
+BT|DIAG|id=A05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=A05|status=PASS|feature=A · 基础跳转与页面落地|costMs=1479|title=打开不存在的路径：不崩溃、不打开页面、兜底回调触发|detail=按预期完成
+BT|DIAG|id=A06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=A06|status=PASS|feature=A · 基础跳转与页面落地|costMs=1706|title=带参数打开 /second：目标页真的收到了参数|detail=按预期完成
+BT|DIAG|id=A07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=A07|status=PASS|feature=A · 基础跳转与页面落地|costMs=2416|title=连续打开同一个页面两次：两次都真的打开，不串页|detail=按预期完成
+BT|DIAG|id=B01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestFormActivity, BacktestConsoleActivity]
+BT|NODE|id=B01|status=PASS|feature=B · 参数透传与保留键|costMs=1079|title=参数操作页：页面自己收到参数并显示出来|detail=按预期完成
+BT|DIAG|id=B02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestFormActivity, SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=B02|status=PASS|feature=B · 参数透传与保留键|costMs=2612|title=由页面发起同步跳转：输入框里的参数真的带到下一页|detail=按预期完成
+BT|DIAG|id=B03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestFormActivity, SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=B03|status=PASS|feature=B · 参数透传与保留键|costMs=2634|title=由页面发起异步跳转：同样把参数带到下一页|detail=按预期完成
+BT|DIAG|id=B04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestFormActivity, BacktestConsoleActivity]
+BT|NODE|id=B04|status=PASS|feature=B · 参数透传与保留键|costMs=2087|title=由页面打开不存在的路径：页面上显示未找到，且没有任何页面被打开|detail=按预期完成
+BT|DIAG|id=C01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[ResultEchoActivity, BacktestConsoleActivity]
+BT|NODE|id=C01|status=PASS|feature=C · 页面返回值（navigateForResult）|costMs=2843|title=要返回值地打开页面：页面回传的数据真的回到发起方|detail=按预期完成
+BT|DIAG|id=C02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[ResultEchoActivity, BacktestConsoleActivity]
+BT|NODE|id=C02|status=PASS|feature=C · 页面返回值（navigateForResult）|costMs=1425|title=页面直接返回（不带结果）：发起方只拿到取消，不会拿到假数据|detail=按预期完成
+BT|DIAG|id=C03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=C03|status=PASS|feature=C · 页面返回值（navigateForResult）|costMs=1639|title=要返回值地打开一个不存在的路径：明确报错，不打开页面|detail=按预期完成
+BT|DIAG|id=C04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestRelayActivity, SecondActivity, BacktestRelayActivity, BacktestConsoleActivity]
+BT|NODE|id=C04|status=PASS|feature=C · 页面返回值（navigateForResult）|costMs=3363|title=中继页：页面里再打开一个页面，并把中继证据回传|detail=按预期完成
+BT|DIAG|id=D01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=D01|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=2229|title=门禁拦截器：拦下的跳转不会打开页面|detail=按预期完成
+BT|DIAG|id=D02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[MockSecondActivity, BacktestConsoleActivity]
+BT|NODE|id=D02|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1983|title=改道拦截器：请求 /second，屏幕上出现的是替身页|detail=按预期完成
+BT|DIAG|id=D03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=D03|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1492|title=改道成环：跳数上限收口，不会无限循环|detail=按预期完成
+BT|DIAG|id=D04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=D04|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=705|title=拦截器优先级：优先级大的先执行|detail=按预期完成
+BT|DIAG|id=D05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=D05|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1642|title=洋葱包裹拦截器：放行前、放行后都执行到了，页面确实打开|detail=按预期完成
+BT|DIAG|id=D06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=D06|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1484|title=洋葱包裹拦截器直接拦下：页面不打开|detail=按预期完成
+BT|DIAG|id=D07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=D07|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1518|title=目标级拦截器没绑定：明确报错而不是静默跳过|detail=按预期完成
+BT|DIAG|id=D08|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=D08|status=PASS|feature=D · 拦截器（拦截/改道/优先级/包裹）|costMs=1482|title=拦截器自己抛异常：变成可读的 Blocked，不崩溃、不开页|detail=按预期完成
+BT|DIAG|id=E01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=E01|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=966|title=异步拦截器延后放行：页面打开，回调在主线程且只回调一次|detail=按预期完成
+BT|DIAG|id=E02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=E02|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=1613|title=需要等待时用同步导航：明确拒绝，且不卡主线程|detail=按预期完成
+BT|DIAG|id=E03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=E03|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=691|title=异步拦截器立即放行：同步导航照常可用（兼容边界）|detail=按预期完成
+BT|DIAG|id=E04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=E04|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=4713|title=异步拦截器一直不回来：超时收口，迟到的放行不再开页|detail=按预期完成
+BT|DIAG|id=E05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=E05|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=2633|title=导航中途取消：页面永远不打开|detail=按预期完成
+BT|DIAG|id=E06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[MockSecondActivity, BacktestConsoleActivity]
+BT|NODE|id=E06|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=959|title=异步拦截器改道：屏幕上出现的是改道后的页面|detail=按预期完成
+BT|DIAG|id=E07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=E07|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=1588|title=异步拦截器直接拦下：原因如实回传，页面不打开|detail=按预期完成
+BT|DIAG|id=E08|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=E08|status=PASS|feature=E · 异步拦截器（等待/超时/取消）|costMs=3016|title=同一轮重复终止：第二次被拒绝，且不会重复打开页面|detail=按预期完成
+BT|DIAG|id=F01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[DynamicDemoActivity, BacktestConsoleActivity]
+BT|NODE|id=F01|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=1197|title=运行时注册路径：注册后页面真的能打开|detail=按预期完成
+BT|DIAG|id=F02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[DynamicDemoActivity, BacktestConsoleActivity]
+BT|NODE|id=F02|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=2186|title=注销动态路径后：立刻变成找不到，且不再打开页面|detail=按预期完成
+BT|DIAG|id=F03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F03|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=580|title=重复注册同一条路径：被拒绝，且原有登记不被覆盖|detail=按预期完成
+BT|DIAG|id=F04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F04|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=616|title=自检：注册了但类加载不了的路径会被点名|detail=按预期完成
+BT|DIAG|id=F05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F05|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=593|title=批量热更的原子性：一条不合法，整批不生效|detail=按预期完成
+BT|DIAG|id=F06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F06|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=587|title=动态路由导出：只含动态注册的，静态路由不掺进来|detail=按预期完成
+BT|DIAG|id=F07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F07|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=593|title=路由图谱与路由表一致|detail=按预期完成
+BT|DIAG|id=F08|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F08|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=587|title=重复装配：不会把路由表撑大，重复路径会被点名|detail=按预期完成
+BT|DIAG|id=F09|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=F09|status=PASS|feature=F · 动态路由 / 图谱 / 自检 / 热更|costMs=583|title=聚合注册表体检：无重复路径、关键路径在、三个模块都有贡献|detail=按预期完成
+BT|DIAG|id=G01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=G01|status=PASS|feature=G · 路径别名与外部链接|costMs=1374|title=精确别名：老链接照样打开新页面|detail=按预期完成
+BT|DIAG|id=G02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=G02|status=PASS|feature=G · 路径别名与外部链接|costMs=1016|title=正则别名：一批老链接都能落到同一个新页面|detail=按预期完成
+BT|DIAG|id=G03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=G03|status=PASS|feature=G · 路径别名与外部链接|costMs=623|title=别名与真实路径同名：被拒绝（不会制造二义性）|detail=按预期完成
+BT|DIAG|id=G04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=G04|status=PASS|feature=G · 路径别名与外部链接|costMs=1503|title=别名成环：跳数上限收口，不会无限解析|detail=按预期完成
+BT|DIAG|id=G05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=G05|status=PASS|feature=G · 路径别名与外部链接|costMs=1945|title=外部链接进来：链接里的参数覆盖调用方参数并送达页面|detail=按预期完成
+BT|DIAG|id=G06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=G06|status=PASS|feature=G · 路径别名与外部链接|costMs=1526|title=外部链接的负向情形：白名单外的 scheme、缺路径都要明确报错|detail=按预期完成
+BT|DIAG|id=G07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=G07|status=PASS|feature=G · 路径别名与外部链接|costMs=1382|title=外部链接的 scheme 大小写：不应该影响匹配|detail=按预期完成
+BT|DIAG|id=H01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=H01|status=PASS|feature=H · 模块间服务与跨进程端点|costMs=578|title=模块间接口调用：注册、查找、拒重复、注销|detail=按预期完成
+BT|DIAG|id=H02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=H02|status=PASS|feature=H · 模块间服务与跨进程端点|costMs=591|title=已注册服务快照：登记的东西看得见|detail=按预期完成
+BT|DIAG|id=H03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=H03|status=PASS|feature=H · 模块间服务与跨进程端点|costMs=578|title=跨进程端点的本地行为：调用、未注册错误、错误识别|detail=按预期完成
+BT|DIAG|id=H04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=H04|status=PASS|feature=H · 模块间服务与跨进程端点|costMs=587|title=端点重名：被拒绝，不会悄悄顶掉原来的实现|detail=按预期完成
+BT|DIAG|远端收尾 target=默认 reply=closed=RemoteSecondActivity pid=28400
+BT|DIAG|远端收尾 target=remote2 reply=no-page
+BT|DIAG|复位后 hostResumed=true 前台=BacktestConsoleActivity
+BT|DIAG|id=I01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestConsoleActivity, BacktestConsoleActivity]
+BT|NODE|id=I01|status=PASS|feature=I · 跨进程（三进程）|costMs=4038|title=跨进程打开页面：另一个进程真的开了页面（有它的进程号作证）|detail=按预期完成
+BT|DIAG|远端收尾 target=默认 reply=closed=RemoteSecondActivity pid=28400
+BT|DIAG|远端收尾 target=remote2 reply=no-page
+BT|DIAG|复位后 hostResumed=true 前台=BacktestConsoleActivity
+BT|DIAG|id=I02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[BacktestConsoleActivity]
+BT|NODE|id=I02|status=PASS|feature=I · 跨进程（三进程）|costMs=3088|title=跨进程带参数：远端页面真的收到了参数|detail=按预期完成
+BT|DIAG|id=I03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I03|status=PASS|feature=I · 跨进程（三进程）|costMs=621|title=没标 @CrossProcess 的路径走跨进程通道：被白名单拦下|detail=按预期完成
+BT|DIAG|id=I04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I04|status=PASS|feature=I · 跨进程（三进程）|costMs=592|title=两个进程各有一份端点表：互不串台|detail=按预期完成
+BT|DIAG|id=I05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I05|status=PASS|feature=I · 跨进程（三进程）|costMs=1038|title=跨进程传业务对象（不用手写序列化）|detail=按预期完成
+BT|DIAG|id=I06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I06|status=PASS|feature=I · 跨进程（三进程）|costMs=609|title=像调本地接口一样调远端接口：三种签名都对|detail=按预期完成
+BT|DIAG|id=I07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I07|status=PASS|feature=I · 跨进程（三进程）|costMs=598|title=调远端没实现的接口：走错误回调，不崩不卡|detail=按预期完成
+BT|DIAG|id=I08|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I08|status=PASS|feature=I · 跨进程（三进程）|costMs=629|title=指定了不存在的目标进程：明确报错，不静默走默认进程|detail=按预期完成
+BT|DIAG|id=I09|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=I09|status=PASS|feature=I · 跨进程（三进程）|costMs=583|title=拿没登记编解码器的接口做远程代理：立刻报配置错误|detail=按预期完成
+BT|DIAG|id=J01|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=J01|status=PASS|feature=J · 健壮性与边界|costMs=1482|title=空路径：明确 NotFound，不崩溃、不开页|detail=按预期完成
+BT|DIAG|id=J02|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=J02|status=PASS|feature=J · 健壮性与边界|costMs=1492|title=注册了但目标类不存在：运行期降级为 NotFound，不崩溃|detail=按预期完成
+BT|DIAG|id=J03|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=J03|status=PASS|feature=J · 健壮性与边界|costMs=754|title=在后台线程发起跳转：照样能打开页面|detail=按预期完成
+BT|DIAG|id=J04|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[SecondActivity, SecondActivity, SecondActivity, SecondActivity, SecondActivity, BacktestConsoleActivity]
+BT|NODE|id=J04|status=PASS|feature=J · 健壮性与边界|costMs=2907|title=连发多次跳转：每次都真的打开，不丢不串|detail=按预期完成
+BT|DIAG|id=J05|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[AboutActivity, BacktestConsoleActivity]
+BT|NODE|id=J05|status=PASS|feature=J · 健壮性与边界|costMs=2684|title=注销静态路径后重装：能恢复|detail=按预期完成
+BT|DIAG|id=J06|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=J06|status=PASS|feature=J · 健壮性与边界|costMs=582|title=静态路由表自检：没有一条是打不开的|detail=按预期完成
+BT|DIAG|id=J07|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=J07|status=PASS|feature=J · 健壮性与边界|costMs=1801|title=异步等待之后才发现目标打不开：不崩溃、按打开失败降级|detail=按预期完成
+BT|DIAG|id=J08|status=PASS|hostResumed=true|前台=BacktestConsoleActivity|本节点打开=[]
+BT|NODE|id=J08|status=PASS|feature=J · 健壮性与边界|costMs=1488|title=包裹拦截器放行后目标打不开：按打开失败降级，不误报成拦截器错误|detail=按预期完成
+BT|SUMMARY|total=68|pass=68|fail=0|skip=0|durationMs=101650

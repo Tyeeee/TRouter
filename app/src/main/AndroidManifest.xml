@@ -55,6 +55,21 @@
             android:name=".ResultEchoActivity"
             android:exported="false"
             android:theme="@style/Theme.TRouterDemo" />
+        <!-- 回测台：节点清单 + 一键回测（路由 /backtest） -->
+        <activity
+            android:name=".backtest.BacktestConsoleActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterDemo" />
+        <!-- 回测操作页：真实输入参数、真实点击发起跳转（路由 /bt-form） -->
+        <activity
+            android:name=".backtest.BacktestFormActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterDemo" />
+        <!-- 回测中继页：页面里再打开一个页面（路由 /bt-relay） -->
+        <activity
+            android:name=".backtest.BacktestRelayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TRouterDemo" />
     </application>
 
 </manifest>

@@ -44,6 +44,8 @@ class RemoteSecondActivity : ComponentActivity() {
 
         val path = intent.getStringExtra(RouteLaunch.EXTRA_PATH)
         val runtime = RouteLaunch.describe(intent)
+        // 回测证据：把"本页真实收到的路径与参数"记在本进程里，供 host 经 demoLastOpen 端点回读
+        RemoteOpenLog.record(this, intent)
 
         root.addView(line("场景 S11 · 跨进程导航（AIDL → :remote 进程）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /remote-second · group=default · kind=ACTIVITY · @CrossProcess"))

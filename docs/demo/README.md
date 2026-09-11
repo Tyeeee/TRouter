@@ -99,6 +99,7 @@ adb logcat -s TRouter   # 实时跟随；-d 导出已缓冲日志
 - V3.0 规划：`docs/V3.0-多模块路由聚合方案.md`；测试报告：`docs/reports/v3/V3.0-TEST-REPORT.md`
 - V4.0 规划：`docs/V4.0-跨进程路由方案.md`；测试报告：`docs/reports/v4/V4.0-TEST-REPORT.md`
 - 后续三批改造（编译期强制 / 异步拦截器 / 多进程与跨进程增强）的报告：`docs/reports/backlog/Batch-A-编译期强制-报告.md`、`Batch-B-异步拦截器-报告.md`、`Batch-C-多进程与类型化跨进程-报告.md`
-- **全量回测结果（测了什么、怎么跑、结果如何、还剩什么限制）：`docs/reports/final/最终回测报告.md`**
+- **全量回测结果（68 个功能节点 + 109 个设备用例，含发现并修掉的缺陷）：`docs/reports/backtest/回测台-功能节点回测报告.md`**
+- 上一轮（回测台之前）的结果留档：`docs/reports/final/最终回测报告.md`
 - 版本回顾 / 待办清单：`docs/版本回顾与缺口核查.md`
-- 截图：`docs/reports/v2/screenshots/`（09–13）、`docs/reports/v3/screenshots/`（14–15）、`docs/reports/v4/screenshots/`（16 远端页 / 17 主页 S11）。
+- 截图：仓库里只保留了 V1.0 那一组 `docs/reports/v1/screenshots/`（01–08）；V2.0 之后的截图当时没有纳入版本库，对应报告里的 `screenshots/16-…png` 之类引用取不到文件。
