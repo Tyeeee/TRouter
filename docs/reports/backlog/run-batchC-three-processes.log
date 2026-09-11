@@ -1,0 +1,24 @@
+=== 1) 回到主页 ===
+[主页] 是否可见 S21 行: True
+=== 2) 点 S26：跨进程导航到第三个进程 :remote2 ===
+[点击] scenario_s26 @ (540, 2109)
+   [第三进程页面] 场景 S26 · 跨进程导航到第三个进程（:remote2）
+   [第三进程页面] 本页运行在进程 com.demo.trouter:remote2 · pid=7166（与 host、:remote 都不同即证明三进程）
+   [第三进程页面] ✓ 本次由 TRouter 打开 · path=/remote-third · kind=ACTIVITY · group=default · traceId=083c1803 · 解析 2ms
+   [第三进程页面] 参数透传 ✓ msg=来自主页的参数字符串 · count=42
+   [第三进程页面] Remote Third 页面（第三进程 :remote2）
+=== 3) 返回主页，点 S27：端点按进程隔离 ===
+[点击] scenario_s27 @ (540, 2297)
+   [状态栏] J · 多进程（批次 C · 第三个真实进程 :remote2）
+   [状态栏] host / :remote / :remote2 三个进程各有独立 TRouter 路由表与端点表；target 参数指定目标进程（null=默认 :remote）。
+   [状态栏] S26 跨进程导航 → 第三个进程（:remote2）
+   [状态栏] S27 端点按进程隔离（同时调 :remote2 与默认 :remote）
+=== 4) 三进程 pid ===
+u0_a343       6415   461   16740940 147964 0                   0 S com.demo.trouter
+u0_a343       6485   461   16668716 172908 0                   0 S com.demo.trouter:remote
+u0_a343       7166   461   17031868 174032 0                   0 S com.demo.trouter:remote2
+
+=== 5) S27 状态栏文本 ===
+   (未取到)
+=== 5) S27 状态栏文本 ===
+   S27 结果 · :remote2 → clock2-v1 q=from-host pid=7166 ｜ 默认(:remote) → -ERR unregistered:demoClock2

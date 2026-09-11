@@ -262,6 +262,23 @@ class MainActivity : ComponentActivity() {
             openAsyncTimeout()
         }
 
+        sectionTitle("J · 多进程（批次 C · 第三个真实进程 :remote2）")
+        infoLine("host / :remote / :remote2 三个进程各有独立 TRouter 路由表与端点表；target 参数指定目标进程（null=默认 :remote）。")
+        scenarioRow(
+            R.id.scenario_s26,
+            "S26 跨进程导航 → 第三个进程（:remote2）",
+            "navigateRemote(${RouterContract.PATH_REMOTE_THIRD}, target=\"${TRouterDemoApp.REMOTE_TARGET_SECOND}\") · 期望：页面上进程名=:remote2 且 pid 与 host/:remote 都不同",
+        ) {
+            openRemote(RouterContract.PATH_REMOTE_THIRD, demoParamsBundle(), TRouterDemoApp.REMOTE_TARGET_SECOND)
+        }
+        scenarioRow(
+            R.id.scenario_s27,
+            "S27 端点按进程隔离（同时调 :remote2 与默认 :remote）",
+            "demoClock2 只在 :remote2 注册：target=remote2 → 正常返回；默认 target → 返回未注册（证明端点表按进程独立）",
+        ) {
+            callSecondProcessEndpoint()
+        }
+
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
@@ -369,6 +386,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** S27（批次 C）：同一个端点名在两个进程的可见性不同——证明端点表按进程独立。 */
+    private fun callSecondProcessEndpoint() {
+        val args = Bundle().apply { putString("q", "from-host") }
+        statusText.text = "正在调用端点 demoClock2（先 :remote2，再默认 :remote）…"
+        TRouter.callRemoteService("demoClock2", args, TRouterDemoApp.REMOTE_TARGET_SECOND) { fromSecond ->
+            val secondText = if (TRouter.isRemoteEndpointError(fromSecond)) "异常:$fromSecond" else fromSecond
+            TRouter.callRemoteService("demoClock2", args) { fromDefault ->
+                val defaultText = truncateForStatus(fromDefault)
+                statusText.text = "S27 结果 · :remote2 → $secondText ｜ 默认(:remote) → $defaultText"
+                Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun truncateForStatus(text: String): String =
+        if (text.length <= 60) text else text.take(60) + "…"
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_RESULT_DEMO && resultCode == Activity.RESULT_OK) {
@@ -415,11 +449,12 @@ class MainActivity : ComponentActivity() {
     }
 
     /** S11/S21：经跨进程通道导航（V4.0，可携带 bundle 参数）——先即时反馈"请求中"，结果异步回调再回显。 */
-    private fun openRemote(path: String, bundle: Bundle? = null) {
+    private fun openRemote(path: String, bundle: Bundle? = null, target: String? = null) {
         // 立即反馈：bind/远端执行是异步的，先让用户看到"已在处理"
-        statusText.text = "跨进程请求中…（:remote）"
-        Toast.makeText(this, "正在向 :remote 进程发起导航：$path", Toast.LENGTH_SHORT).show()
-        TRouter.navigateRemote(path, bundle) { result ->
+        val targetLabel = target ?: ":remote"
+        statusText.text = "跨进程请求中…（$targetLabel）"
+        Toast.makeText(this, "正在向 $targetLabel 进程发起导航：$path", Toast.LENGTH_SHORT).show()
+        TRouter.navigateRemote(path, bundle, target) { result ->
             runOnUiThread {
                 when (result) {
                     is TRouterResult.Success -> {

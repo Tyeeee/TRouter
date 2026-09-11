@@ -25,6 +25,11 @@ import com.trouter.core.internal.RemoteRouterService
  */
 class TRouterDemoApp : Application() {
 
+    companion object {
+        /** 批次 C：第二个远端目标（:remote2）的逻辑名，与 TRouterConfig.remoteServices 的 key 对应。 */
+        const val REMOTE_TARGET_SECOND: String = "remote2"
+    }
+
     override fun onCreate() {
         super.onCreate()
         val config = TRouterConfig(
@@ -35,6 +40,10 @@ class TRouterDemoApp : Application() {
             targetInterceptorResolver = { className -> TRouterTargetInterceptorNames.namesOf(className) },
             // 批次 B：异步拦截器超时（S25 演示用：异步耗时 3000ms > 本超时 → Blocked 收口）
             asyncInterceptorTimeoutMs = 1_500L,
+            // 批次 C：第二个跨进程目标（:remote2）。target=null 仍走上面的 remoteService（:remote）
+            remoteServices = mapOf(
+                REMOTE_TARGET_SECOND to ComponentName(this, RemoteRouterServiceSecond::class.java),
+            ),
         )
         TRouter.init(this, config)
         TRouter.install(DemoRouteRegistry)
@@ -44,6 +53,14 @@ class TRouterDemoApp : Application() {
             TRouter.registerRemoteEndpoint("demoClock") { args ->
                 val q = args?.getString("q") ?: "none"
                 "clock-v1 q=$q pid=${Process.myPid()}"
+            }
+        }
+        // 批次 C：第三个进程注册自己的端点——端点表按进程独立，
+        // 因此 host 用 target="remote2" 能调到 demoClock2，用默认 target 只会拿到"未注册"
+        if (DemoProcess.isInProcess(this, ":remote2")) {
+            TRouter.registerRemoteEndpoint("demoClock2") { args ->
+                val q = args?.getString("q") ?: "none"
+                "clock2-v1 q=$q pid=${Process.myPid()}"
             }
         }
         // L3：给 @Interceptor(remoteAudit) 绑一个 no-op 观察者（演示不拦截，仅证明绑定链在跑）

@@ -48,6 +48,9 @@ object RouterContract {
     /** V5.0 动态路由演示：/dynamic-demo（运行时 registerRoute 注册；页面本身不标 @Route） */
     const val PATH_DYNAMIC_DEMO: String = "/dynamic-demo"
 
+    /** 批次 C 多进程演示：第二个远端进程（:remote2）的页面（@Route + @CrossProcess） */
+    const val PATH_REMOTE_THIRD: String = "/remote-third"
+
     /** 差距收敛 G3 演示：navigateForResult 结果回传目标页 */
     const val PATH_RESULT_DEMO: String = "/result-demo"
 

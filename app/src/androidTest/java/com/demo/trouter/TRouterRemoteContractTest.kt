@@ -62,7 +62,7 @@ class TRouterRemoteContractTest : BaseTRouterTest() {
     fun remoteUnconfiguredReturnsBlockedImmediately() {
         reInit(remoteConfig(whitelist = CrossProcessPaths.paths, service = null))
 
-        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, cb) }
+        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, onResult = cb) }
 
         assertTrue("应返回 Blocked: $result", result is TRouterResult.Blocked)
         assertTrue("reason 应含未配置: ${(result as TRouterResult.Blocked).reason}", result.reason.contains("未配置"))
@@ -75,7 +75,7 @@ class TRouterRemoteContractTest : BaseTRouterTest() {
     fun remoteWhitelistBlocksUnlistedPath() {
         reInit(remoteConfig(whitelist = CrossProcessPaths.paths)) // 白名单仅 /remote-second
 
-        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_SECOND, null, cb) }
+        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_SECOND, null, onResult = cb) }
 
         assertTrue("应返回 Blocked: $result", result is TRouterResult.Blocked)
         assertTrue(
@@ -90,7 +90,7 @@ class TRouterRemoteContractTest : BaseTRouterTest() {
     fun remoteNotFoundIsMappedWithoutHostOnLost() {
         reInit(remoteConfig(whitelist = CrossProcessPaths.paths + RouterContract.PATH_UNREGISTERED))
 
-        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_UNREGISTERED, null, cb) }
+        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_UNREGISTERED, null, onResult = cb) }
 
         assertEquals(TRouterResult.NotFound(RouterContract.PATH_UNREGISTERED), result)
         assertTrue("远端 NotFound 不应触发 host onLost", lostPaths.isEmpty())
@@ -105,11 +105,11 @@ class TRouterRemoteContractTest : BaseTRouterTest() {
     fun secondRemoteCallReusesConnectedService() {
         reInit(remoteConfig(whitelist = CrossProcessPaths.paths))
 
-        val first = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, cb) }
+        val first = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, onResult = cb) }
         assertTrue("首次应 Success: $first", first is TRouterResult.Success)
 
         // 不 reset：同一客户端、同一条已连接通道上发起第二次调用
-        val second = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, cb) }
+        val second = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, onResult = cb) }
         assertTrue("第二次应 Success（连接态需主动派发，不得超时）: $second", second is TRouterResult.Success)
 
         val recvCount = logs.lines.count { it.contains("[remote][recv]") }
@@ -122,7 +122,7 @@ class TRouterRemoteContractTest : BaseTRouterTest() {
     fun remoteSuccessAndTraceCorrelation() {
         reInit(remoteConfig(whitelist = CrossProcessPaths.paths))
 
-        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, cb) }
+        val result = awaitRemote { cb -> TRouter.navigateRemote(RouterContract.PATH_REMOTE_SECOND, null, onResult = cb) }
 
         assertTrue("应返回 Success: $result", result is TRouterResult.Success)
         assertEquals(RouterContract.PATH_REMOTE_SECOND, (result as TRouterResult.Success).meta.path)

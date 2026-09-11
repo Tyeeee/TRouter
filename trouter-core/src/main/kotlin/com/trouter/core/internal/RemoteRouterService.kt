@@ -15,8 +15,11 @@ import java.util.UUID
  * remote 进程的 Application.onCreate 会各自 init/install 一份 TRouter，
  * 因此本服务直接调用 TRouter.navigate 即由**远端进程自己的路由表**解析并打开远端页面，
  * 再把结果摘要（RemoteReplyCodec）返回 host。
+ *
+ * 多进程（批次 C）：本类为 **open**，宿主需要第二个跨进程进程时，
+ * 声明一个子类并在 manifest 里指定 `android:process=":remote2"` 即可（同一个类不能声明两次）。
  */
-class RemoteRouterService : Service() {
+open class RemoteRouterService : Service() {
 
     private val binder = object : IRouterService.Stub() {
         override fun navigate(path: String?, bundle: Bundle?): String {

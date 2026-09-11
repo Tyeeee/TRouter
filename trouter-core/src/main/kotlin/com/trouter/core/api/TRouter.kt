@@ -2,6 +2,7 @@ package com.trouter.core.api
 
 import android.app.Activity
 import android.app.Application
+import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -88,8 +89,17 @@ object TRouter {
     private var resumedActivity: WeakReference<Activity>? = null
     private var timberPlanted = false
 
-    // V4.0：host 侧跨进程通道客户端（按需 bind，reset 时断开）
-    private val remoteRouter = RemoteRouter()
+    // V4.0：host 侧跨进程通道客户端（按需 bind，reset 时断开）。
+    // 批次 C：**每个目标进程一个客户端实例**——连接/队列状态按进程隔离，互不干扰。
+    private val remoteRoutersLock = Any()
+    private val remoteRouters = LinkedHashMap<String, RemoteRouter>()
+
+    private fun remoteRouterFor(component: ComponentName?, target: String?): RemoteRouter {
+        val key = component?.flattenToString() ?: "default:${target ?: "-"}"
+        return synchronized(remoteRoutersLock) {
+            remoteRouters.getOrPut(key) { RemoteRouter() }
+        }
+    }
 
     // 批次 B：异步链的恢复执行与结果回调统一回主线程（打开页面必须主线程）
     private val mainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
@@ -1176,7 +1186,12 @@ object TRouter {
      *
      * 要求：config.remoteService 已配置且远端进程 Application 已 init/install（各进程独立路由表）。
      */
-    fun navigateRemote(path: String, bundle: Bundle? = null, onResult: (TRouterResult) -> Unit) {
+    fun navigateRemote(
+        path: String,
+        bundle: Bundle? = null,
+        target: String? = null,
+        onResult: (TRouterResult) -> Unit,
+    ) {
         if (!initialized) {
             onResult(TRouterResult.NotInitialized)
             return
@@ -1186,16 +1201,35 @@ object TRouter {
             onResult(TRouterResult.Blocked(path, "remote 通道未初始化（TRouter.init 未完成）"))
             return
         }
-        remoteRouter.navigate(ctx, config.remoteService, config.remoteWhitelist, path, bundle, onResult) {
+        val component = resolveRemoteComponent(target)
+        if (target != null && component == null) {
+            onResult(TRouterResult.Blocked(path, remoteTargetMissingReason(target)))
+            return
+        }
+        // 注意：target=null 且 remoteService 为空时**继续下传**，由 RemoteRouter 按既有语义
+        // 返回 Blocked 并输出 [remote][fail] 日志（保持"未配置"这一契约的文案与可观测性不变）
+        remoteRouterFor(component, target).navigate(ctx, component, config.remoteWhitelist, path, bundle, onResult) {
             log(it)
         }
     }
+
+    /** 解析目标进程的 AIDL 服务组件：target=null → 默认 [TRouterConfig.remoteService]；否则查 [TRouterConfig.remoteServices]。 */
+    private fun resolveRemoteComponent(target: String?): ComponentName? =
+        if (target == null) config.remoteService else config.remoteServices[target]
+
+    private fun remoteTargetMissingReason(target: String?): String =
+        "未配置 target=$target 的跨进程服务（请加入 TRouterConfig.remoteServices，为其声明 RemoteRouterService 子类，并在 manifest 指定 android:process）"
 
     /**
      * G2-remote：跨进程调用远端进程注册的服务端点（结果原样 String 回传主线程；
      * 失败以 RemoteReplyCodec.SERVICE_ERROR_PREFIX 前缀串表达）。
      */
-    fun callRemoteService(name: String, args: Bundle? = null, onResult: (String) -> Unit) {
+    fun callRemoteService(
+        name: String,
+        args: Bundle? = null,
+        target: String? = null,
+        onResult: (String) -> Unit,
+    ) {
         if (!initialized) {
             onResult(REMOTE_ERR_PREFIX + "TRouter 未初始化")
             return
@@ -1205,7 +1239,12 @@ object TRouter {
             onResult(REMOTE_ERR_PREFIX + "remote 通道未初始化（TRouter.init 未完成）")
             return
         }
-        remoteRouter.callService(ctx, config.remoteService, name, args, onResult) { log(it) }
+        val component = resolveRemoteComponent(target)
+        if (target != null && component == null) {
+            onResult(REMOTE_ERR_PREFIX + " " + remoteTargetMissingReason(target))
+            return
+        }
+        remoteRouterFor(component, target).callService(ctx, component, name, args, onResult) { log(it) }
     }
 
     // ------------------------------------------------------------------ 测试支持
@@ -1221,7 +1260,10 @@ object TRouter {
 
     /** 测试底座专用：清空路由表与状态（core internal，同模块 debug 源码集可见）。 */
     internal fun resetForTest() {
-        remoteRouter.disconnect()
+        synchronized(remoteRoutersLock) {
+            remoteRouters.values.forEach { it.disconnect() }
+            remoteRouters.clear()
+        }
         synchronized(liveInterceptorsLock) { liveInterceptors.clear() }
         synchronized(targetBindingsLock) { targetBindings.clear() }
         synchronized(aliasLock) { aliasTable.clear() }

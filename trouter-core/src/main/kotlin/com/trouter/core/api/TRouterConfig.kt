@@ -26,6 +26,11 @@ import android.content.ComponentName
  * 差距收敛新增：
  * - [deeplinkSchemes]：允许经 navigateUri 进入路由的 scheme 白名单（G1）；空集合 = 未启用深链。
  *
+ * 批次 C 新增（多进程）：
+ * - [remoteServices]：**额外的**跨进程服务组件，key 为逻辑目标名（如 "remote2"）。
+ *   `navigateRemote/callRemoteService` 的 `target` 参数即按此表查找；`target=null` 时走 [remoteService]（默认进程）。
+ *   宿主可为每个额外进程声明一个 `RemoteRouterService` 子类（该类是 open）并在 manifest 指定 android:process。
+ *
  * 批次 B 新增（异步拦截器）：
  * - [asyncInterceptorTimeoutMs]：异步拦截器单轮终止的超时时间（默认 5000ms）。
  *   超过该时间未调用 proceed/block/redirect → 该次导航按 Blocked 收口（reason 含超时信息），
@@ -42,4 +47,5 @@ open class TRouterConfig(
     val targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
     val deeplinkSchemes: Set<String> = emptySet(),
     val asyncInterceptorTimeoutMs: Long = 5_000L,
+    val remoteServices: Map<String, ComponentName> = emptyMap(),
 )

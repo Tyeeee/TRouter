@@ -35,6 +35,16 @@
             android:name="com.trouter.core.internal.RemoteRouterService"
             android:exported="false"
             android:process=":remote" />
+        <!-- 批次 C 多进程：第三个进程 :remote2 的页面与其 AIDL 服务（服务为 core 类的空子类） -->
+        <activity
+            android:name=".RemoteThirdActivity"
+            android:exported="false"
+            android:process=":remote2"
+            android:theme="@style/Theme.TRouterDemo" />
+        <service
+            android:name=".RemoteRouterServiceSecond"
+            android:exported="false"
+            android:process=":remote2" />
         <!-- V5.0 动态路由演示：普通 Activity（不标 @Route，运行时注册） -->
         <activity
             android:name=".DynamicDemoActivity"

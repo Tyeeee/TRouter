@@ -20,6 +20,7 @@ class TestConfig(
     targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
     deeplinkSchemes: Set<String> = emptySet(),
     asyncInterceptorTimeoutMs: Long = 5_000L,
+    remoteServices: Map<String, ComponentName> = emptyMap(),
 ) : TRouterConfig(
     isDebug = isDebug,
     logSink = logSink,
@@ -30,4 +31,5 @@ class TestConfig(
     targetInterceptorResolver = targetInterceptorResolver,
     deeplinkSchemes = deeplinkSchemes,
     asyncInterceptorTimeoutMs = asyncInterceptorTimeoutMs,
+    remoteServices = remoteServices,
 )

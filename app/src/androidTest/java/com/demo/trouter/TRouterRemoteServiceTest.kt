@@ -50,7 +50,11 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
         )
         val hostPid = Process.myPid()
         val reply = awaitString { cb ->
-            TRouter.callRemoteService("demoClock", Bundle().apply { putString("q", "跨进程服务参数") }, cb)
+            TRouter.callRemoteService(
+            "demoClock",
+            Bundle().apply { putString("q", "跨进程服务参数") },
+            onResult = cb,
+        )
         }
         assertTrue("应命中远端端点: $reply", reply.startsWith("clock-v1"))
         assertTrue("参数应原样到达远端: $reply", reply.contains("q=跨进程服务参数"))
@@ -72,7 +76,7 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
                 remoteService = ComponentName(ctx, RemoteRouterService::class.java),
             ),
         )
-        val reply = awaitString { cb -> TRouter.callRemoteService("noSuchEndpoint", null, cb) }
+        val reply = awaitString { cb -> TRouter.callRemoteService("noSuchEndpoint", null, onResult = cb) }
         assertTrue("应返回错误串: $reply", reply.startsWith("-ERR "))
         assertTrue("错误原因含 unregistered", reply.contains("unregistered"))
     }
@@ -83,7 +87,7 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
         reInit(
             TRouterConfig(isDebug = true, logSink = logs),
         )
-        val reply = awaitString { cb -> TRouter.callRemoteService("demoClock", null, cb) }
+        val reply = awaitString { cb -> TRouter.callRemoteService("demoClock", null, onResult = cb) }
         assertTrue("应返回错误串: $reply", reply.startsWith("-ERR "))
     }
 }
