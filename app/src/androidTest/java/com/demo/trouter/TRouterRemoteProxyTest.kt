@@ -36,6 +36,10 @@ class TRouterRemoteProxyTest {
                     7L,
                 )
             }
+
+            // G2 跨进程服务：本用例只验证 navigate 的透明委托，服务通道按协议返回"未注册"错误串即可
+            override fun callService(name: String?, args: Bundle?): String =
+                "-ERR unregistered:${name ?: "null"}"
         }
 
         val proxy = RemoteProxies.delegating(fake)

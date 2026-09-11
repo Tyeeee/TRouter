@@ -7,7 +7,8 @@ import com.trouter.core.api.TRouterConfig
 /**
  * 测试统一配置：默认 isDebug=true（R3 日志完整输出分支），
  * 并接入日志收集器与 onLost 记录器，便于行为断言。
- * V2.0 起可注入 [interceptors]（拦截器用例：S08/S09/S10）。
+ * V2.0 起可注入 [interceptors]（拦截器用例：S08/S09/S10）；
+ * 批次 B 起可注入 [deeplinkSchemes]（G1 深链）与 [asyncInterceptorTimeoutMs]（异步拦截器超时）。
  */
 class TestConfig(
     isDebug: Boolean = true,
@@ -17,6 +18,8 @@ class TestConfig(
     remoteService: ComponentName? = null,
     remoteWhitelist: Set<String>? = null,
     targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
+    deeplinkSchemes: Set<String> = emptySet(),
+    asyncInterceptorTimeoutMs: Long = 5_000L,
 ) : TRouterConfig(
     isDebug = isDebug,
     logSink = logSink,
@@ -25,4 +28,6 @@ class TestConfig(
     remoteService = remoteService,
     remoteWhitelist = remoteWhitelist,
     targetInterceptorResolver = targetInterceptorResolver,
+    deeplinkSchemes = deeplinkSchemes,
+    asyncInterceptorTimeoutMs = asyncInterceptorTimeoutMs,
 )

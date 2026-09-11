@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -237,6 +238,30 @@ class MainActivity : ComponentActivity() {
             openForResult(RouterContract.PATH_RESULT_DEMO)
         }
 
+        sectionTitle("I · 异步拦截器（批次 B · S23–S25）")
+        infoLine("开启 S23 后，/second 的链里会有一个异步拦截器：同步 navigate 会被**明确拒绝**（S01 变 Blocked），S24 用 navigateAsync 正常放行。")
+        scenarioRow(
+            R.id.scenario_s23,
+            "S23 异步拦截器开关（延时 300ms 放行 /second）",
+            "开启后 S01 同步导航 → Blocked（reason 提示改用 navigateAsync）；S24 仍可正常打开",
+        ) {
+            toggleAsyncInterceptor()
+        }
+        scenarioRow(
+            R.id.scenario_s24,
+            "S24 navigateAsync 导航（异步链正常放行）",
+            "navigateAsync(${RouterContract.PATH_SECOND}) · 期望：状态栏 Success，回调在主线程且只回调一次",
+        ) {
+            openAsync(RouterContract.PATH_SECOND)
+        }
+        scenarioRow(
+            R.id.scenario_s25,
+            "S25 异步拦截器超时收口",
+            "把异步耗时拉到 3000ms（> 配置超时 1500ms）· 期望：Blocked，reason 含「异步拦截器超时」，页面不打开",
+        ) {
+            openAsyncTimeout()
+        }
+
         sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
         infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
         val routes = TRouter.registeredRoutes()
@@ -295,6 +320,52 @@ class MainActivity : ComponentActivity() {
             }
             TRouterResult.NotInitialized -> statusText.text = "TRouter 未初始化"
             is TRouterResult.NotFound -> statusText.text = "未找到:${r.path}"
+        }
+    }
+
+    /** S23（批次 B）：切换异步拦截器开关——开启后同步导航会被明确拒绝，这是**设计如此**。 */
+    private fun toggleAsyncInterceptor() {
+        val a = DemoInterceptors.async
+        a.enabled = !a.enabled
+        if (a.enabled) a.delayMs = 300L
+        statusText.text = if (a.enabled) {
+            "异步拦截器已开启（延时 ${a.delayMs}ms 放行 ${RouterContract.PATH_SECOND}）：同步 navigate 将被 Blocked"
+        } else {
+            "异步拦截器已关闭（链回到纯同步）"
+        }
+        Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+    }
+
+    /** S24（批次 B）：navigateAsync —— 异步链正常放行，回调在主线程且只回调一次。 */
+    private fun openAsync(path: String) {
+        statusText.text = "navigateAsync 已发起: $path"
+        TRouter.navigateAsync(path) { r ->
+            val mainThread = Looper.myLooper() === Looper.getMainLooper()
+            statusText.text = when (r) {
+                is TRouterResult.Success -> "navigateAsync ✓ ${r.meta.path}（回调线程=主线程:$mainThread）"
+                is TRouterResult.Blocked -> "navigateAsync 被拒绝: ${r.reason}"
+                is TRouterResult.NotFound -> "navigateAsync 未找到: ${r.path}"
+                TRouterResult.NotInitialized -> "TRouter 未初始化"
+            }
+            Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** S25（批次 B）：把异步耗时拉到超过配置超时，验证超时收口 + 迟到放行被忽略。 */
+    private fun openAsyncTimeout() {
+        val a = DemoInterceptors.async
+        a.enabled = true
+        a.delayMs = 3000L
+        statusText.text = "navigateAsync（异步耗时 ${a.delayMs}ms > 超时 1500ms）已发起…"
+        TRouter.navigateAsync(RouterContract.PATH_SECOND) { r ->
+            a.delayMs = 300L
+            statusText.text = when (r) {
+                is TRouterResult.Blocked -> "超时收口 ✓ ${r.reason}（此后迟到的放行被忽略）"
+                is TRouterResult.Success -> "意外成功（应超时）: ${r.meta.path}"
+                is TRouterResult.NotFound -> "未找到: ${r.path}"
+                TRouterResult.NotInitialized -> "TRouter 未初始化"
+            }
+            Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
         }
     }
 

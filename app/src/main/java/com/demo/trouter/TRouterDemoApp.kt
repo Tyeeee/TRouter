@@ -33,6 +33,8 @@ class TRouterDemoApp : Application() {
             remoteService = ComponentName(this, RemoteRouterService::class.java),
             remoteWhitelist = CrossProcessPaths.paths,
             targetInterceptorResolver = { className -> TRouterTargetInterceptorNames.namesOf(className) },
+            // 批次 B：异步拦截器超时（S25 演示用：异步耗时 3000ms > 本超时 → Blocked 收口）
+            asyncInterceptorTimeoutMs = 1_500L,
         )
         TRouter.init(this, config)
         TRouter.install(DemoRouteRegistry)

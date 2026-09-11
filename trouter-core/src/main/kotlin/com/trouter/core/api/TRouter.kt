@@ -5,12 +5,15 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import com.trouter.core.internal.FragmentContainerActivity
 import com.trouter.core.internal.RemoteRouter
 import com.trouter.core.internal.RouteTable
 import java.lang.ref.WeakReference
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
 import timber.log.Timber
 
 /**
@@ -87,6 +90,13 @@ object TRouter {
 
     // V4.0：host 侧跨进程通道客户端（按需 bind，reset 时断开）
     private val remoteRouter = RemoteRouter()
+
+    // 批次 B：异步链的恢复执行与结果回调统一回主线程（打开页面必须主线程）
+    private val mainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
+
+    private fun runOnMain(block: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) block() else mainHandler.post(block)
+    }
 
     // ------------------------------------------------------------------ 生命周期
 
@@ -196,6 +206,47 @@ object TRouter {
     }
 
     /**
+     * 异步导航（批次 B）：链中允许出现 [AsyncInterceptor]，结果通过 [onResult] 回调（主线程，只回调一次）。
+     *
+     * 与同步 [navigate] 的差异：
+     * - 异步拦截器可在任意线程延后终止本轮（proceed/block/redirect），剩余链与打开目标由框架切回主线程执行；
+     * - 超过 `TRouterConfig.asyncInterceptorTimeoutMs` 未终止 → `Blocked`（reason 含超时信息）；
+     * - 返回 [RouteRequest] 可取消：取消后迟到的 proceed 不会打开目标。
+     *
+     * @return 取消句柄（无需取消时忽略即可）
+     */
+    fun navigateAsync(path: String, bundle: Bundle? = null, onResult: (TRouterResult) -> Unit): RouteRequest {
+        val delivered = AtomicBoolean(false)
+        fun deliver(result: TRouterResult) {
+            if (delivered.compareAndSet(false, true)) runOnMain { onResult(result) }
+        }
+
+        if (!initialized) {
+            deliver(TRouterResult.NotInitialized)
+            return RouteRequest {}
+        }
+        val traceId = UUID.randomUUID().toString().replace("-", "").take(8)
+        val request = RouteRequest {
+            log("[navigate][cancel] traceId=$traceId path=$path")
+            deliver(TRouterResult.Blocked(path, "导航已取消（RouteRequest.cancel）"))
+        }
+        // 整条链统一在主线程起步；异步成员恢复时再切回主线程（见 AsyncChainRun.await）
+        runOnMain {
+            runNavigate(
+                path = path,
+                bundle = bundle,
+                traceId = traceId,
+                redirectHop = 0,
+                requestCode = null,
+                allowAsync = true,
+                cancelled = { request.isCancelled },
+                finish = ::deliver,
+            )
+        }
+        return request
+    }
+
+    /**
      * 单跳导航实现（Redirect 重入复用本方法，同一 traceId 贯穿各跳）。
      * 每跳独立记录 navigate 入口/出口日志，hop 标注跳数（0 = 用户首次导航）。
      */
@@ -206,90 +257,310 @@ object TRouter {
         redirectHop: Int,
         requestCode: Int? = null,
     ): TRouterResult {
-        val startMs = SystemClock.elapsedRealtime()
+        var captured: TRouterResult? = null
+        runNavigate(
+            path = path,
+            bundle = bundle,
+            traceId = traceId,
+            redirectHop = redirectHop,
+            requestCode = requestCode,
+            allowAsync = false,
+            cancelled = { false },
+        ) { captured = it }
+        // allowAsync=false 时链不可能挂起：finish 必然在本次调用栈内同步完成
+        return captured ?: TRouterResult.Blocked(path, "链执行异常：未产出结果")
+    }
 
-        // 埋点：navigate 入口（每跳一条）
+    /**
+     * 单跳导航核心（批次 B 起为**同步/异步共用**）：解析 → 别名 → 拦截链 → 打开 → 结果映射
+     * （Redirect 以同 traceId 重入，跳数上限 MAX_REDIRECTS）。
+     *
+     * 两种模式：
+     * - [allowAsync]=false（同步 [navigate] / [navigateForResult]）：链中出现异步拦截器立即 Blocked，
+     *   **绝不阻塞主线程等待**——宁可明确报错，也不制造卡顿；
+     * - [allowAsync]=true（[navigateAsync]）：异步拦截器可在任意线程延后终止，剩余链与打开目标切回主线程。
+     *
+     * [finish] 通过内部 settled 守卫保证**只交付一次**结果（超时/取消/正常三选一）。
+     */
+    private fun runNavigate(
+        path: String,
+        bundle: Bundle?,
+        traceId: String,
+        redirectHop: Int,
+        requestCode: Int?,
+        allowAsync: Boolean,
+        cancelled: () -> Boolean,
+        finish: (TRouterResult) -> Unit,
+    ) {
+        val startMs = SystemClock.elapsedRealtime()
         log("[navigate][entry] traceId=$traceId hop=$redirectHop path=$path bundleKeys=${bundle?.size() ?: 0}")
 
-        // 未注册路径：先查 G5 别名（精确 -> 正则），命中则转向真实 path（记跳数防环）
-        var meta = routeTable.find(path)
-        if (meta == null) {
-            val resolved = resolveAlias(path)
-            if (resolved != null) {
-                if (redirectHop + 1 > MAX_REDIRECTS) {
-                    val cost = SystemClock.elapsedRealtime() - startMs
-                    val reason = "alias loop（>=$MAX_REDIRECTS 跳）: $path"
-                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=$path, reason=$reason) costMs=$cost")
-                    return TRouterResult.Blocked(path, reason)
-                }
-                log("[route][alias] from=$path to=$resolved hop=$redirectHop")
-                return navigateInternal(resolved, bundle, traceId, redirectHop + 1, requestCode)
-            }
-            val cost = SystemClock.elapsedRealtime() - startMs
-            // 埋点：navigate 出口（未找到）
-            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=NotFound(path=$path) costMs=$cost")
-            // 降级回调（不受 isDebug 影响）
-            config.onLost?.invoke(path)
-            return TRouterResult.NotFound(path)
+        if (cancelled()) {
+            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=$path, reason=已取消) costMs=0")
+            finish(TRouterResult.Blocked(path, "导航已取消"))
+            return
         }
 
-        // L4 拦截链：原子拦截器（RouteInterceptor）+ 洋葱包裹拦截器（WrappingInterceptor）统一执行，
-        // 链末端（或 wrapper 调 proceed()）打开目标。空列表 = 直接打开（零日志，行为与 V1.0 一致）。
-        // 打开/包装期间抛出的异常在链外统一按「打开失败」处理（Error 出口 + onLost），与 V1 语义一致。
-        val outcome = try {
-            runChain(meta, bundle, traceId, requestCode)
+        val meta = routeTable.find(path)
+        if (meta == null) {
+            // 未注册路径：先查 G5 别名（精确 -> 正则），命中则转向真实 path（记跳数防环）
+            val resolved = resolveAlias(path)
+            if (resolved == null) {
+                val cost = SystemClock.elapsedRealtime() - startMs
+                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=NotFound(path=$path) costMs=$cost")
+                config.onLost?.invoke(path)
+                finish(TRouterResult.NotFound(path))
+                return
+            }
+            if (redirectHop + 1 > MAX_REDIRECTS) {
+                val cost = SystemClock.elapsedRealtime() - startMs
+                val reason = "alias loop（>=$MAX_REDIRECTS 跳）: $path"
+                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=$path, reason=$reason) costMs=$cost")
+                finish(TRouterResult.Blocked(path, reason))
+                return
+            }
+            log("[route][alias] from=$path to=$resolved hop=$redirectHop")
+            runNavigate(resolved, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, finish)
+            return
+        }
+
+        var settled = false
+        val settle: (TRouterResult) -> Unit = { result ->
+            if (!settled) {
+                settled = true
+                finish(result)
+            }
+        }
+
+        try {
+            executeChain(meta, bundle, traceId, requestCode, allowAsync, cancelled) { outcome ->
+                val cost = SystemClock.elapsedRealtime() - startMs
+                when (outcome) {
+                    is ChainOutcome.Opened -> {
+                        log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Success(meta=${outcome.meta.path}, kind=${outcome.meta.kind}) costMs=$cost")
+                        settle(TRouterResult.Success(outcome.meta))
+                    }
+                    is ChainOutcome.Blocked -> {
+                        log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${outcome.path}, reason=${outcome.reason}) costMs=$cost")
+                        settle(TRouterResult.Blocked(outcome.path, outcome.reason))
+                    }
+                    is ChainOutcome.Redirected -> {
+                        if (redirectHop + 1 > MAX_REDIRECTS) {
+                            val reason = "redirect loop（>=${MAX_REDIRECTS + 1} 跳）: ${outcome.targetPath}"
+                            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${meta.path}, reason=$reason) costMs=$cost")
+                            settle(TRouterResult.Blocked(meta.path, reason))
+                        } else {
+                            log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${outcome.targetPath}) costMs=$cost")
+                            runNavigate(outcome.targetPath, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, settle)
+                        }
+                    }
+                }
+            }
         } catch (e: Throwable) {
+            // 打开/包裹期间抛出的异常统一按「打开失败」处理（Error 出口 + onLost），与 V1 语义一致
             val cost = SystemClock.elapsedRealtime() - startMs
             log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Error(${e.javaClass.simpleName}: ${e.message}) costMs=$cost")
             config.onLost?.invoke(path)
-            return TRouterResult.NotFound(path)
-        }
-
-        return when (outcome) {
-            is ChainOutcome.Opened -> {
-                val cost = SystemClock.elapsedRealtime() - startMs
-                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Success(meta=${outcome.meta.path}, kind=${outcome.meta.kind}) costMs=$cost")
-                TRouterResult.Success(outcome.meta)
-            }
-            is ChainOutcome.Blocked -> {
-                val cost = SystemClock.elapsedRealtime() - startMs
-                log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${outcome.path}, reason=${outcome.reason}) costMs=$cost")
-                TRouterResult.Blocked(outcome.path, outcome.reason)
-            }
-            is ChainOutcome.Redirected -> {
-                if (redirectHop + 1 > MAX_REDIRECTS) {
-                    val cost = SystemClock.elapsedRealtime() - startMs
-                    val reason = "redirect loop（>=${MAX_REDIRECTS + 1} 跳）: ${outcome.targetPath}"
-                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Blocked(path=${meta.path}, reason=$reason) costMs=$cost")
-                    TRouterResult.Blocked(meta.path, reason)
-                } else {
-                    // 本跳以重定向收尾：出口日志记 Redirect，再由目标 path 发起新跳（同 traceId）
-                    val cost = SystemClock.elapsedRealtime() - startMs
-                    log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${outcome.targetPath}) costMs=$cost")
-                    return navigateInternal(outcome.targetPath, bundle, traceId, redirectHop + 1, requestCode)
-                }
-            }
+            settle(TRouterResult.NotFound(path))
         }
     }
 
     /**
-     * L4 链执行入口：取 config.interceptors 快照后递归执行；链末端打开目标。
-     * 单次 navigate 的执行是同步调用栈推进（无并发交错）；拦截器内部抛异常按
-     * 「该拦截器故障 = Blocked」处理（不打开、不触发 onLost、不崩溃）。
+     * 链执行入口（同步/异步共用）：取链快照 → 空链直接打开目标 → 否则按模式执行。
+     * 链结果经 [onOutcome] 交付；同步模式保证返回前交付一次，异步模式可能延后交付。
      */
-    private fun runChain(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): ChainOutcome {
+    private fun executeChain(
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        requestCode: Int?,
+        allowAsync: Boolean,
+        cancelled: () -> Boolean,
+        onOutcome: (ChainOutcome) -> Unit,
+    ) {
         val members = combinedMembers(meta, traceId)
-            ?: return ChainOutcome.Blocked(meta.path, "目标拦截器未注册（@Interceptor names 需先 bindTargetInterceptor）")
-        if (members.isEmpty()) return openTargetOutcome(meta, bundle, traceId, requestCode)
+        if (members == null) {
+            onOutcome(ChainOutcome.Blocked(meta.path, "目标拦截器未注册（@Interceptor names 需先 bindTargetInterceptor）"))
+            return
+        }
+        if (members.isEmpty()) {
+            onOutcome(ChainOutcome.Opened(openTarget(meta, bundle, traceId, requestCode)))
+            return
+        }
 
-        val startMs = SystemClock.elapsedRealtime()
+        val chainStartMs = SystemClock.elapsedRealtime()
         log("[interceptor][start] traceId=$traceId path=${meta.path} interceptors=${members.size}")
 
-        val outcome = stepChain(members, 0, meta, bundle, traceId, requestCode)
+        var finished = false
+        val once: (ChainOutcome) -> Unit = { outcome ->
+            if (!finished) {
+                finished = true
+                log("[interceptor][end] traceId=$traceId decision=${describeOutcome(outcome)} costMs=${SystemClock.elapsedRealtime() - chainStartMs}")
+                onOutcome(outcome)
+            }
+        }
 
-        val cost = SystemClock.elapsedRealtime() - startMs
-        log("[interceptor][end] traceId=$traceId decision=${describeOutcome(outcome)} costMs=$cost")
-        return outcome
+        val handler = mainHandler
+        val timeoutMs = config.asyncInterceptorTimeoutMs
+        val runOnMainThread: (() -> Unit) -> Unit = { block ->
+            if (Looper.myLooper() == Looper.getMainLooper()) block() else handler.post(block)
+        }
+        val runSync: (Int) -> ChainOutcome = { from ->
+            stepChain(members, from, meta, bundle, traceId, requestCode)
+        }
+        val evalAtomic: (RouteInterceptor, Int) -> ChainOutcome? = { m, idx ->
+            evalRouteInterceptor(m, meta, bundle, traceId, idx)
+        }
+        val evalWrap: (WrappingInterceptor, Int, () -> ChainOutcome) -> ChainOutcome = { m, idx, proceed ->
+            evalWrappingInterceptor(m, meta, bundle, traceId, idx, proceed)
+        }
+
+        /**
+         * 异步链执行器（局部实现）：把"等待拦截器决策"从同步调用栈改为回调推进。
+         *
+         * 对外承诺（与 AsyncInterceptor / AsyncChain 文档一致）：
+         * - 每个异步成员必须三选一终止本轮（proceed / block / redirect），**单次有效**，重复调用抛 IllegalStateException；
+         * - 超时兜底 [timeoutMs]：超时按 Blocked 收口，迟到的终止一律忽略；
+         * - 调用方取消后，迟到的 proceed 不会打开目标；
+         * - 异步成员可在任意线程终止，剩余链与打开目标由框架切回主线程；
+         * - 链中可连续出现多个异步成员（各自独立超时窗口）；
+         * - 洋葱包裹拦截器**不能跨异步成员**（其 proceed 是同步契约）：命中时给出明确 Blocked，而不是静默错乱。
+         */
+        class AsyncRunner {
+            private var settled = false
+
+            /** 后置观察回调（"放行之后"的逻辑；只能观察，不能改写结果）。 */
+            private val postHooks = ArrayList<(ChainOutcome) -> Unit>()
+
+            fun start() = step(0)
+
+            private fun settle(outcome: ChainOutcome) {
+                if (settled) return
+                settled = true
+                // 逆序执行后置观察：内层先收尾，符合洋葱语义
+                for (i in postHooks.indices.reversed()) {
+                    runCatching { postHooks[i](outcome) }
+                }
+                once(outcome)
+            }
+
+            private fun step(index: Int) {
+                if (settled) return
+                if (index >= members.size) {
+                    settle(ChainOutcome.Opened(openTarget(meta, bundle, traceId, requestCode)))
+                    return
+                }
+                when (val member = members[index]) {
+                    is AsyncInterceptor -> await(member, index)
+                    is RouteInterceptor ->
+                        evalAtomic(member, index)?.let { settle(it) } ?: step(index + 1)
+                    is WrappingInterceptor -> {
+                        val asyncAfter = members.drop(index + 1).any { it is AsyncInterceptor }
+                        if (asyncAfter) {
+                            settle(
+                                ChainOutcome.Blocked(
+                                    meta.path,
+                                    "洋葱拦截器不能包裹异步拦截器（${member.javaClass.simpleName} 之后存在 AsyncInterceptor）：" +
+                                        "请把包裹逻辑改写为 AsyncInterceptor，或调整拦截器顺序",
+                                ),
+                            )
+                        } else {
+                            settle(evalWrap(member, index) { runSync(index + 1) })
+                        }
+                    }
+                    else -> settle(ChainOutcome.Blocked(meta.path, "未知拦截器类型: ${member.javaClass.name}"))
+                }
+            }
+
+            /** 等待异步成员终止：正常 / 拦截 / 改道 / 超时 / 取消 / 异常 六条路径都有明确收口。 */
+            private fun await(member: AsyncInterceptor, index: Int) {
+                // 匿名对象里这三个名字会与 AsyncChain 自身成员同名，先取别名再暴露
+                val waitMeta = meta
+                val waitBundle = bundle
+                val waitTrace = traceId
+                val terminated = AtomicBoolean(false)
+                var timeoutRunnable: Runnable? = null
+
+                fun terminate(outcome: ChainOutcome) {
+                    if (!terminated.compareAndSet(false, true)) return
+                    timeoutRunnable?.let { handler.removeCallbacks(it) }
+                    settle(outcome)
+                }
+
+                val chain = object : AsyncChain {
+                    override val meta: RouteMeta get() = waitMeta
+                    override val bundle: Bundle? get() = waitBundle
+                    override val traceId: String get() = waitTrace
+                    override val isCancelled: Boolean get() = cancelled()
+
+                    override fun proceed(done: (ChainOutcome) -> Unit) {
+                        if (!terminateOnce("proceed")) return
+                        if (cancelled()) {
+                            settle(ChainOutcome.Blocked(meta.path, "导航已取消（RouteRequest.cancel）"))
+                            return
+                        }
+                        postHooks.add(done)
+                        // 剩余链继续由同一执行器推进（可再遇异步成员）；恢复执行切回主线程
+                        runOnMainThread { step(index + 1) }
+                    }
+
+                    override fun block(reason: String) {
+                        if (!terminateOnce("block")) return
+                        settle(ChainOutcome.Blocked(meta.path, reason))
+                    }
+
+                    override fun redirect(targetPath: String) {
+                        if (!terminateOnce("redirect")) return
+                        settle(ChainOutcome.Redirected(targetPath))
+                    }
+
+                    /**
+                     * 终止守卫，返回是否应当继续本次终止动作：
+                     * - 已收口（超时/取消/先前已终止）→ 返回 false **静默忽略**：迟到放行可能发生在任意线程
+                     *   甚至 Handler 回调里，抛错会直接炸掉调用方，与"迟到一律忽略"的对外承诺也不一致；
+                     * - 同一成员重复终止（proceed 之后再 block/redirect）→ 抛 IllegalStateException，
+                     *   这是接入方的配置错误，必须显性暴露。
+                     */
+                    private fun terminateOnce(action: String): Boolean {
+                        if (settled) return false
+                        if (!terminated.compareAndSet(false, true)) {
+                            throw IllegalStateException(
+                                "AsyncChain 只能终止一次（proceed/block/redirect 三选一），重复调用被拒绝：$action",
+                            )
+                        }
+                        timeoutRunnable?.let { handler.removeCallbacks(it) }
+                        return true
+                    }
+                }
+
+                timeoutRunnable = Runnable {
+                    if (terminated.compareAndSet(false, true)) {
+                        log("[interceptor][async][timeout] traceId=$traceId class=${member.javaClass.simpleName} timeoutMs=$timeoutMs")
+                        settle(
+                            ChainOutcome.Blocked(
+                                meta.path,
+                                "异步拦截器超时（${timeoutMs}ms）: ${member.javaClass.simpleName}",
+                            ),
+                        )
+                    }
+                }
+                log("[interceptor][async][wait] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} timeoutMs=$timeoutMs")
+                handler.postDelayed(timeoutRunnable, timeoutMs)
+
+                try {
+                    member.intercept(chain)
+                } catch (e: Throwable) {
+                    log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+                    terminate(ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}"))
+                }
+            }
+        }
+
+        if (allowAsync) {
+            AsyncRunner().start()
+        } else {
+            once(stepChain(members, 0, meta, bundle, traceId, requestCode))
+        }
     }
 
     /**
@@ -324,7 +595,92 @@ object TRouter {
         return result
     }
 
-    /** 递归推进：index 到达成员末尾 = 打开目标；否则按成员类型执行（旧原子 or 洋葱包裹）。 */
+    /**
+     * 同步导航中执行异步成员（关键兼容语义）：
+     * 异步拦截器**若能立即放行**（不等待 IO，例如"开关关着就直接放行"），同步 navigate 照常可用；
+     * 只有当它**延迟放行**（真正需要等待）时，才返回 Blocked 提示改用 navigateAsync——
+     * 既守住"绝不阻塞主线程"的底线，也不误伤"链上挂了异步实现、但本次立即通过"的常见场景
+     * （例如 :remote 进程的全局链）。
+     *
+     * 迟到终止（本函数已按"未立即放行"收口后才到达的 proceed/block/redirect）一律静默忽略，与超时语义一致。
+     */
+    private fun runAsyncMemberSynchronously(
+        member: AsyncInterceptor,
+        members: List<RouteChainMember>,
+        index: Int,
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        requestCode: Int?,
+    ): ChainOutcome {
+        // 匿名对象里的成员名会与 AsyncChain 同名，先取别名
+        val waitMeta = meta
+        val waitBundle = bundle
+        val waitTrace = traceId
+
+        var terminated = false
+        var closed = false
+        var outcome: ChainOutcome? = null
+
+        fun once(action: String): Boolean {
+            if (closed) return false // 已按"未立即放行"收口：迟到终止静默忽略
+            if (terminated) {
+                throw IllegalStateException(
+                    "AsyncChain 只能终止一次（proceed/block/redirect 三选一），重复调用被拒绝：$action",
+                )
+            }
+            terminated = true
+            return true
+        }
+
+        val chain = object : AsyncChain {
+            override val meta: RouteMeta get() = waitMeta
+            override val bundle: Bundle? get() = waitBundle
+            override val traceId: String get() = waitTrace
+            override val isCancelled: Boolean get() = false
+
+            override fun proceed(done: (ChainOutcome) -> Unit) {
+                if (!once("proceed")) return
+                val rest = stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+                runCatching { done(rest) }
+                outcome = rest
+            }
+
+            override fun block(reason: String) {
+                if (!once("block")) return
+                outcome = ChainOutcome.Blocked(waitMeta.path, reason)
+            }
+
+            override fun redirect(targetPath: String) {
+                if (!once("redirect")) return
+                outcome = ChainOutcome.Redirected(targetPath)
+            }
+        }
+
+        try {
+            member.intercept(chain)
+        } catch (e: Throwable) {
+            log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+            return ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
+        }
+
+        val immediate = outcome
+        if (immediate == null) {
+            closed = true
+            log("[interceptor][async][deferred-sync] traceId=$traceId class=${member.javaClass.simpleName}")
+            return ChainOutcome.Blocked(
+                meta.path,
+                "异步拦截器 ${member.javaClass.simpleName} 在同步导航中没有立即放行（延迟放行会阻塞主线程，已被拒绝）：" +
+                    "请改用 TRouter.navigateAsync(path, bundle) { result -> ... }",
+            )
+        }
+        return immediate
+    }
+
+    /**
+     * 递归推进（同步模式）：index 到达成员末尾 = 打开目标；否则按成员类型执行。
+     * 异步拦截器在同步模式下**明确 Blocked**（提示改用 navigateAsync），不做任何等待。
+     */
     private fun stepChain(
         members: List<RouteChainMember>,
         index: Int,
@@ -335,47 +691,75 @@ object TRouter {
     ): ChainOutcome {
         if (index >= members.size) return openTargetOutcome(meta, bundle, traceId, requestCode)
 
-        val member = members[index]
-        return when (member) {
-            is RouteInterceptor -> {
-                val decision = try {
-                    member.intercept(meta, bundle)
-                } catch (e: Throwable) {
-                    log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
-                    return ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
+        return when (val member = members[index]) {
+            is RouteInterceptor ->
+                evalRouteInterceptor(member, meta, bundle, traceId, index)
+                    ?: stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+            is WrappingInterceptor ->
+                evalWrappingInterceptor(member, meta, bundle, traceId, index) {
+                    stepChain(members, index + 1, meta, bundle, traceId, requestCode)
                 }
-                log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=${describeDecision(decision)}")
-                when (decision) {
-                    InterceptorDecision.Continue -> stepChain(members, index + 1, meta, bundle, traceId, requestCode)
-                    is InterceptorDecision.Block -> ChainOutcome.Blocked(meta.path, decision.reason)
-                    is InterceptorDecision.Redirect -> ChainOutcome.Redirected(decision.targetPath)
-                }
-            }
-            is WrappingInterceptor -> {
-                log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=Wrap")
-                val nextIndex = index + 1
-                val singleShotChain = object : InterceptorChain {
-                    override val meta: RouteMeta = meta
-                    override val bundle: Bundle? = bundle
-                    private var consumed = false
-
-                    override fun proceed(): ChainOutcome {
-                        if (consumed) {
-                            // 同一条链二次放行 = 重复打开目标的隐患，直接抛错（由外层按拦截器故障处理）
-                            throw IllegalStateException("InterceptorChain.proceed 只能调用一次（防止重复打开目标）")
-                        }
-                        consumed = true
-                        return stepChain(members, nextIndex, meta, bundle, traceId, requestCode)
-                    }
-                }
-                try {
-                    member.intercept(singleShotChain)
-                } catch (e: Throwable) {
-                    log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
-                    ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
-                }
-            }
+            is AsyncInterceptor -> runAsyncMemberSynchronously(member, members, index, meta, bundle, traceId, requestCode)
             else -> ChainOutcome.Blocked(meta.path, "未知拦截器类型: ${member.javaClass.name}")
+        }
+    }
+
+    /**
+     * 原子拦截器求值（同步/异步共用）。
+     * @return null = 放行到下一个成员；非 null = 该成员直接定案（Block / Redirect / 拦截器故障）
+     */
+    private fun evalRouteInterceptor(
+        member: RouteInterceptor,
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        index: Int,
+    ): ChainOutcome? {
+        val decision = try {
+            member.intercept(meta, bundle)
+        } catch (e: Throwable) {
+            log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+            return ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
+        }
+        log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=${describeDecision(decision)}")
+        return when (decision) {
+            InterceptorDecision.Continue -> null
+            is InterceptorDecision.Block -> ChainOutcome.Blocked(meta.path, decision.reason)
+            is InterceptorDecision.Redirect -> ChainOutcome.Redirected(decision.targetPath)
+        }
+    }
+
+    /**
+     * 洋葱包裹拦截器求值（同步/异步共用）：[proceed] 为"放行到剩余链"的同步句柄，
+     * 同一 chain 实例只允许调用一次（重复调用抛错，防重复打开目标）。
+     */
+    private fun evalWrappingInterceptor(
+        member: WrappingInterceptor,
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        index: Int,
+        proceed: () -> ChainOutcome,
+    ): ChainOutcome {
+        log("[interceptor][eval] traceId=$traceId index=${index + 1} class=${member.javaClass.simpleName} decision=Wrap")
+        val singleShotChain = object : InterceptorChain {
+            override val meta: RouteMeta = meta
+            override val bundle: Bundle? = bundle
+            private var consumed = false
+
+            override fun proceed(): ChainOutcome {
+                if (consumed) {
+                    throw IllegalStateException("InterceptorChain.proceed 只能调用一次（防止重复打开目标）")
+                }
+                consumed = true
+                return proceed()
+            }
+        }
+        return try {
+            member.intercept(singleShotChain)
+        } catch (e: Throwable) {
+            log("[interceptor][eval] traceId=$traceId error=${e.javaClass.simpleName}: ${e.message}")
+            ChainOutcome.Blocked(meta.path, "interceptor error: ${e.javaClass.simpleName}: ${e.message}")
         }
     }
 

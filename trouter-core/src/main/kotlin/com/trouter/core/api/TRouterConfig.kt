@@ -25,6 +25,12 @@ import android.content.ComponentName
  *
  * 差距收敛新增：
  * - [deeplinkSchemes]：允许经 navigateUri 进入路由的 scheme 白名单（G1）；空集合 = 未启用深链。
+ *
+ * 批次 B 新增（异步拦截器）：
+ * - [asyncInterceptorTimeoutMs]：异步拦截器单轮终止的超时时间（默认 5000ms）。
+ *   超过该时间未调用 proceed/block/redirect → 该次导航按 Blocked 收口（reason 含超时信息），
+ *   此后再调用 proceed 一律被忽略。同步 navigate 不受本项影响：它只接受**立即放行**的异步成员，
+ *   遇到延迟放行的成员会直接 Blocked 并提示改用 navigateAsync。
  */
 open class TRouterConfig(
     val isDebug: Boolean = false,
@@ -35,4 +41,5 @@ open class TRouterConfig(
     val remoteWhitelist: Set<String>? = null,
     val targetInterceptorResolver: ((targetClassName: String) -> List<String>)? = null,
     val deeplinkSchemes: Set<String> = emptySet(),
+    val asyncInterceptorTimeoutMs: Long = 5_000L,
 )
