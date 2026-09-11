@@ -37,7 +37,8 @@ class TRouterDemoApp : Application() {
         TRouter.init(this, config)
         TRouter.install(DemoRouteRegistry)
         // G2-remote：仅在 :remote 进程注册跨进程服务端点（host 不注册 → 测试可证明走的是真实跨进程调用）
-        if (Process.myProcessName().endsWith(":remote")) {
+        // 进程判定收口在 DemoProcess（minSdk 24 下不能直接用 Process.myProcessName，需 API 33）
+        if (DemoProcess.isInProcess(this, ":remote")) {
             TRouter.registerRemoteEndpoint("demoClock") { args ->
                 val q = args?.getString("q") ?: "none"
                 "clock-v1 q=$q pid=${Process.myPid()}"

@@ -51,6 +51,8 @@ dependencies {
     implementation(project(":feature-demo"))
     implementation(project(":feature-about"))
     ksp(project(":trouter-processor"))
+    // 批次 A2：把 TRouter 的 Lint 规则挂到本模块的 Lint 检查里（调用点硬编码 → lint error）
+    lintChecks(project(":trouter-lint"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

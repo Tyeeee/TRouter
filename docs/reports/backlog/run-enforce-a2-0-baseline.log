@@ -1,0 +1,186 @@
+Reusing configuration cache.
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:generateDebugAssets UP-TO-DATE
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :feature-demo:generateDebugAssets UP-TO-DATE
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :feature-about:generateDebugAssets UP-TO-DATE
+> Task :feature-about:preBuild UP-TO-DATE
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-core:prepareLintJarForPublish UP-TO-DATE
+> Task :feature-demo:prepareLintJarForPublish UP-TO-DATE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :trouter-core:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:prepareDebugArtProfile UP-TO-DATE
+> Task :trouter-core:mergeDebugAssets UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-core:writeDebugAarMetadata UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :feature-demo:prepareDebugArtProfile UP-TO-DATE
+> Task :trouter-core:processDebugManifest UP-TO-DATE
+> Task :feature-demo:mergeDebugAssets UP-TO-DATE
+> Task :feature-about:preDebugBuild UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :feature-demo:writeDebugAarMetadata UP-TO-DATE
+> Task :feature-demo:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :feature-demo:processDebugManifest UP-TO-DATE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-core:checkDebugAarMetadata UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :feature-about:generateDebugResources UP-TO-DATE
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :feature-demo:checkDebugAarMetadata UP-TO-DATE
+> Task :feature-about:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :feature-about:prepareDebugArtProfile UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :feature-about:mergeDebugAssets UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :feature-about:writeDebugAarMetadata UP-TO-DATE
+> Task :feature-about:prepareLintJarForPublish UP-TO-DATE
+> Task :feature-about:packageDebugResources UP-TO-DATE
+> Task :feature-about:checkDebugAarMetadata UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-about:processDebugManifest UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+> Task :trouter-core:extractDeepLinksDebug UP-TO-DATE
+> Task :feature-demo:extractDeepLinksDebug UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :feature-about:extractDeepLinksDebug UP-TO-DATE
+> Task :feature-about:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :feature-demo:compileDebugLibraryResources UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :trouter-core:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :feature-about:compileDebugLibraryResources UP-TO-DATE
+> Task :feature-about:writeDebugLintModelMetadata UP-TO-DATE
+> Task :feature-demo:writeDebugLintModelMetadata UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :trouter-core:compileDebugLibraryResources UP-TO-DATE
+> Task :trouter-core:writeDebugLintModelMetadata UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :trouter-core:extractProguardFiles UP-TO-DATE
+> Task :feature-about:javaPreCompileDebug UP-TO-DATE
+> Task :feature-about:extractProguardFiles UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:javaPreCompileDebug UP-TO-DATE
+> Task :feature-demo:extractProguardFiles UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :feature-about:preDebugAndroidTestBuild UP-TO-DATE
+> Task :feature-about:preDebugUnitTestBuild UP-TO-DATE
+> Task :feature-demo:preDebugUnitTestBuild UP-TO-DATE
+> Task :feature-demo:preDebugAndroidTestBuild UP-TO-DATE
+> Task :trouter-core:preDebugAndroidTestBuild UP-TO-DATE
+> Task :trouter-core:preDebugUnitTestBuild UP-TO-DATE
+> Task :trouter-lint:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-lint:processResources UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-lint:compileKotlin UP-TO-DATE
+> Task :trouter-lint:compileJava NO-SOURCE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :trouter-lint:classes UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :trouter-lint:jar UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :trouter-core:extractDebugAnnotations UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:processDebugJavaRes UP-TO-DATE
+> Task :trouter-core:mergeDebugJavaResource UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :trouter-core:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :trouter-core:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :trouter-core:createFullJarDebug UP-TO-DATE
+> Task :trouter-core:syncDebugLibJars UP-TO-DATE
+> Task :trouter-core:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :trouter-core:bundleDebugLocalLintAar UP-TO-DATE
+> Task :feature-about:extractDebugAnnotations UP-TO-DATE
+> Task :feature-about:kspDebugKotlin UP-TO-DATE
+> Task :feature-demo:kspDebugKotlin UP-TO-DATE
+> Task :feature-demo:extractDebugAnnotations UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :feature-about:compileDebugKotlin UP-TO-DATE
+> Task :feature-about:processDebugJavaRes UP-TO-DATE
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-about:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :feature-about:mergeDebugJavaResource UP-TO-DATE
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+> Task :feature-about:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature-demo:processDebugJavaRes UP-TO-DATE
+> Task :feature-about:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :feature-about:syncDebugLibJars UP-TO-DATE
+> Task :feature-demo:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :feature-demo:mergeDebugJavaResource UP-TO-DATE
+> Task :feature-demo:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :feature-demo:syncDebugLibJars UP-TO-DATE
+> Task :feature-about:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :feature-about:bundleDebugLocalLintAar UP-TO-DATE
+> Task :feature-about:createFullJarDebug UP-TO-DATE
+> Task :feature-demo:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :feature-demo:bundleDebugLocalLintAar UP-TO-DATE
+> Task :feature-demo:createFullJarDebug UP-TO-DATE
+> Task :feature-demo:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :feature-about:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :feature-about:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :feature-demo:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :trouter-core:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :trouter-core:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :trouter-core:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :trouter-core:lintAnalyzeDebug UP-TO-DATE
+> Task :trouter-core:generateDebugLintModel UP-TO-DATE
+> Task :trouter-core:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :feature-demo:generateDebugLintModel UP-TO-DATE
+> Task :feature-about:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :feature-about:generateDebugLintModel UP-TO-DATE
+> Task :feature-about:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :feature-about:lintAnalyzeDebug UP-TO-DATE
+> Task :feature-demo:lintAnalyzeDebug UP-TO-DATE
+> Task :feature-demo:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :feature-demo:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebug
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///Users/tye/Work/Android/TRouterDemo/app/build/reports/lint-results-debug.html
+Wrote SARIF report to file:///Users/tye/Work/Android/TRouterDemo/app/build/reports/lint-results-debug.sarif
+
+> Task :app:lintDebug
+
+BUILD SUCCESSFUL in 41s
+145 actionable tasks: 11 executed, 134 up-to-date
+Configuration cache entry reused.

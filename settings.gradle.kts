@@ -31,4 +31,5 @@ include(":feature-about")
 include(":trouter-annotation")
 include(":trouter-processor")
 include(":trouter-core")
+include(":trouter-lint")
  
