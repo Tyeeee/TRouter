@@ -70,19 +70,19 @@ class TRouterApiContractTest : BaseTRouterTest() {
         assertEquals(listOf(RouterContract.PATH_UNREGISTERED), lostPaths)
     }
 
-    /** S07-V3（C5）聚合唯一性：DemoRouteRegistry 聚合 host+feature 后无重复 path、模块归属正确。 */
+    /**
+     * 聚合唯一性：把 host 与各业务模块的页面清单合并后，不应出现重复路径，且三个模块都要有贡献。
+     * 注意：这里刻意**不写死路由总数**——新增演示页面属于正常演进，不该让用例变红。
+     */
     @Test
     fun aggregatedRegistryHasNoDuplicatePaths() {
         val routes = TRouter.registeredRoutes()
         val paths = routes.map { it.path }
         assertEquals("聚合后不应有重复 path", paths.size, paths.toSet().size)
-        assertEquals(
-            "应为 6 条路由（host 2 + feature-demo 3 + feature-about 1）: $paths",
-            6,
-            paths.size,
-        )
+        // 不写死总数：新增演示页面不该让这条用例失败（它的目的是"聚合正确"，不是"恰好 N 条"）
+        assertTrue("聚合后应有路由: $paths", paths.isNotEmpty())
         assertTrue(
-            "应覆盖全部契约路径: $paths",
+            "应覆盖各模块的契约路径: $paths",
             paths.containsAll(
                 listOf(
                     RouterContract.PATH_MAIN,
@@ -94,6 +94,15 @@ class TRouterApiContractTest : BaseTRouterTest() {
                 ),
             ),
         )
+        // 三个模块都必须真的贡献了路由（漏了一个模块的清单是这类聚合最常见的错误）
+        val moduleTags = routes.map {
+            when {
+                it.targetClassName.contains(".feature.demo.") -> "feature-demo"
+                it.targetClassName.contains(".feature.about.") -> "feature-about"
+                else -> "host"
+            }
+        }.toSet()
+        assertEquals("host / feature-demo / feature-about 三个模块都应贡献路由: $moduleTags", 3, moduleTags.size)
         val targets = routes.map { it.targetClassName }
         assertTrue("host 路由应指向 MainActivity: $targets", targets.contains("com.demo.trouter.MainActivity"))
         assertTrue("feature-demo 路由应指向 feature.demo 包: $targets", targets.any { it.contains("feature.demo.SecondActivity") })

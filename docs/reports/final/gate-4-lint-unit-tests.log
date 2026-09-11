@@ -1,0 +1,16 @@
+Reusing configuration cache.
+> Task :trouter-lint:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-lint:processTestResources NO-SOURCE
+> Task :trouter-lint:processResources
+> Task :trouter-lint:compileKotlin
+> Task :trouter-lint:compileJava NO-SOURCE
+> Task :trouter-lint:classes
+> Task :trouter-lint:jar
+> Task :trouter-lint:compileTestKotlin
+> Task :trouter-lint:compileTestJava NO-SOURCE
+> Task :trouter-lint:testClasses UP-TO-DATE
+> Task :trouter-lint:test
+
+BUILD SUCCESSFUL in 5s
+5 actionable tasks: 5 executed
+Configuration cache entry reused.

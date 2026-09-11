@@ -746,9 +746,9 @@ adb shell settings put global animator_duration_scale 0
 
 页面底部还会列出**当前所有可用的路径**，以及每条路径来自哪个模块。
 
-**自动化测试**：目前有 98 个手机上的用例（21 个测试类）+ 7 个 Lint 规则单元测试，
-覆盖跳转、拦截器、异步拦截器、动态路由、深链、别名、跨进程（含三个进程）、对象传输、类型化调用等。
-跑方法：
+**自动化测试**：目前有 98 个手机上的用例（21 个测试类）+ 7 个"检查规则"自己的单元测试，
+覆盖跳转、拦截器、异步拦截器、动态路由、深链、别名、跨进程（含三个真实进程）、对象传输、跨进程调接口等，
+最近一次全量结果见 `docs/reports/final/最终回测报告.md`（全部通过）。跑方法：
 
 ```bash
 ./gradlew :app:connectedDebugAndroidTest
@@ -816,6 +816,7 @@ adb shell settings put global animator_duration_scale 0
 | `docs/demo/README.md` | 演示工程逐场景导览 |
 | `docs/我们与开源Router差距分析.md` | 与市面上开源方案的能力对比（早期版本，部分内容已随新功能过时） |
 | `docs/开源Router调研.md` | 对 ARouter / WMRouter / TheRouter / DRouter 的调研 |
+| `docs/reports/final/最终回测报告.md` | **全量回测结果（测了什么、怎么跑、结果如何、还剩什么限制）** |
 | `docs/reports/backlog/` | 各阶段改动与测试证据（含运行日志） |
 | `docs/V1.0-…` ~ `docs/V5.0-…` | 早期各阶段的设计方案（术语较老，仅供追溯） |
 
