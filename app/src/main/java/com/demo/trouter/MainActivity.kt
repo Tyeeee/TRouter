@@ -120,43 +120,43 @@ class MainActivity : ComponentActivity() {
             textSize = 22f
         })
         infoLine(
-            "点击下方带 › 的场景行即可进入对应验证页（行内水波纹提示可点）；" +
-                "目标页可用「返回」按钮或系统返回键回到本页。",
+            "下面每一行是一个可点的例子，点进去就能看到效果；" +
+                "想看某个功能怎么用、会看到什么，看行里的说明即可。返回用页面里的「返回」按钮或系统返回键。",
         )
 
-        sectionTitle("A · 导航成功（Activity / Fragment）")
-        scenarioRow(R.id.scenario_s01, "S01 基础页面跳转（Activity）", "路径 /second · default · 期望：Second 页展示，navigate 返回 Success") {
+        sectionTitle("A · 最基本的跳转：打开一个页面（S01–S04）")
+        scenarioRow(R.id.scenario_s01, "S01 打开一个新页面", "路径 /second · default · 期望：Second 页展示，navigate 返回 Success") {
             open(RouterContract.PATH_SECOND)
         }
-        scenarioRow(R.id.scenario_s02, "S02 Fragment 目标承载", "路径 /fragment-demo · default · 期望：Fragment 演示页经 core 容器展示，Success(kind=FRAGMENT)") {
+        scenarioRow(R.id.scenario_s02, "S02 打开一个「页面片段」（Fragment）", "路径 /fragment-demo · default · 期望：Fragment 演示页经 core 容器展示，Success(kind=FRAGMENT)") {
             open(RouterContract.PATH_FRAGMENT_DEMO)
         }
-        infoLine("（说明）S06 主页自身 · /main · default · ACTIVITY —— 本页即通过 @Route 注册的可路由页面，无需点击。")
+        infoLine("（说明）本页自己也是一个已注册的页面（路径 /main），所以别人也能用路由打开它——无需点击。")
 
-        sectionTitle("B · 分组路由（secondary group）")
-        scenarioRow(R.id.scenario_s03, "S03 分组路由 · About 页", "路径 /about · group=secondary · 期望：页面展示，日志出现 group=secondary 加载起止") {
+        sectionTitle("B · 跨模块跳转：打开另一个模块的页面（S03）")
+        scenarioRow(R.id.scenario_s03, "S03 打开另一个模块里的页面", "路径 /about · group=secondary · 期望：页面展示，日志出现 group=secondary 加载起止") {
             open(RouterContract.PATH_ABOUT)
         }
 
-        sectionTitle("C · 降级处理（未注册路径）")
-        scenarioRow(R.id.scenario_s04, "S04 未注册路径 → onLost 降级", "路径 /not/exist（刻意不注册）· 期望：不崩溃，下方状态提示未找到并触发 onLost") {
+        sectionTitle("C · 页面不存在时会怎样（S04）")
+        scenarioRow(R.id.scenario_s04, "S04 打开一个不存在的页面（看兜底提示）", "路径 /not/exist（刻意不注册）· 期望：不崩溃，下方状态提示未找到并触发 onLost") {
             open(RouterContract.PATH_UNREGISTERED)
         }
 
-        sectionTitle("D · 配置与可观测性")
+        sectionTitle("D · 日志与「这页是不是路由打开的」")
         infoLine(
-            "（说明）S05 isDebug 日志开关：由测试注入配置驱动（MainRouterTest#testConfigDebugMode），无需点击；" +
-                "日志见 adb logcat -s TRouter。",
+            "（说明）日志开关由配置里的 isDebug 控制：true 时打印全过程，false 时安静。" +
+                "想看日志：adb logcat -s TRouter。",
         )
 
-        sectionTitle("E · 拦截器（V2.0）")
+        sectionTitle("E · 跳转前先做检查：拦截（S08–S10）")
         infoLine(
-            "S08/S09 为行为开关：点击行切换开/关，当前状态显示于底部状态栏；" +
-                "再点 S01 观察 /second 导航差异（拦截链日志见 adb logcat -s TRouter）。",
+            "S08/S09 是开关：点一下打开、再点一下关闭，当前状态会显示在页面底部；" +
+                "开关打开后，去点 S01 就能看到差别。",
         )
         scenarioRow(
             R.id.scenario_s08,
-            "S08 门禁拦截器（Block）",
+            "S08 开关：把某个页面临时拦住（像登录校验）",
             "开启后导航 ${RouterContract.PATH_SECOND} 被拦截（Blocked、不打开）；关闭则放行",
         ) {
             DemoInterceptors.gate.enabled = !DemoInterceptors.gate.enabled
@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
         }
         scenarioRow(
             R.id.scenario_s09,
-            "S09 Mock 拦截器（Redirect）",
+            "S09 开关：把一个页面换成另一个页面（灰度/Mock）",
             "开启后 ${RouterContract.PATH_SECOND} 重定向到 Mock 页 ${RouterContract.PATH_MOCK_SECOND}；关闭恢复真实页",
         ) {
             DemoInterceptors.mock.enabled = !DemoInterceptors.mock.enabled
@@ -175,106 +175,106 @@ class MainActivity : ComponentActivity() {
             Toast.makeText(this, "Mock 拦截器：$state", Toast.LENGTH_SHORT).show()
         }
 
-        sectionTitle("F · 跨进程导航（V4.0）")
+        sectionTitle("F · 把页面开在另一个进程里（S11–S12）")
         infoLine(
-            "S11 把导航请求经 AIDL 发给 :remote 进程，由远端 TRouter 打开第二进程页面；" +
-                "结果异步回传（见底部状态栏与 logcat [remote][send/recv]）。",
+            "点 S11 后，本进程会把「要打开哪个页面」这件事发给第二个进程，由那边的 TRouter 打开页面，" +
+                "再把结果回传到这里（底部状态栏会显示结果）。",
         )
         scenarioRow(
             R.id.scenario_s11,
-            "S11 跨进程导航（Activity）",
+            "S11 把页面开在第二个进程里",
             "路径 ${RouterContract.PATH_REMOTE_SECOND} · @CrossProcess · 期望：remote 进程页面打开并回传 Success",
         ) {
             openRemote(RouterContract.PATH_REMOTE_SECOND)
         }
 
-        sectionTitle("G · 动态路由与图谱（V5.0）")
+        sectionTitle("G · 运行时才注册的页面（S13–S14）")
         infoLine(
-            "S13 行切换注册/注销 /dynamic-demo（目标页未标 @Route）；注册后可点 S14 导航。" +
-                "图谱摘要见下方（节点=目标类、边=已注册路由，动态与静态同图）。",
+            "点 S13 会在「运行时」注册一条路径（对应页面没有加注解），再点一下注销；注册后点 S14 就能打开它。" +
+                "下方还列出了当前所有路径。",
         )
         scenarioRow(
             R.id.scenario_s13,
-            "S13 动态路由 · 注册/注销（切换）",
+            "S13 开关：运行时注册 / 注销一条路径",
             "注册 ${RouterContract.PATH_DYNAMIC_DEMO}（group=dynamic）后 S14 可导航；再点本行注销 → 恢复 NotFound",
         ) {
             toggleDynamic()
         }
         scenarioRow(
             R.id.scenario_s14,
-            "S14 导航到动态路由",
+            "S14 打开刚注册的那条路径",
             "需先经 S13 注册：${RouterContract.PATH_DYNAMIC_DEMO} · 期望：打开 DynamicDemo 页（Success）",
         ) {
             open(RouterContract.PATH_DYNAMIC_DEMO)
         }
 
-        sectionTitle("H · 参数透传（单进程 Activity/Fragment · 跨进程）")
-        infoLine("以下行导航时携带 bundle（msg/count）；目标页会展示收到的参数，跨进程经 AIDL Bundle 送达 :remote。")
+        sectionTitle("H · 跳转时怎么带参数（S19–S21）")
+        infoLine("下面三行跳转时都会带上两个参数（一段文字 + 一个数字），目标页会把收到的参数显示出来。")
         scenarioRow(
             R.id.scenario_s19,
-            "S19 单进程参数 → Second（Activity）",
+            "S19 带参数跳转 → Activity 页",
             "${RouterContract.PATH_SECOND} + bundle(msg,count) · 期望：Second 页展示「参数透传 ✓」",
         ) {
             open(RouterContract.PATH_SECOND, demoParamsBundle())
         }
         scenarioRow(
             R.id.scenario_s20,
-            "S20 单进程参数 → Fragment",
+            "S20 带参数跳转 → Fragment 页",
             "${RouterContract.PATH_FRAGMENT_DEMO} + bundle(msg,count) · 期望：Fragment 页展示收到的参数",
         ) {
             open(RouterContract.PATH_FRAGMENT_DEMO, demoParamsBundle())
         }
         scenarioRow(
             R.id.scenario_s21,
-            "S21 跨进程参数 → :remote 页",
+            "S21 带参数跳到第二个进程的页面",
             "${RouterContract.PATH_REMOTE_SECOND} + bundle(msg,count) · 期望：第二进程页展示参数（经 AIDL）",
         ) {
             openRemote(RouterContract.PATH_REMOTE_SECOND, demoParamsBundle())
         }
         scenarioRow(
             R.id.scenario_s22,
-            "S22 导航结果回传（G3）",
+            "S22 打开页面，并在它返回时拿到数据",
             "navigateForResult(${RouterContract.PATH_RESULT_DEMO}) · 期望：返回后状态栏显示结果页回传的数据",
         ) {
             openForResult(RouterContract.PATH_RESULT_DEMO)
         }
 
-        sectionTitle("I · 异步拦截器（批次 B · S23–S25）")
-        infoLine("开启 S23 后，/second 的链里会有一个异步拦截器：同步 navigate 会被**明确拒绝**（S01 变 Blocked），S24 用 navigateAsync 正常放行。")
+        sectionTitle("I · 跳转前需要联网/等待怎么办（S23–S25）")
+        infoLine("点 S23 打开开关后，「打开页面之前要先等一下」这件事就生效了：这时用普通方式跳转会被拒绝（并告诉你原因），请改用 S24 的异步方式。")
         scenarioRow(
             R.id.scenario_s23,
-            "S23 异步拦截器开关（延时 300ms 放行 /second）",
+            "S23 开关：跳转前先「等一会儿」（模拟联网检查）",
             "开启后 S01 同步导航 → Blocked（reason 提示改用 navigateAsync）；S24 仍可正常打开",
         ) {
             toggleAsyncInterceptor()
         }
         scenarioRow(
             R.id.scenario_s24,
-            "S24 navigateAsync 导航（异步链正常放行）",
+            "S24 等待检查完成后再打开页面",
             "navigateAsync(${RouterContract.PATH_SECOND}) · 期望：状态栏 Success，回调在主线程且只回调一次",
         ) {
             openAsync(RouterContract.PATH_SECOND)
         }
         scenarioRow(
             R.id.scenario_s25,
-            "S25 异步拦截器超时收口",
+            "S25 检查一直没结果会怎样（超时保护）",
             "把异步耗时拉到 3000ms（> 配置超时 1500ms）· 期望：Blocked，reason 含「异步拦截器超时」，页面不打开",
         ) {
             openAsyncTimeout()
         }
 
-        sectionTitle("J · 多进程（批次 C · 第三个真实进程 :remote2）")
-        infoLine("host / :remote / :remote2 三个进程各有独立 TRouter 路由表与端点表；target 参数指定目标进程（null=默认 :remote）。")
+        sectionTitle("J · 多个进程各自独立（S26–S29）")
+        infoLine("本 App 一共有三个进程：主进程、第二个进程、第三个进程。每个进程都有自己的路径表和接口表，互不影响；下面是分别在第三个进程里打开页面、调用接口。")
         scenarioRow(
             R.id.scenario_s26,
-            "S26 跨进程导航 → 第三个进程（:remote2）",
+            "S26 把页面开在第三个进程里",
             "navigateRemote(${RouterContract.PATH_REMOTE_THIRD}, target=\"${TRouterDemoApp.REMOTE_TARGET_SECOND}\") · 期望：页面上进程名=:remote2 且 pid 与 host/:remote 都不同",
         ) {
             openRemote(RouterContract.PATH_REMOTE_THIRD, demoParamsBundle(), TRouterDemoApp.REMOTE_TARGET_SECOND)
         }
         scenarioRow(
             R.id.scenario_s27,
-            "S27 端点按进程隔离（同时调 :remote2 与默认 :remote）",
+            "S27 两个进程各有自己的接口，互不串台",
             "demoClock2 只在 :remote2 注册：target=remote2 → 正常返回；默认 target → 返回未注册（证明端点表按进程独立）",
         ) {
             callSecondProcessEndpoint()
@@ -282,7 +282,7 @@ class MainActivity : ComponentActivity() {
 
         scenarioRow(
             R.id.scenario_s28,
-            "S28 POJO 跨进程（KSP 生成编解码 · 免手写 Parcelable）",
+            "S28 跨进程传一个业务对象（不用手写序列化）",
             "DemoReport（含 List/枚举/可空嵌套 POJO）→ Bundle → AIDL 送到 :remote2 解包回显 · 期望：字段逐一一致",
         ) {
             sendPojoToThirdProcess()
@@ -290,14 +290,14 @@ class MainActivity : ComponentActivity() {
 
         scenarioRow(
             R.id.scenario_s29,
-            "S29 类型化远程接口（@RemoteApi · 动态代理）",
+            "S29 像调本地接口一样，调另一个进程里的接口",
             "连续三次类型化调用 count / summarize / report（含枚举、List、POJO 结果）· 期望：结果逐项正确且带远端 pid",
         ) {
             callTypedRemoteApi()
         }
 
-        sectionTitle("路由表快照（只读 · TRouter.registeredRoutes）")
-        infoLine("（行尾 ↦ 目标类所在模块：host=:app / feature-demo / feature-about —— V3.0 多模块聚合）")
+        sectionTitle("当前已注册的全部路径（只读）")
+        infoLine("（每行末尾的 ↦ 表示这个页面来自哪个模块：:app 主模块 / feature-demo / feature-about）")
         val routes = TRouter.registeredRoutes()
         if (routes.isEmpty()) {
             infoLine("（未注册任何路由——请检查 TRouter.init/install 是否执行）", Ui.COLOR_ERROR_RED)
