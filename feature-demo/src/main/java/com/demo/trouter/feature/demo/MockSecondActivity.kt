@@ -40,7 +40,7 @@ class MockSecondActivity : ComponentActivity() {
 
         root.addView(line("场景 S09 · Mock 目标页（MockInterceptor Redirect）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /mock/second · group=mock · kind=ACTIVITY（/second 的替身）"))
-        root.addView(line("期望：开启 Mock 开关后点 S01，本页替代真实 Second 页被打开（Redirect 生效）"))
+        root.addView(line("期望：打开 Mock 开关后点 S01，真实页面被替换成本页（改道生效）"))
         root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         root.addView(TextView(this).apply {
             text = "Mock Second 页面"

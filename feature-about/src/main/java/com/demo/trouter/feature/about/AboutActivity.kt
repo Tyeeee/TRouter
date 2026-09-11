@@ -36,7 +36,7 @@ class AboutActivity : ComponentActivity() {
 
         root.addView(line("场景 S03 · 分组路由（secondary group）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /about · group=secondary · kind=ACTIVITY"))
-        root.addView(line("期望：页面展示；日志出现 [GroupLoader][load][start/end] group=secondary"))
+        root.addView(line("期望：页面正常展示；日志里能看到启动时加载了 secondary 分组的页面清单"))
         root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         root.addView(TextView(this).apply {
             text = "About 页面（secondary group）"

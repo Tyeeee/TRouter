@@ -37,7 +37,7 @@ class DynamicDemoActivity : ComponentActivity() {
 
         root.addView(line("场景 S13 · 动态路由目标页（运行时注册）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /dynamic-demo · group=dynamic · kind=ACTIVITY · 本页未标注 @Route"))
-        root.addView(line("期望：由 TRouter.registerRoute 注册后，navigate 打开本页；注销后回到 NotFound"))
+        root.addView(line("期望：先在「运行时」注册本页路径才能打开；注销后就会变成「找不到路径」"))
         root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         root.addView(TextView(this).apply {
             text = "DynamicDemo 页面"

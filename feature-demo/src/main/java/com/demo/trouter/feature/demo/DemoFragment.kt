@@ -39,10 +39,10 @@ class DemoFragment : Fragment() {
         val view = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(24 * d, 12 * d, 24 * d, 16 * d)
-            addView(line("场景 S02 · Fragment 目标承载", 15f, Ui.COLOR_TITLE_BLUE))
+            addView(line("场景 S02 · 打开一个「页面片段」（Fragment）", 15f, Ui.COLOR_TITLE_BLUE))
             addView(line("路径 /fragment-demo · group=default · kind=FRAGMENT"))
-            addView(line("承载：core 内置 FragmentContainerActivity（系统栏已避让）"))
-            addView(line("期望：navigate 返回 Success(kind=FRAGMENT)"))
+            addView(line("本页片段由框架内置的容器页面装着，你不需要自己写容器"))
+            addView(line("期望：跳转返回「成功」，类型是 Fragment"))
             addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
             // 参数透传证据（Fragment）：调用方 bundle 经容器克隆为 arguments 送达
             val msg = args?.getString(DemoParams.KEY_MSG)

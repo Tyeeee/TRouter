@@ -47,7 +47,7 @@ class RemoteSecondActivity : ComponentActivity() {
 
         root.addView(line("场景 S11 · 跨进程导航（AIDL → :remote 进程）", 15f, Ui.COLOR_TITLE_BLUE))
         root.addView(line("路径 /remote-second · group=default · kind=ACTIVITY · @CrossProcess"))
-        root.addView(line("本页运行在独立进程 :remote · pid=${Process.myPid()}（与 host 进程 pid 不同即证明跨进程）", 14f, Ui.COLOR_REMOTE_PURPLE))
+        root.addView(line("本页运行在独立进程 :remote · 进程号 ${Process.myPid()}（与主进程的进程号不同，说明确实跨进程了）", 14f, Ui.COLOR_REMOTE_PURPLE))
         root.addView(line(runtime, 14f, Ui.COLOR_EVIDENCE_GREEN))
         // 参数透传证据（跨进程）：调用方 bundle 经 AIDL 到达 :remote 进程的 intent extras
         val msg = intent.getStringExtra(DemoParams.KEY_MSG)
@@ -61,8 +61,8 @@ class RemoteSecondActivity : ComponentActivity() {
             setPadding(0, 24, 0, 8)
         })
         root.addView(TextView(this).apply {
-            text = "本页由 host 点击「S11 跨进程导航」后，导航请求经 AIDL 发往 :remote 进程，" +
-                "由该进程的 TRouter 实例解析并打开（结果异步回传 host）。"
+            text = "本页是这样打开的：在主进程点「S11 跨进程导航」后，主进程把「要打开哪个页面」" +
+                "发给 :remote 进程，由这边的 TRouter 用自己的路径表打开本页，再把结果回传给主进程。"
             textSize = 14f
             setPadding(0, 0, 0, 16)
         })
