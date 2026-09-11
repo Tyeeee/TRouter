@@ -25,7 +25,7 @@ private class DemoClockImpl : DemoClockService {
 }
 
 /**
- * 批 3a：G6 路由表 JSON 导出/覆盖 + G2 进程内服务层。
+ * 批 3a：整表导出导入 路由表 JSON 导出/覆盖 + 模块间接口调用 进程内服务层。
  */
 @RunWith(AndroidJUnit4::class)
 class TRouterRouteMapAndServiceTest : BaseTRouterTest() {
@@ -39,7 +39,7 @@ class TRouterRouteMapAndServiceTest : BaseTRouterTest() {
         kind = RouteTargetKind.ACTIVITY,
     )
 
-    /** G6-1：动态集导出 JSON → 清空 → 导入覆盖 → 恢复可导航且静态不受影响；格式非法零变更。 */
+    /** 整表导出导入-1：动态集导出 JSON → 清空 → 导入覆盖 → 恢复可导航且静态不受影响；格式非法零变更。 */
     @Test
     fun jsonExportImportOverlaysDynamicOnly() {
         val d1 = "/map/save1"
@@ -60,7 +60,7 @@ class TRouterRouteMapAndServiceTest : BaseTRouterTest() {
         assertTrue("静态 /second 不受影响", TRouter.navigate(RouterContract.PATH_SECOND) is TRouterResult.Success)
     }
 
-    /** G6-2：非法 JSON 或与静态冲突 → 整批失败零变更。 */
+    /** 整表导出导入-2：非法 JSON 或与静态冲突 → 整批失败零变更。 */
     @Test
     fun invalidOrConflictingImportIsAtomicNoop() {
         val d = "/map/keep"
@@ -78,7 +78,7 @@ class TRouterRouteMapAndServiceTest : BaseTRouterTest() {
         assertTrue("静态 /second 导航正常", TRouter.navigate(RouterContract.PATH_SECOND) is TRouterResult.Success)
     }
 
-    /** G6-3：编解码器纯函数往返 + 坏行 null。 */
+    /** 整表导出导入-3：编解码器纯函数往返 + 坏行 null。 */
     @Test
     fun codecRoundTripAndTolerance() {
         val metas = listOf(meta("/c/1"), meta("/c/2"))
@@ -89,7 +89,7 @@ class TRouterRouteMapAndServiceTest : BaseTRouterTest() {
         assertEquals(emptyList<RouteMeta>(), RouteMapCodec.fromJson("[]"))
     }
 
-    /** G2-1：注册/查找/重复拒绝/注销/未注册为 null；注册与注销有日志。 */
+    /** 模块间接口调用-1：注册/查找/重复拒绝/注销/未注册为 null；注册与注销有日志。 */
     @Test
     fun serviceRegisterFindUnregister() {
         assertTrue(TRouter.registerService(DemoClockService::class.java, DemoClockImpl()))

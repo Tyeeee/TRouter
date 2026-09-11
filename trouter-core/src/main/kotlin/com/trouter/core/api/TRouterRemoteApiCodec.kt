@@ -3,7 +3,7 @@ package com.trouter.core.api
 import android.os.Bundle
 
 /**
- * 单个方法的编解码器（批次 C，由 KSP 为 `@RemoteApi` 接口的每个方法生成）。
+ * 单个方法的编解码器（多进程与跨进程增强，由 KSP 为 `@RemoteApi` 接口的每个方法生成）。
  *
  * - [encode]：把调用方实参（按声明顺序，**不含最后的回调**）写进 args Bundle；
  * - [decode]：从远端回包 Bundle 里取出结果值（类型与接口声明一致）。
@@ -14,7 +14,7 @@ interface TRouterRemoteMethodCodec {
 }
 
 /**
- * 类型化远程接口的编解码契约（批次 C）。
+ * 类型化远程接口的编解码契约（多进程与跨进程增强）。
  *
  * 生成物形如：
  * ```

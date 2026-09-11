@@ -7,7 +7,7 @@ import com.trouter.core.api.GroupLoader
 import com.trouter.core.api.GroupLoaderRegistry
 
 /**
- * V3.0 host 聚合注册表：把「:app 自身路由 + 各 feature 模块路由」**显式**合并为单一注册表，
+ * 多模块版本 host 聚合注册表：把「:app 自身路由 + 各 feature 模块路由」**显式**合并为单一注册表，
  * 供 TRouterDemoApp / 测试 provideRegistry 一次聚合装配。
  *
  * - 每个模块独立跑 KSP、各自生成 TRouterGroupRegistry object（包名随模块 namespace）；

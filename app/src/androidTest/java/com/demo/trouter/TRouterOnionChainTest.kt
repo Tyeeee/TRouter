@@ -19,7 +19,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 洋葱/双向链测试（L4，场景 S15；方案 docs/Backlog补全方案-动态化与硬化.md §1）。
+ * 洋葱/双向链测试（前后包裹式拦截器，场景 S15；方案 docs/Backlog补全方案-动态化与硬化.md §1）。
  *
  * 覆盖：
  * 1. 包裹拦截器可做「前置 → proceed() 放行并打开 → 后置」的洋葱观察；
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
  * 4. proceed() 二次调用被守卫拦截（抛错→按拦截器故障 Blocked），防止重复打开；
  * 5. 包裹拦截器返回 Redirected → TRouter 以同 traceId 重入新跳。
  *
- * 本批按协议只测 L4（含紧邻的旧拦截器契约/UI 用例做执行器回归）。
+ * 本批按协议只测 前后包裹式拦截器（含紧邻的旧拦截器契约/UI 用例做执行器回归）。
  */
 @RunWith(AndroidJUnit4::class)
 class TRouterOnionChainTest : BaseTRouterTest() {
@@ -46,7 +46,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
         )
     }
 
-    /** L4-1（洋葱顺序）：wrapper 前置 → proceed → 目标打开 → wrapper 后置。 */
+    /** 前后包裹式拦截器-1（洋葱顺序）：wrapper 前置 → proceed → 目标打开 → wrapper 后置。 */
     @Test
     fun wrapperRunsBeforeAndAfterOpen() {
         val events = mutableListOf<String>()
@@ -71,7 +71,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
         assertTrue("onLost 不应触发", lostPaths.isEmpty())
     }
 
-    /** L4-2（短路）：前方原子拦截器 Block 后，包裹拦截器与其余成员不再执行。 */
+    /** 前后包裹式拦截器-2（短路）：前方原子拦截器 Block 后，包裹拦截器与其余成员不再执行。 */
     @Test
     fun blockSkipsLaterWrappers() {
         var wrapperCalled = false
@@ -93,7 +93,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
         assertEquals("只应有一条 eval（Block 短路）", 1, evals.size)
     }
 
-    /** L4-3（不放行即拦截）：wrapper 不调用 proceed() 直接 Block → 不打开目标、结果 Blocked。 */
+    /** 前后包裹式拦截器-3（不放行即拦截）：wrapper 不调用 proceed() 直接 Block → 不打开目标、结果 Blocked。 */
     @Test
     fun wrapperCanBlockWithoutProceed() {
         val blocker = object : WrappingInterceptor {
@@ -110,7 +110,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
             logs.lines.joinToString("\n").contains("decision=Block(reason=wrapper 直接拦截)"))
     }
 
-    /** L4-4（二次放行守卫）：proceed() 调两次 → 守卫抛错，按拦截器故障 Blocked（不崩溃、不重复开页语义）。 */
+    /** 前后包裹式拦截器-4（二次放行守卫）：proceed() 调两次 → 守卫抛错，按拦截器故障 Blocked（不崩溃、不重复开页语义）。 */
     @Test
     fun doubleProceedIsGuarded() {
         val bad = object : WrappingInterceptor {
@@ -130,7 +130,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
         assertTrue("onLost 不应触发", lostPaths.isEmpty())
     }
 
-    /** L4-5（wrapper Redirect）：仅对源 path 重定向、目标跳放行 → 同 traceId 重入并打开 Mock 目标。 */
+    /** 前后包裹式拦截器-5（wrapper Redirect）：仅对源 path 重定向、目标跳放行 → 同 traceId 重入并打开 Mock 目标。 */
     @Test
     fun wrapperRedirectReentersWithSameTrace() {
         val redirector = object : WrappingInterceptor {
@@ -155,7 +155,7 @@ class TRouterOnionChainTest : BaseTRouterTest() {
         assertEquals("同一次导航 traceId 应贯穿: $ids", 1, ids.size)
     }
 
-    /** L4-6（旧原子与包裹混排）：顺序 = 旧原子 Continue → wrapper 包裹(放行) → 打开。 */
+    /** 前后包裹式拦截器-6（旧原子与包裹混排）：顺序 = 旧原子 Continue → wrapper 包裹(放行) → 打开。 */
     @Test
     fun mixedOldAndWrapperOrder() {
         val events = mutableListOf<String>()

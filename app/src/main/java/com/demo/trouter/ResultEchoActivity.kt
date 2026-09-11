@@ -19,7 +19,7 @@ object ResultDemoKeys {
 }
 
 /**
- * G3 结果回调演示页（@Route /result-demo）：点击「返回并携带结果」把数据经
+ * 拿页面返回值 结果回调演示页（@Route /result-demo）：点击「返回并携带结果」把数据经
  * setResult 回传发起方（MainActivity 的 onActivityResult 接收并回显）。
  */
 @Route(path = RouterContract.PATH_RESULT_DEMO)

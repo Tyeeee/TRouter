@@ -3,7 +3,7 @@ package com.trouter.core.api
 import android.os.Bundle
 
 /**
- * POJO 跨进程编解码器契约（批次 C）。
+ * POJO 跨进程编解码器契约（多进程与跨进程增强）。
  *
  * 由 KSP 为每个 `@RemotePojo` 类生成实现（零反射），生成物形如：
  * ```

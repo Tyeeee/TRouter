@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 /**
- * G2-remote 跨进程服务测试：真实 AIDL 双进程调用远端进程注册的端点。
+ * 跨进程接口调用 跨进程服务测试：真实 AIDL 双进程调用远端进程注册的端点。
  */
 @RunWith(AndroidJUnit4::class)
 class TRouterRemoteServiceTest : BaseTRouterTest() {
@@ -36,7 +36,7 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
         return boxed!!
     }
 
-    /** G2-remote-1：调用远端端点（仅 :remote 注册）→ 返回结果含参数，且执行进程 ≠ host。 */
+    /** 跨进程接口调用-1：调用远端端点（仅 :remote 注册）→ 返回结果含参数，且执行进程 ≠ host。 */
     @Test
     fun remoteEndpointReturnsResultFromRemoteProcess() {
         val ctx = ApplicationProvider.getApplicationContext<android.content.Context>()
@@ -65,7 +65,7 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
             logs.lines.joinToString("\n").contains("[remote][service][recv]") && logs.lines.joinToString("\n").contains("name=demoClock"))
     }
 
-    /** G2-remote-2：未注册端点 → 明确错误串（非静默）。 */
+    /** 跨进程接口调用-2：未注册端点 → 明确错误串（非静默）。 */
     @Test
     fun unregisteredEndpointReturnsError() {
         val ctx = ApplicationProvider.getApplicationContext<android.content.Context>()
@@ -81,7 +81,7 @@ class TRouterRemoteServiceTest : BaseTRouterTest() {
         assertTrue("错误原因含 unregistered", reply.contains("unregistered"))
     }
 
-    /** G2-remote-3：未配置 remoteService → 立即错误串。 */
+    /** 跨进程接口调用-3：未配置 remoteService → 立即错误串。 */
     @Test
     fun serviceWithoutRemoteConfiguredReturnsError() {
         reInit(

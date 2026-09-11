@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 批 2b：G1 URI/Scheme 深链 + G5 路由别名（精确/正则/多 path ↔ 一页）。
+ * 批 2b：从外部链接进入 URI/Scheme 深链 + 路径别名 路由别名（精确/正则/多 path ↔ 一页）。
  */
 @RunWith(AndroidJUnit4::class)
 class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
@@ -34,7 +34,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         )
     }
 
-    /** G1-1：白名单 scheme 的 URI → 以 path 段命中路由并成功。 */
+    /** 从外部链接进入-1：白名单 scheme 的 URI → 以 path 段命中路由并成功。 */
     @Test
     fun uriWithAllowedSchemeNavigates() {
         reInitSchemes(setOf("trouter"))
@@ -44,7 +44,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertTrue("onLost 不应触发", lostPaths.isEmpty())
     }
 
-    /** G1-2：未启用 scheme → Blocked（明确拒绝，不静默）。 */
+    /** 从外部链接进入-2：未启用 scheme → Blocked（明确拒绝，不静默）。 */
     @Test
     fun uriWithDisallowedSchemeIsBlocked() {
         reInitSchemes(emptySet())
@@ -55,7 +55,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertTrue("onLost 不应触发", lostPaths.isEmpty())
     }
 
-    /** G1-3：URI 缺路径段 → Blocked（清晰原因）。 */
+    /** 从外部链接进入-3：URI 缺路径段 → Blocked（清晰原因）。 */
     @Test
     fun uriWithoutPathIsBlocked() {
         reInitSchemes(setOf("trouter"))
@@ -65,7 +65,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
             result.reason.contains("缺少路径段"))
     }
 
-    /** G1-4：query 参数提取为导航参数（并入 bundle）。 */
+    /** 从外部链接进入-4：query 参数提取为导航参数（并入 bundle）。 */
     @Test
     fun uriQueryExtractedToParams() {
         val params = UriRouter.paramsOf(Uri.parse("trouter://app/second?a=1&b=你好&c="))
@@ -74,7 +74,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertEquals("", params.getString("c"))
     }
 
-    /** G5-1：精确别名 → 转向真实路由；注销后恢复 NotFound。 */
+    /** 路径别名-1：精确别名 → 转向真实路由；注销后恢复 NotFound。 */
     @Test
     fun exactAliasNavigatesThenUnregisterRestores() {
         assertTrue(TRouter.registerRouteAlias("/short-second", RouterContract.PATH_SECOND))
@@ -89,7 +89,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertTrue(lostPaths.contains("/short-second"))
     }
 
-    /** G5-2：正则别名（regex: 前缀）命中；不匹配则 NotFound。 */
+    /** 路径别名-2：正则别名（regex: 前缀）命中；不匹配则 NotFound。 */
     @Test
     fun regexAliasMatchesOnlyPattern() {
         assertTrue(TRouter.registerRouteAlias("regex:/r/\\d+", RouterContract.PATH_ABOUT))
@@ -101,7 +101,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertEquals(TRouterResult.NotFound("/r/abc"), miss)
     }
 
-    /** G5-3：别名与静态路由同名冲突 → 拒绝注册（静态优先语义由“仅在未命中时查别名”保证）。 */
+    /** 路径别名-3：别名与静态路由同名冲突 → 拒绝注册（静态优先语义由“仅在未命中时查别名”保证）。 */
     @Test
     fun duplicateAliasRejectedAndStaticWins() {
         assertFalse("与静态 path 同名的别名应拒绝", TRouter.registerRouteAlias(RouterContract.PATH_SECOND, RouterContract.PATH_ABOUT))
@@ -113,7 +113,7 @@ class TRouterDeeplinkAndAliasTest : BaseTRouterTest() {
         assertEquals(RouterContract.PATH_SECOND, (result as TRouterResult.Success).meta.path)
     }
 
-    /** G5-4：别名互相指向形成环 → 跳数上限截断为 Blocked（不崩溃）。 */
+    /** 路径别名-4：别名互相指向形成环 → 跳数上限截断为 Blocked（不崩溃）。 */
     @Test
     fun aliasLoopIsCapped() {
         assertTrue(TRouter.registerRouteAlias("/a", "/b"))

@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 动态路由与图谱契约测试（场景 S13/S14，见 docs/V5.0-动态路由与图谱方案.md §3）。
+ * 动态路由与图谱契约测试（场景 S13/S14，见 docs/运行时注册路径版本-动态路由与图谱方案.md §3）。
  *
  * 测试协议（你确认）：本版**只测 V5 新功能**，不跑历史 26 例；统一回测最后执行。
  * 覆盖：注册前 NotFound → 注册后 Success → 注销后 NotFound；重复注册拒绝（冲突）；静态路由可注销；

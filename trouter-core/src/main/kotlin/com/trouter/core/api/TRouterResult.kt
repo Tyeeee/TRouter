@@ -13,7 +13,7 @@ sealed class TRouterResult {
     data object NotInitialized : TRouterResult()
 
     /**
-     * V2.0：导航被拦截器终止（Block / 拦截器故障 / Redirect 超跳数）。
+     * 导航被拦截器终止（Block / 拦截器故障 / Redirect 超跳数）。
      * 与 NotFound 语义隔离：不触发 onLost、不打开目标。
      */
     data class Blocked(val path: String, val reason: String) : TRouterResult()

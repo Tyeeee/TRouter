@@ -24,7 +24,7 @@ import com.demo.trouter.generated.TRouterPojo_DemoReport
 import com.trouter.core.api.Ui
 
 /**
- * TRouter V1.0 测试台 · 场景索引（主页，@Route /main）。
+ * TRouter 最早的基础版本 测试台 · 场景索引（主页，@Route /main）。
  *
  * 交互说明：
  * - 每个场景行（含行尾 › 与点击水波纹）可点击，进入对应验证页；
@@ -108,7 +108,7 @@ class MainActivity : ComponentActivity() {
             }, contentWidth)
         }
 
-        /** V3.0 多模块可见化：按目标类包名推导来源模块（纯 UI 展示，不改 core 数据模型）。 */
+        /** 多模块版本 多模块可见化：按目标类包名推导来源模块（纯 UI 展示，不改 core 数据模型）。 */
         fun moduleTagOf(className: String): String = when {
             className.contains(".feature.demo.") -> "feature-demo"
             className.contains(".feature.about.") -> "feature-about"
@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
         }
 
         root.addView(TextView(this).apply {
-            text = "TRouter 测试台 · V1.0 导航 + V2.0 拦截器"
+            text = "TRouter 演示 App（每一行点进去都能看到效果）"
             textSize = 22f
         })
         infoLine(
@@ -342,7 +342,7 @@ class MainActivity : ComponentActivity() {
         putString(RouteLaunch.EXTRA_PATH, "HACKED-BUNDLE-OVERRIDE") // 探针：路由元数据不得被用户参数覆盖
     }
 
-    /** S22（G3）：navigateForResult 发起，结果在 onActivityResult 接收。 */
+    /** S22（拿页面返回值）：navigateForResult 发起，结果在 onActivityResult 接收。 */
     private fun openForResult(path: String) {
         when (val r = TRouter.navigateForResult(path, REQUEST_RESULT_DEMO)) {
             is TRouterResult.Success -> {
@@ -357,7 +357,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** S23（批次 B）：切换异步拦截器开关——开启后同步导航会被明确拒绝，这是**设计如此**。 */
+    /** S23（异步拦截器改造）：切换异步拦截器开关——开启后同步导航会被明确拒绝，这是**设计如此**。 */
     private fun toggleAsyncInterceptor() {
         val a = DemoInterceptors.async
         a.enabled = !a.enabled
@@ -370,7 +370,7 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this, statusText.text, Toast.LENGTH_LONG).show()
     }
 
-    /** S24（批次 B）：navigateAsync —— 异步链正常放行，回调在主线程且只回调一次。 */
+    /** S24（异步拦截器改造）：navigateAsync —— 异步链正常放行，回调在主线程且只回调一次。 */
     private fun openAsync(path: String) {
         statusText.text = "navigateAsync 已发起: $path"
         TRouter.navigateAsync(path) { r ->
@@ -385,7 +385,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** S25（批次 B）：把异步耗时拉到超过配置超时，验证超时收口 + 迟到放行被忽略。 */
+    /** S25（异步拦截器改造）：把异步耗时拉到超过配置超时，验证超时收口 + 迟到放行被忽略。 */
     private fun openAsyncTimeout() {
         val a = DemoInterceptors.async
         a.enabled = true
@@ -403,7 +403,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** S27（批次 C）：同一个端点名在两个进程的可见性不同——证明端点表按进程独立。 */
+    /** S27（多进程与跨进程增强）：同一个端点名在两个进程的可见性不同——证明端点表按进程独立。 */
     private fun callSecondProcessEndpoint() {
         val args = Bundle().apply { putString("q", "from-host") }
         statusText.text = "正在调用端点 demoClock2（先 :remote2，再默认 :remote）…"
@@ -417,7 +417,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** S28（批次 C）：POJO 本地往返 + 跨进程往返（业务类不实现 Parcelable，编解码全部由 KSP 生成）。 */
+    /** S28（多进程与跨进程增强）：POJO 本地往返 + 跨进程往返（业务类不实现 Parcelable，编解码全部由 KSP 生成）。 */
     private fun sendPojoToThirdProcess() {
         val report = DemoReport(
             id = "R-2026",
@@ -436,7 +436,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** S29（批次 C）：类型化远程接口——调用点看不到 Bundle/字符串协议，只有接口方法。 */
+    /** S29（多进程与跨进程增强）：类型化远程接口——调用点看不到 Bundle/字符串协议，只有接口方法。 */
     private fun callTypedRemoteApi() {
         val api = TRouter.remoteApi(
             DemoStatsApi::class.java,
@@ -474,7 +474,7 @@ class MainActivity : ComponentActivity() {
         const val REQUEST_RESULT_DEMO = 1001
     }
 
-    /** S13（V5.0）：切换注册/注销动态路由（目标页未标 @Route），并刷新图谱摘要。 */
+    /** S13（运行时注册路径版本）：切换注册/注销动态路由（目标页未标 @Route），并刷新图谱摘要。 */
     private fun toggleDynamic() {
         val path = RouterContract.PATH_DYNAMIC_DEMO
         val registered = TRouter.registeredRoutes().any { it.path == path }
@@ -499,14 +499,14 @@ class MainActivity : ComponentActivity() {
         refreshGraph()
     }
 
-    /** S14/图谱摘要（V5.0）：由 routeGraph() 实时汇总（动态与静态同图）。 */
+    /** S14/图谱摘要（运行时注册路径版本）：由 routeGraph() 实时汇总（动态与静态同图）。 */
     private fun refreshGraph() {
         if (!::graphText.isInitialized) return
         val g = TRouter.routeGraph()
         graphText.text = "图谱摘要：节点 ${g.nodes.size}（目标类）· 边 ${g.edges.size}（已注册路由）· 静态+动态同图"
     }
 
-    /** S11/S21：经跨进程通道导航（V4.0，可携带 bundle 参数）——先即时反馈"请求中"，结果异步回调再回显。 */
+    /** S11/S21：经跨进程通道导航（跨进程版本，可携带 bundle 参数）——先即时反馈"请求中"，结果异步回调再回显。 */
     private fun openRemote(path: String, bundle: Bundle? = null, target: String? = null) {
         // 立即反馈：bind/远端执行是异步的，先让用户看到"已在处理"
         val targetLabel = target ?: ":remote"

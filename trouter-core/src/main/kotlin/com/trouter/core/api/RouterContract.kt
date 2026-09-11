@@ -7,11 +7,11 @@ package com.trouter.core.api
  * KSP 检测到字面量时会输出 Warning。
  *
  * 演进登记（版本回顾见 docs/版本回顾与缺口核查.md）：
- * - V1.0：沉淀演示宿主路径 /main /second /fragment-demo /about /not/exist（页面当时全在 :app）；
- * - V2.0：新增 /mock/second（Mock 拦截器演示目标）；
- * - V3.0：路径常量保持 core 单一来源不变，页面按功能迁入 :feature-demo / :feature-about 两个模块；
- * - V4.0：新增 /remote-second（跨进程演示目标，@CrossProcess 白名单）；
- * - V5.0：新增 /dynamic-demo（动态路由演示目标——页面不标 @Route，运行时 registerRoute 注册）。
+ * - 最早的基础版本：沉淀演示宿主路径 /main /second /fragment-demo /about /not/exist（页面当时全在 :app）；
+ * - 拦截器版本：新增 /mock/second（Mock 拦截器演示目标）；
+ * - 多模块版本：路径常量保持 core 单一来源不变，页面按功能迁入 :feature-demo / :feature-about 两个模块；
+ * - 跨进程版本：新增 /remote-second（跨进程演示目标，@CrossProcess 白名单）；
+ * - 运行时注册路径版本：新增 /dynamic-demo（动态路由演示目标——页面不标 @Route，运行时 registerRoute 注册）。
  */
 object RouterContract {
 
@@ -39,19 +39,19 @@ object RouterContract {
     /** 分组路由演示：About 页，注册在 secondary group（验证多 group 加载器生成） */
     const val PATH_ABOUT: String = "/about"
 
-    /** V2.0 Mock 演示：/second 的 Mock 替身页（MockInterceptor 重定向目标，group=mock） */
+    /** 拦截器版本 Mock 演示：/second 的 Mock 替身页（MockInterceptor 重定向目标，group=mock） */
     const val PATH_MOCK_SECOND: String = "/mock/second"
 
-    /** V4.0 跨进程演示：remote 进程页面（@Route + @CrossProcess，manifest 声明 android:process=":remote"） */
+    /** 跨进程版本 跨进程演示：remote 进程页面（@Route + @CrossProcess，manifest 声明 android:process=":remote"） */
     const val PATH_REMOTE_SECOND: String = "/remote-second"
 
-    /** V5.0 动态路由演示：/dynamic-demo（运行时 registerRoute 注册；页面本身不标 @Route） */
+    /** 运行时注册路径版本 动态路由演示：/dynamic-demo（运行时 registerRoute 注册；页面本身不标 @Route） */
     const val PATH_DYNAMIC_DEMO: String = "/dynamic-demo"
 
-    /** 批次 C 多进程演示：第二个远端进程（:remote2）的页面（@Route + @CrossProcess） */
+    /** 多进程与跨进程增强 多进程演示：第二个远端进程（:remote2）的页面（@Route + @CrossProcess） */
     const val PATH_REMOTE_THIRD: String = "/remote-third"
 
-    /** 差距收敛 G3 演示：navigateForResult 结果回传目标页 */
+    /** 差距收敛 拿页面返回值 演示：navigateForResult 结果回传目标页 */
     const val PATH_RESULT_DEMO: String = "/result-demo"
 
     /**

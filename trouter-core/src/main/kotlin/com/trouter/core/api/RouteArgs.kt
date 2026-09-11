@@ -6,7 +6,7 @@ import android.os.Parcelable
 import java.io.Serializable
 
 /**
- * 目标页收参助手（G4，对齐主流 @Autowired 的“便利性”，但不引入反射）。
+ * 目标页收参助手（取参数的小助手，对齐主流 @Autowired 的“便利性”，但不引入反射）。
  *
  * 目标页创建处用 [of] 读取 Intent extras 或 Fragment arguments，再按类型取值；
  * 取值全部委托 Bundle，行为与手工 get* 一致。跨进程（AIDL Bundle）边界：

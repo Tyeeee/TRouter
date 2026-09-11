@@ -5,7 +5,7 @@ import com.trouter.core.api.RouteTargetKind
 import com.trouter.core.api.TRouterResult
 
 /**
- * 跨进程结果编解码（V4.0）。
+ * 跨进程结果编解码（跨进程版本）。
  *
  * AIDL 侧只传一个结构化字符串（字段以控制符 [SEP] 分隔，业务字段不会含该字符），
  * 避免自定义 Parcelable 泄漏到 core API；host 侧解码后重建统一密封 [TRouterResult]。
@@ -15,7 +15,7 @@ object RemoteReplyCodec {
 
     private const val SEP = "\u001F"
 
-    /** 服务调用错误串前缀（G2-remote，host/服务端共用同一协议前缀）。 */
+    /** 服务调用错误串前缀（跨进程接口调用，host/服务端共用同一协议前缀）。 */
     const val SERVICE_ERROR_PREFIX = "-ERR "
     private const val KIND_SUCCESS = "SUCCESS"
     private const val KIND_NOT_FOUND = "NOT_FOUND"

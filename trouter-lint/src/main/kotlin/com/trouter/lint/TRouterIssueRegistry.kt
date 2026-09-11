@@ -6,7 +6,7 @@ import com.android.tools.lint.detector.api.CURRENT_API
 import com.android.tools.lint.detector.api.Issue
 
 /**
- * TRouter Lint 检查注册表（批次 A2）。
+ * TRouter Lint 检查注册表（编译期强制改造2）。
  *
  * 为什么需要它：KSP 只能看到 `@Route` 注解里的 path（已在处理器里做字面量分级），
  * 但**调用点**的硬编码（`TRouter.navigate("/second")`）它完全看不到——而调用点硬编码

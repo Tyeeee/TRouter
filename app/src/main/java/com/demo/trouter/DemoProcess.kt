@@ -8,7 +8,7 @@ import java.io.File
 /**
  * 当前进程名（跨 API 级别安全）。
  *
- * 起因：批次 A2 首次开启 Lint 后，`NewApi` 报出 `Process.myProcessName()` 需要 API 33，
+ * 起因：编译期强制改造2 首次开启 Lint 后，`NewApi` 报出 `Process.myProcessName()` 需要 API 33，
  * 而本工程 minSdk = 24 —— 在 API 24~32 的真机上会直接崩溃。
  * 这里做一次统一收口：33+ 用官方 API，以下用 `/proc/self/cmdline` 兜底，读不到再退回包名。
  */

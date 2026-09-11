@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * POJO 跨进程编解码测试（批次 C 第 2 部分，场景 S28）。
+ * POJO 跨进程编解码测试（多进程与跨进程增强 第 2 部分，场景 S28）。
  *
  * 覆盖：
  * 1. **本地往返**：pack → unpack 与原对象完全相等（含 List / 枚举 / 非空嵌套 POJO）；

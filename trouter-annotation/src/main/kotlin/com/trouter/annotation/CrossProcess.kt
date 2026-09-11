@@ -1,7 +1,7 @@
 package com.trouter.annotation
 
 /**
- * 跨进程路由标注（V4.0）：标记「允许经跨进程通道（AIDL）导航」的 @Route 目标。
+ * 跨进程路由标注（跨进程版本）：标记「允许经跨进程通道（AIDL）导航」的 @Route 目标。
  *
  * 使用约束（处理器强制）：
  * - 必须与 @Route 同时标注（否则 KSP ERROR）；

@@ -14,7 +14,7 @@ import com.trouter.core.api.TRouterResult
 import java.util.UUID
 
 /**
- * host 侧跨进程通道客户端（V4.0 + G2-remote）。
+ * host 侧跨进程通道客户端（跨进程版本 + 跨进程接口调用）。
  *
  * 设计（防「顺序/时机依赖」缺陷）：
  * 1. 单后台线程（trouter-remote）串行执行全部操作：入队/连接回调/超时/派发；
@@ -42,7 +42,7 @@ class RemoteRouter {
             val onResult: (String) -> Unit,
         ) : Task(traceId, log)
 
-        /** 批次 C：类型化调用（原生返回 Bundle，结果由调用方按生成物解包）。 */
+        /** 多进程与跨进程增强：类型化调用（原生返回 Bundle，结果由调用方按生成物解包）。 */
         class Typed(
             val service: String,
             val method: String,
@@ -130,7 +130,7 @@ class RemoteRouter {
     }
 
     /**
-     * 批次 C：类型化跨进程调用（返回原生 Bundle）。
+     * 类型化跨进程调用（返回原生 Bundle）。
      * 失败统一回 null，由调用方（生成的客户端代理）转为错误回调。
      */
     fun callTyped(

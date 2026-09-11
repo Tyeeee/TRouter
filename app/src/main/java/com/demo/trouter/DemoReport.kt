@@ -3,7 +3,7 @@ package com.demo.trouter
 import com.trouter.annotation.RemotePojo
 
 /**
- * 批次 C 演示：跨进程传输的业务对象（**不实现 Parcelable**，编解码由 KSP 生成）。
+ * 多进程与跨进程增强 演示：跨进程传输的业务对象（**不实现 Parcelable**，编解码由 KSP 生成）。
  *
  * 字段刻意覆盖白名单里的各类形态：
  * - 基础类型与 String；

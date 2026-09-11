@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * 多进程契约测试（批次 C，场景 S26/S27）——**真跑三个进程**：
+ * 多进程契约测试（多进程与跨进程增强，场景 S26/S27）——**真跑三个进程**：
  * host（测试所在进程）+ `:remote` + `:remote2`。
  *
  * 覆盖：

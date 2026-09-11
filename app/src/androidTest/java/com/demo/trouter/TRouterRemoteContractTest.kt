@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 /**
- * 跨进程通道契约测试（场景 S12，见 docs/V4.0-跨进程路由方案.md §5）。
+ * 跨进程通道契约测试（场景 S12，见 docs/跨进程版本-跨进程路由方案.md §5）。
  *
  * 说明：S11（成功链路 UI）由 MainRouterTest#testRemoteProcessNavigation 覆盖；
  * 本类针对**跨进程契约分支**直调 TRouter.navigateRemote，均走**真实 AIDL 双进程**

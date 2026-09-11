@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * TRouter API 契约测试（场景 S07，见 docs/V1.0-测试与演示台规划.md §2.1）。
+ * TRouter API 契约测试（场景 S07，见 docs/最早的基础版本-测试与演示台规划.md §2.1）。
  *
  * 说明：UI 行为驱动场景（S01–S05）由 MainRouterTest 覆盖；本类只针对**无法/不宜用 UI 驱动**的
  * 契约分支（S07）做直接 API 验证（NotInitialized、重复 install 幂等、traceId 一致性、NotFound/onLost），

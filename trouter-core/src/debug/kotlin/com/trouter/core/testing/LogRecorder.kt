@@ -3,7 +3,7 @@ package com.trouter.core.testing
 /**
  * 日志收集器：实现 config.logSink，供测试断言日志是否输出（R3 / O1）。
  *
- * V4.0 起 [remote] 日志可能由跨进程客户端 worker 线程写入（主线程守卫日志并存），
+ * 跨进程版本 起 [remote] 日志可能由跨进程客户端 worker 线程写入（主线程守卫日志并存），
  * 因此全部读写做同步化。
  */
 class LogRecorder : (String) -> Unit {

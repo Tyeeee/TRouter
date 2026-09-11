@@ -32,7 +32,7 @@ import timber.log.Timber
  *    只登记「类名字符串」，不加载任何页面类（惰性，见 RouteMeta 注释）；
  * 3. [navigate]：按 path 查表并打开目标；页面类在此刻才真正加载。
  *
- * 可观测性（V1.0 四个埋点，Timber，Tag=TRouter，消息为结构化 [节点] 行）：
+ * 可观测性（最早的基础版本 四个埋点，Timber，Tag=TRouter，消息为结构化 [节点] 行）：
  * navigate 入口/出口、GroupLoader 加载开始/结束；受 config.isDebug 控制。
  * logSink（测试收集器）与 logcat（Timber）收到的消息一致，无重复前缀。
  */
@@ -44,7 +44,7 @@ object TRouter {
     /** 拦截器 Redirect 重定向累计跳数上限（防死循环，见 navigateInternal）。 */
     private const val MAX_REDIRECTS = 3
 
-    /** G5：别名注册表中正则别名前缀（exact 优先，其次按注册序正则匹配）。 */
+    /** 路径别名：别名注册表中正则别名前缀（exact 优先，其次按注册序正则匹配）。 */
     private const val ALIAS_REGEX_PREFIX = "regex:"
 
     @Volatile
@@ -53,27 +53,27 @@ object TRouter {
     private var config: TRouterConfig = TRouterConfig()
     private val routeTable = RouteTable()
 
-    // G8：目标 Class 按进程缓存（首次 navigate 时加载一次，后续命中缓存）
+    // 目标 Class 按进程缓存（首次 navigate 时加载一次，后续命中缓存）
     private val classCache = java.util.concurrent.ConcurrentHashMap<String, Class<*>>()
 
-    // L2：运行时拦截器注册表。读写均在锁内做「快照或原子替换」，navigate 每次取不可变快照：
+    // 运行时拦截器注册表。读写均在锁内做「快照或原子替换」，navigate 每次取不可变快照：
     // 增删绝不打断进行中的链，只影响下一次 navigate（吸取「顺序/时机依赖」缺陷教训）。
     private val liveInterceptorsLock = Any()
     private val liveInterceptors = ArrayList<RouteChainMember>()
 
-    // L3：目标级拦截器绑定表（name -> member）。CopyOnWrite 快照语义与 liveInterceptors 一致。
+    // 目标级拦截器绑定表（name -> member）。CopyOnWrite 快照语义与 liveInterceptors 一致。
     private val targetBindingsLock = Any()
     private val targetBindings = LinkedHashMap<String, RouteChainMember>()
 
-    // G5：路由别名表（alias -> 真实 path；支持 regex: 前缀正则别名）
+    // 路由别名表（alias -> 真实 path；支持 regex: 前缀正则别名）
     private val aliasLock = Any()
     private val aliasTable = LinkedHashMap<String, String>()
 
-    // G2：进程内服务注册表（接口 Class -> 实现实例）
+    // 进程内服务注册表（接口 Class -> 实现实例）
     private val servicesLock = Any()
     private val servicesTable = LinkedHashMap<Class<*>, Any>()
 
-    // G2-remote：跨进程服务端点注册表（名称 -> (Bundle)->String，各进程独立注册）
+    // 跨进程服务端点注册表（名称 -> (Bundle)->String，各进程独立注册）
     private val endpointLock = Any()
     private val endpoints = LinkedHashMap<String, (Bundle) -> String>()
     private const val REMOTE_ERR_PREFIX = "-ERR"
@@ -89,8 +89,8 @@ object TRouter {
     private var resumedActivity: WeakReference<Activity>? = null
     private var timberPlanted = false
 
-    // V4.0：host 侧跨进程通道客户端（按需 bind，reset 时断开）。
-    // 批次 C：**每个目标进程一个客户端实例**——连接/队列状态按进程隔离，互不干扰。
+    // host 侧跨进程通道客户端（按需 bind，reset 时断开）。
+    // **每个目标进程一个客户端实例**——连接/队列状态按进程隔离，互不干扰。
     private val remoteRoutersLock = Any()
     private val remoteRouters = LinkedHashMap<String, RemoteRouter>()
 
@@ -101,7 +101,7 @@ object TRouter {
         }
     }
 
-    // 批次 B：异步链的恢复执行与结果回调统一回主线程（打开页面必须主线程）
+    // 异步链的恢复执行与结果回调统一回主线程（打开页面必须主线程）
     private val mainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     private fun runOnMain(block: () -> Unit) {
@@ -174,7 +174,7 @@ object TRouter {
                 if (routeTable.register(meta)) {
                     added++
                 } else {
-                    // V3.0 可观测防线：重复 path（含跨模块/重复 install）如实告警，first-wins 语义固化
+                    // 多模块版本 可观测防线：重复 path（含跨模块/重复 install）如实告警，first-wins 语义固化
                     val keep = routeTable.find(meta.path)
                     log("[RouteTable][duplicate] path=${meta.path} keep=${keep?.targetClassName} incoming=${meta.targetClassName}")
                 }
@@ -193,7 +193,7 @@ object TRouter {
      * @param path  必须来自 RouterContract 常量
      * @param bundle 目标页参数（Activity：作为 Intent extras；Fragment：随 Fragment 参数传递）
      *
-     * V2.0：命中路由后先走 config.interceptors 拦截链（解析后、打开前）；
+     * 命中路由后先走 config.interceptors 拦截链（解析后、打开前）；
      * 决策为 Redirect 时以同 traceId 重入（跳数上限 MAX_REDIRECTS，防死循环）。
      */
     fun navigate(path: String, bundle: Bundle? = null): TRouterResult {
@@ -203,7 +203,7 @@ object TRouter {
     }
 
     /**
-     * 带结果回调的导航（G3）：以 startActivityForResult 发起，结果由调用方 Activity 的
+     * 带结果回调的导航（拿页面返回值）：以 startActivityForResult 发起，结果由调用方 Activity 的
      * onActivityResult/ResultLauncher 接收（与系统语义一致）；无前台 Activity 时返回 Blocked。
      */
     fun navigateForResult(path: String, requestCode: Int, bundle: Bundle? = null): TRouterResult {
@@ -216,7 +216,7 @@ object TRouter {
     }
 
     /**
-     * 异步导航（批次 B）：链中允许出现 [AsyncInterceptor]，结果通过 [onResult] 回调（主线程，只回调一次）。
+     * 异步导航（异步拦截器改造）：链中允许出现 [AsyncInterceptor]，结果通过 [onResult] 回调（主线程，只回调一次）。
      *
      * 与同步 [navigate] 的差异：
      * - 异步拦截器可在任意线程延后终止本轮（proceed/block/redirect），剩余链与打开目标由框架切回主线程执行；
@@ -282,7 +282,7 @@ object TRouter {
     }
 
     /**
-     * 单跳导航核心（批次 B 起为**同步/异步共用**）：解析 → 别名 → 拦截链 → 打开 → 结果映射
+     * 单跳导航核心（异步拦截器改造 起为**同步/异步共用**）：解析 → 别名 → 拦截链 → 打开 → 结果映射
      * （Redirect 以同 traceId 重入，跳数上限 MAX_REDIRECTS）。
      *
      * 两种模式：
@@ -313,7 +313,7 @@ object TRouter {
 
         val meta = routeTable.find(path)
         if (meta == null) {
-            // 未注册路径：先查 G5 别名（精确 -> 正则），命中则转向真实 path（记跳数防环）
+            // 未注册路径：先查 路径别名 别名（精确 -> 正则），命中则转向真实 path（记跳数防环）
             val resolved = resolveAlias(path)
             if (resolved == null) {
                 val cost = SystemClock.elapsedRealtime() - startMs
@@ -574,11 +574,11 @@ object TRouter {
     }
 
     /**
-     * 组装一次导航的链快照 = 全局运行时拦截器(L2) + 目标级拦截器(L3，按 resolver 解析并按名取绑定)。
+     * 组装一次导航的链快照 = 全局运行时拦截器(运行中增删拦截器) + 目标级拦截器(只给某个页面挂拦截器，按 resolver 解析并按名取绑定)。
      * @return null 表示解析失败/存在未注册的目标拦截器名（调用方转为 Blocked）。
      */
     private fun combinedMembers(meta: RouteMeta, traceId: String): List<RouteChainMember>? {
-        // G11：全局链按 priority 降序稳定排序（默认 0 = 保持声明顺序）
+        // 全局链按 priority 降序稳定排序（默认 0 = 保持声明顺序）
         val global = interceptorSnapshot().sortedByDescending { it.priority }
         val resolver = config.targetInterceptorResolver ?: return global
         val names = try {
@@ -779,13 +779,13 @@ object TRouter {
         return ChainOutcome.Opened(opened)
     }
 
-    /** G8：目标类加载（带进程内缓存）；失败抛 ClassNotFoundException（由调用方按打开失败处理）。 */
+    /** 页面类缓存：目标类加载（带进程内缓存）；失败抛 ClassNotFoundException（由调用方按打开失败处理）。 */
     @Suppress("UNCHECKED_CAST")
     private fun loadTargetClass(className: String): Class<*> =
         classCache.computeIfAbsent(className) { Class.forName(it) }
 
     /**
-     * G7：路由目标合法性校验（可观测/测试/构建辅助）。
+     * 路由目标合法性校验（可观测/测试/构建辅助）。
      * 逐条尝试加载已注册路由的目标类，返回**无法加载**的路由清单（不含那些成功的）。
      * 静态路由目标类由 KSP 保证存在；本方法主要用于捕获**动态注册传错类名**这类迟发现问题。
      */
@@ -881,13 +881,13 @@ object TRouter {
         return applyRouteConfig(removes = removes, adds = adds)
     }
 
-    // ------------------------------------------------------------------ 路由表 JSON（G6）与服务层（G2）
+    // ------------------------------------------------------------------ 路由表 JSON（整表导出导入）与服务层（模块间接口调用）
 
-    /** G6：把当前全部路由（静态+动态）导出为规范 JSON（供下发/审计）。 */
+    /** 整表导出导入：把当前全部路由（静态+动态）导出为规范 JSON（供下发/审计）。 */
     fun exportRouteMapJson(): String = RouteMapCodec.toJson(registeredRoutes())
 
     /**
-     * G6：导入路由表 JSON 作为**动态覆盖层**：先清当前动态路由，再原子注册导入内容；
+     * 导入路由表 JSON 作为**动态覆盖层**：先清当前动态路由，再原子注册导入内容；
      * 导入与静态路由冲突或格式非法 → 整批失败、零变更。
      * @return true = 导入并覆盖成功。
      */
@@ -898,7 +898,7 @@ object TRouter {
         return applyRouteConfig(removes = removes, adds = metas)
     }
 
-    /** G2：注册进程内服务（接口 key → 实现实例）。重复接口返回 false。 */
+    /** 模块间接口调用：注册进程内服务（接口 key → 实现实例）。重复接口返回 false。 */
     fun <T : Any> registerService(serviceClass: Class<T>, instance: T): Boolean {
         if (!initialized) return false
         val ok = synchronized(servicesLock) {
@@ -911,7 +911,7 @@ object TRouter {
         return ok
     }
 
-    /** G2：注销进程内服务。@return true = 确有移除。 */
+    /** 模块间接口调用：注销进程内服务。@return true = 确有移除。 */
     fun unregisterService(serviceClass: Class<*>): Boolean {
         if (!initialized) return false
         val removed = synchronized(servicesLock) { servicesTable.remove(serviceClass) }
@@ -919,17 +919,17 @@ object TRouter {
         return removed != null
     }
 
-    /** G2：按接口查找服务实例；未注册返回 null（调用方自行判空，不抛异常）。 */
+    /** 模块间接口调用：按接口查找服务实例；未注册返回 null（调用方自行判空，不抛异常）。 */
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> findService(serviceClass: Class<T>): T? =
         synchronized(servicesLock) { servicesTable[serviceClass] as T? }
 
-    /** G2：已注册服务接口快照。 */
+    /** 模块间接口调用：已注册服务接口快照。 */
     fun registeredServices(): List<Class<*>> =
         synchronized(servicesLock) { ArrayList(servicesTable.keys) }
 
     /**
-     * G2-remote：注册跨进程服务端点（各进程独立注册表；名称重复拒绝）。
+     * 注册跨进程服务端点（各进程独立注册表；名称重复拒绝）。
      * 端点签名：入参 Bundle（基础类型）→ 返回结构化字符串（默认协议自定，host 原样回传）。
      */
     fun registerRemoteEndpoint(name: String, handler: (Bundle) -> String): Boolean {
@@ -966,10 +966,10 @@ object TRouter {
     fun isRemoteEndpointError(reply: String): Boolean = reply.startsWith(REMOTE_ERR_PREFIX)
 
 
-    // ------------------------------------------------------------------ 拦截器运行时增删（L2）
+    // ------------------------------------------------------------------ 拦截器运行时增删（运行中增删拦截器）
 
     /**
-     * 运行时追加拦截器（L2）。立即对**下一次** navigate 生效（本次进行中的链不受影响）。
+     * 运行时追加拦截器（运行中增删拦截器）。立即对**下一次** navigate 生效（本次进行中的链不受影响）。
      * 同一实例重复注册返回 false（拒绝重复），并输出重复日志。
      * @return true = 已加入；false = 未初始化 或 重复实例。
      */
@@ -990,7 +990,7 @@ object TRouter {
     }
 
     /**
-     * 运行时移除拦截器（L2，按实例引用）。
+     * 运行时移除拦截器（运行中增删拦截器，按实例引用）。
      * @return true = 确有移除；false = 未初始化 或 不存在。
      */
     fun removeInterceptor(interceptor: RouteChainMember): Boolean {
@@ -1004,7 +1004,7 @@ object TRouter {
         return removed
     }
 
-    /** 已注册拦截器只读快照（L2，可观测）。 */
+    /** 已注册拦截器只读快照（运行中增删拦截器，可观测）。 */
     fun registeredInterceptors(): List<RouteChainMember> {
         if (!initialized) return emptyList()
         return interceptorSnapshot()
@@ -1014,10 +1014,10 @@ object TRouter {
     private fun interceptorSnapshot(): List<RouteChainMember> =
         synchronized(liveInterceptorsLock) { ArrayList(liveInterceptors) }
 
-    // ------------------------------------------------------------------ 目标级拦截器绑定（L3）
+    // ------------------------------------------------------------------ 目标级拦截器绑定（只给某个页面挂拦截器）
 
     /**
-     * 把标识名绑定到拦截器实例（L3，与 @Interceptor(names) 配套）。
+     * 把标识名绑定到拦截器实例（只给某个页面挂拦截器，与 @Interceptor(names) 配套）。
      * @return true 绑定成功；false = 未初始化 或 该 name 已被占用（需先 unbind）。
      */
     fun bindTargetInterceptor(name: String, interceptor: RouteChainMember): Boolean {
@@ -1036,7 +1036,7 @@ object TRouter {
         return bound
     }
 
-    /** 解绑标识名（L3）。@return true = 确有解绑。 */
+    /** 解绑标识名（只给某个页面挂拦截器）。@return true = 确有解绑。 */
     fun unbindTargetInterceptor(name: String): Boolean {
         if (!initialized) return false
         val removed = synchronized(targetBindingsLock) { targetBindings.remove(name) }
@@ -1044,14 +1044,14 @@ object TRouter {
         return removed != null
     }
 
-    /** 已绑定目标拦截器只读快照（L3）。 */
+    /** 已绑定目标拦截器只读快照（只给某个页面挂拦截器）。 */
     fun registeredTargetInterceptors(): Map<String, RouteChainMember> =
         synchronized(targetBindingsLock) { LinkedHashMap(targetBindings) }
 
-    // ------------------------------------------------------------------ 深链（G1）与路由别名（G5）
+    // ------------------------------------------------------------------ 深链（从外部链接进入）与路由别名（路径别名）
 
     /**
-     * URI/Scheme 深链入口（G1）：scheme 须在 config.deeplinkSchemes 白名单内；
+     * URI/Scheme 深链入口（从外部链接进入）：scheme 须在 config.deeplinkSchemes 白名单内；
      * uri.path 段即内部路由 path；query 并入导航参数（query 优先于入参 bundle）。
      */
     fun navigateUri(uri: Uri, bundle: Bundle? = null): TRouterResult {
@@ -1069,7 +1069,7 @@ object TRouter {
     }
 
     /**
-     * 注册路由别名（G5）：alias 未注册时导航 alias 会转向 [toPath]。
+     * 注册路由别名（路径别名）：alias 未注册时导航 alias 会转向 [toPath]。
      * alias 以 `regex:` 开头视为正则（精确别名优先，正则按注册序取首个命中）。
      * @return true 注册成功；false = 未初始化 / 空参数 / 别名重复。
      */
@@ -1090,7 +1090,7 @@ object TRouter {
         return ok
     }
 
-    /** 注销路由别名（G5）。@return true = 确有移除。 */
+    /** 注销路由别名（路径别名）。@return true = 确有移除。 */
     fun unregisterRouteAlias(alias: String): Boolean {
         if (!initialized) return false
         val removed = synchronized(aliasLock) { aliasTable.remove(alias) }
@@ -1098,7 +1098,7 @@ object TRouter {
         return removed != null
     }
 
-    /** 已注册别名只读快照（G5）。 */
+    /** 已注册别名只读快照（路径别名）。 */
     fun registeredRouteAliases(): Map<String, String> =
         synchronized(aliasLock) { LinkedHashMap(aliasTable) }
 
@@ -1117,10 +1117,10 @@ object TRouter {
         return null
     }
 
-    // ------------------------------------------------------------------ 动态路由与图谱（V5.0）
+    // ------------------------------------------------------------------ 动态路由与图谱（运行时注册路径版本）
 
     /**
-     * 运行时注册路由（V5.0）：不依赖 KSP 生成物，与静态路由**同表共存**。
+     * 运行时注册路由（运行时注册路径版本）：不依赖 KSP 生成物，与静态路由**同表共存**。
      * 目标仍只存类名字符串（惰性），拦截器/降级/快照/图谱自动生效。
      *
      * @return true 注册成功；false = 未初始化 或 与既有 path 冲突（拒绝覆盖，先 unregister 再注册）
@@ -1139,7 +1139,7 @@ object TRouter {
     }
 
     /**
-     * 运行时注销路由（V5.0）：静态与动态路由均可注销（路径级统一语义）。
+     * 运行时注销路由（运行时注册路径版本）：静态与动态路由均可注销（路径级统一语义）。
      * @return true 表示确有移除；未初始化或不存在返回 false。
      */
     fun unregisterRoute(path: String): Boolean {
@@ -1153,7 +1153,7 @@ object TRouter {
     }
 
     /**
-     * 路由图谱（V5.0）：由当前路由表（静态 + 动态）实时导出，顺序确定（按注册/插入序）。
+     * 路由图谱（运行时注册路径版本）：由当前路由表（静态 + 动态）实时导出，顺序确定（按注册/插入序）。
      */
     fun routeGraph(): RouteGraph {
         if (!initialized) return RouteGraph(nodes = emptyList(), edges = emptyList())
@@ -1175,7 +1175,7 @@ object TRouter {
         return RouteGraph(nodes = nodes, edges = edges)
     }
 
-    // ------------------------------------------------------------------ 跨进程导航（V4.0）
+    // ------------------------------------------------------------------ 跨进程导航（跨进程版本）
 
     /**
      * 跨进程导航：把导航请求经 AIDL 发给 remote 进程，由**远端进程自己的 TRouter** 解析并打开，
@@ -1221,7 +1221,7 @@ object TRouter {
         "未配置 target=$target 的跨进程服务（请加入 TRouterConfig.remoteServices，为其声明 RemoteRouterService 子类，并在 manifest 指定 android:process）"
 
     /**
-     * G2-remote：跨进程调用远端进程注册的服务端点（结果原样 String 回传主线程；
+     * 跨进程调用远端进程注册的服务端点（结果原样 String 回传主线程；
      * 失败以 RemoteReplyCodec.SERVICE_ERROR_PREFIX 前缀串表达）。
      */
     fun callRemoteService(
@@ -1247,7 +1247,7 @@ object TRouter {
         remoteRouterFor(component, target).callService(ctx, component, name, args, onResult) { log(it) }
     }
 
-    // ------------------------------------------------------------------ 类型化远程 API（批次 C）
+    // ------------------------------------------------------------------ 类型化远程 API（多进程与跨进程增强）
 
     /** 远端进程侧：api 名 → 分发器（由 @RemoteApi 生成物登记）。 */
     private val remoteApiLock = Any()
@@ -1312,7 +1312,7 @@ object TRouter {
     }
 
     /**
-     * 取类型化远程 API 的动态代理（批次 C）：
+     * 取类型化远程 API 的动态代理（多进程与跨进程增强）：
      * ```
      * val api = TRouter.remoteApi(DemoStatsApi::class.java, target = "remote2") { err -> ... }
      * api.count("abc") { n -> statusBar("远端返回 $n") }   // 结果回主线程

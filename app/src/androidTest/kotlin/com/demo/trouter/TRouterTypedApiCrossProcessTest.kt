@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * 类型化远程接口测试（批次 C 第 2 部分，场景 S29）。
+ * 类型化远程接口测试（多进程与跨进程增强 第 2 部分，场景 S29）。
  *
  * 覆盖：
  * 1. 基础类型参数/结果：`count("abcd")` → 远端返回 8（真跨进程，回包带远端 pid 的调用另行校验）；

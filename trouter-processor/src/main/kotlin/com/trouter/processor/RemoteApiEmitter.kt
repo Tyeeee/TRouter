@@ -9,7 +9,7 @@ import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 
 /**
- * `@RemoteApi` 生成器（批次 C）：把接口变成"可跨进程调用的类型化 API"。
+ * `@RemoteApi` 生成器（多进程与跨进程增强）：把接口变成"可跨进程调用的类型化 API"。
  *
  * 为接口生成 `TRouterRemoteApi_<接口名>`（实现 `TRouterRemoteApiCodec`）：
  * - `methods`：每个方法的参数/结果编解码器（客户端用它把实参打包、把回包解出结果）；

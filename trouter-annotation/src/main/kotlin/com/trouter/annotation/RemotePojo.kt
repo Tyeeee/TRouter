@@ -1,7 +1,7 @@
 package com.trouter.annotation
 
 /**
- * 跨进程 POJO 标注（批次 C）：标记需要**跨进程传输**的数据类。
+ * 跨进程 POJO 标注（多进程与跨进程增强）：标记需要**跨进程传输**的数据类。
  *
  * 处理器会为该类生成 `TRouterPojo_<类名>` 编解码器（零反射）：
  * - `pack(bundle, value)`：把字段逐个写进 Bundle（基础类型 / String / 枚举名 / List / 嵌套 @RemotePojo）；

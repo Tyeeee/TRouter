@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 内核硬化测试（批 1：G8 Class 缓存落地 / G7 目标合法性校验 / G11 全局拦截优先级）。
+ * 内核硬化测试（批 1：页面类缓存 Class 缓存落地 / 路径自检 目标合法性校验 / 拦截器优先级 全局拦截优先级）。
  * 方案 docs/我们与开源Router差距分析.md 表 B。
  */
 @RunWith(AndroidJUnit4::class)
@@ -23,7 +23,7 @@ class TRouterCoreHardeningTest : BaseTRouterTest() {
 
     override fun provideRegistry(): GroupLoaderRegistry = DemoRouteRegistry
 
-    /** G7-1：全部已注册路由（静态+跨模块）目标类应可加载。 */
+    /** 路径自检-1：全部已注册路由（静态+跨模块）目标类应可加载。 */
     @Test
     fun allRegisteredRoutesHaveLoadableTargets() {
         val missing = TRouter.checkRouteTargets()
@@ -32,7 +32,7 @@ class TRouterCoreHardeningTest : BaseTRouterTest() {
             logs.lines.none { it.contains("[route][verify][missing]") })
     }
 
-    /** G7-2：动态注册传错类名 → checkRouteTargets 能精确检出并告警（迟发现问题前置）。 */
+    /** 路径自检-2：动态注册传错类名 → checkRouteTargets 能精确检出并告警（迟发现问题前置）。 */
     @Test
     fun dynamicRouteWithMissingTargetDetectedByVerify() {
         val fakePath = "/dynamic/fake-target"
@@ -66,7 +66,7 @@ class TRouterCoreHardeningTest : BaseTRouterTest() {
             InterceptorDecision.Continue
     }
 
-    /** G11：全局链按 priority 降序执行（默认 0 者保持声明顺序——由既有 S16-4 继续守护）。 */
+    /** 拦截器优先级：全局链按 priority 降序执行（默认 0 者保持声明顺序——由既有 S16-4 继续守护）。 */
     @Test
     fun globalChainSortsByPriorityStably() {
         assertTrue(TRouter.addInterceptor(LowPriorityInterceptor()))

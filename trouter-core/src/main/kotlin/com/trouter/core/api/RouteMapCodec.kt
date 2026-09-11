@@ -1,7 +1,7 @@
 package com.trouter.core.api
 
 /**
- * 路由表 JSON 编解码（G6）。
+ * 路由表 JSON 编解码（整表导出导入）。
  *
  * 规范格式（导出/导入同构，字段顺序固定）：顶层数组，每项
  * `{"path":..,"group":..,"targetClassName":..,"kind":"ACTIVITY|FRAGMENT"}`。

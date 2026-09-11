@@ -19,7 +19,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 目标级拦截器测试（L3，场景 S17；方案 docs/Backlog补全方案-动态化与硬化.md §3）。
+ * 目标级拦截器测试（只给某个页面挂拦截器，场景 S17；方案 docs/Backlog补全方案-动态化与硬化.md §3）。
  *
  * 用 RemoteSecondActivity（@Interceptor(names=["remoteAudit"])）作宿主验证：
  * 全局链之后追加目标链；未绑定标识 = 明确 Blocked（不静默）；重复绑定拒绝；非目标路由不受影响。

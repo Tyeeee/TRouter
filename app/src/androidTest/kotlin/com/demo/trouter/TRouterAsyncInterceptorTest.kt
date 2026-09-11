@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * 异步拦截器测试（批次 B，场景 S23–S25）。
+ * 异步拦截器测试（异步拦截器改造，场景 S23–S25）。
  *
  * 覆盖（每条都是对外承诺的行为，不是实现细节）：
  * 1. 异步放行 → 目标打开、结果回调**在主线程**且**只回调一次**；

@@ -1,7 +1,7 @@
 package com.trouter.annotation
 
 /**
- * 类型化远程接口标注（批次 C）：标在**接口**上，处理器为该接口生成
+ * 类型化远程接口标注（多进程与跨进程增强）：标在**接口**上，处理器为该接口生成
  * `TRouterRemoteApi_<接口名>`（实现 `TRouterRemoteApiCodec`）。
  *
  * 接口方法形态（处理器强制，违反即编译错误）：

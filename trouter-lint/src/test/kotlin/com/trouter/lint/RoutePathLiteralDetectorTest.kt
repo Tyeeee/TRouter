@@ -6,7 +6,7 @@ import com.android.tools.lint.detector.api.Detector
 import com.android.tools.lint.detector.api.Issue
 
 /**
- * 批次 A2 用例：调用点硬编码 path 必须被拦，引用常量必须放行。
+ * 编译期强制改造2 用例：调用点硬编码 path 必须被拦，引用常量必须放行。
  *
  * 用 Lint 官方测试底座（lint-tests）在 JVM 上直接跑检测器，不依赖模拟器：
  * 1) 字面量 → 期望 1 条 `TRouterHardcodedPath` 错误；

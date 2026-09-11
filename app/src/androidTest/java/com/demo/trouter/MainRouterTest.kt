@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 import org.hamcrest.Matchers.containsString
 
 /**
- * UI 行为驱动场景用例（场景体系见 docs/V1.0-测试与演示台规划.md §2.1）。
+ * UI 行为驱动场景用例（场景体系见 docs/最早的基础版本-测试与演示台规划.md §2.1）。
  *
  * 本类 = UI 可驱动场景（S01–S05）：统一由 BaseTRouterTest init(TestConfig)+install，
  * 用例只做「点击场景行 → 断言目标页/反馈/日志」的真实操作，不直调 TRouter.navigate。
@@ -72,7 +72,7 @@ class MainRouterTest : BaseTRouterTest() {
         }
     }
 
-    /** S13（V5.0）：真实点击——注册动态路由 → 导航成功；注销 → 导航走 NotFound 降级。 */
+    /** S13（运行时注册路径版本）：真实点击——注册动态路由 → 导航成功；注销 → 导航走 NotFound 降级。 */
     @Test
     fun testDynamicRouteScenario() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->

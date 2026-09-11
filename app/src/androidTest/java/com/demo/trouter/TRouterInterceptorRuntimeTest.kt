@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * 动态增删拦截器测试（L2，场景 S16；方案 docs/Backlog补全方案-动态化与硬化.md §2）。
+ * 动态增删拦截器测试（运行中增删拦截器，场景 S16；方案 docs/Backlog补全方案-动态化与硬化.md §2）。
  *
  * 覆盖：运行时 add/remove 的生效与失效、同实例重复拒绝、增删**只影响下一次 navigate**
  * （进行中的链与下一次之间严格隔离——同类缺陷（如"第二次调用必超时"）的回归锚点）、

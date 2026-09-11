@@ -24,14 +24,14 @@ import org.junit.runner.RunWith
 import org.hamcrest.Matchers.containsString
 
 /**
- * G3 导航结果回调 + G4 收参助手测试（批 2 首两件）。
+ * 拿页面返回值 导航结果回调 + 取参数的小助手 收参助手测试（批 2 首两件）。
  */
 @RunWith(AndroidJUnit4::class)
 class TRouterResultAndArgsTest : BaseTRouterTest() {
 
     override fun provideRegistry(): GroupLoaderRegistry = DemoRouteRegistry
 
-    /** G3-1：无前台 Activity 时 navigateForResult 明确 Blocked（不偷偷降级为 NEW_TASK）。 */
+    /** 拿页面返回值-1：无前台 Activity 时 navigateForResult 明确 Blocked（不偷偷降级为 NEW_TASK）。 */
     @Test
     fun navigateForResultWithoutForegroundIsBlocked() {
         // 本用例未启动任何 Activity（BaseTRouterTest 只有 init/install）
@@ -42,7 +42,7 @@ class TRouterResultAndArgsTest : BaseTRouterTest() {
         assertTrue("onLost 不应触发", lostPaths.isEmpty())
     }
 
-    /** G3-2（UI 全链路）：S22 → Result 页 → 「返回并携带结果」→ 主页状态栏收到回传数据。 */
+    /** 拿页面返回值-2（UI 全链路）：S22 → Result 页 → 「返回并携带结果」→ 主页状态栏收到回传数据。 */
     @Test
     fun resultEchoRoundTripViaUI() {
         ActivityScenario.launch(MainActivity::class.java).use {
@@ -55,7 +55,7 @@ class TRouterResultAndArgsTest : BaseTRouterTest() {
         }
     }
 
-    /** G4-1：RouteArgs 类型化收参（String/数值/布尔/数组/Serializable）。 */
+    /** 取参数的小助手-1：RouteArgs 类型化收参（String/数值/布尔/数组/Serializable）。 */
     @Test
     fun routeArgsTypedReads() {
         val payload = SerializablePayload(7)
@@ -81,7 +81,7 @@ class TRouterResultAndArgsTest : BaseTRouterTest() {
         assertEquals(0, args.int("k_missing2"))
     }
 
-    /** G4-2：Intent 便捷入口 + 空参数安全。 */
+    /** 取参数的小助手-2：Intent 便捷入口 + 空参数安全。 */
     @Test
     fun routeArgsIntentEntryAndEmptySafe() {
         val intent = Intent().putExtra("x", 1)

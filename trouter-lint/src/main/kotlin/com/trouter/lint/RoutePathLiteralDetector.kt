@@ -16,7 +16,7 @@ import org.jetbrains.uast.UExpression
 import org.jetbrains.uast.ULiteralExpression
 
 /**
- * 路由 path 硬编码检查（批次 A2，issue id = `TRouterHardcodedPath`）。
+ * 路由 path 硬编码检查（编译期强制改造2，issue id = `TRouterHardcodedPath`）。
  *
  * 覆盖范围：**调用点**。`TRouter.navigate("/second")` 这类写法在评审里最容易被放过去，
  * KSP 也看不见（它只看注解），运行期更不会报错——只是"改路径时漏改一处"的定时炸弹。

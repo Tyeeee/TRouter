@@ -13,8 +13,8 @@ import com.trouter.core.api.RouteMeta
 import com.trouter.core.api.RouterContract
 
 /**
- * V2.0 演示拦截器集合（宿主装配 + 主页 S08/S09 开关共用的**有状态**实例）；
- * 批次 B 追加异步拦截器（S23–S25）。
+ * 拦截器版本 演示拦截器集合（宿主装配 + 主页 S08/S09 开关共用的**有状态**实例）；
+ * 异步拦截器改造 追加异步拦截器（S23–S25）。
  *
  * 统一治理：拦截器仍经 TRouterConfig.interceptors 注入（见 TRouterDemoApp），
  * 开关只是翻转实例自身状态（行为开关，非日志开关，不受 isDebug 影响）。
@@ -29,7 +29,7 @@ object DemoInterceptors {
         redirects = mapOf(RouterContract.PATH_SECOND to RouterContract.PATH_MOCK_SECOND),
     )
 
-    /** 异步拦截器（批次 B，S23–S25）：延时后放行，模拟网络风控/定位等真实异步检查。 */
+    /** 异步拦截器（异步拦截器改造，S23–S25）：延时后放行，模拟网络风控/定位等真实异步检查。 */
     val async = AsyncDemoInterceptor()
 
     /** 供主页/测试装配的完整演示列表（默认全关闭/全放行）。 */
@@ -52,7 +52,7 @@ class GateInterceptor : RouteInterceptor {
 }
 
 /**
- * 异步拦截器演示（批次 B）：模拟"调一次网络/定位再决定放不放行"。
+ * 异步拦截器演示（异步拦截器改造）：模拟"调一次网络/定位再决定放不放行"。
  *
  * - [enabled]=false：立即放行（对同步 navigate 完全透明）；
  * - [enabled]=true：延时 [delayMs] 后放行；此时**同步 navigate 会被明确拒绝**

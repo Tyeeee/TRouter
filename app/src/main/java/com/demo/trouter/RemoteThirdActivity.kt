@@ -16,7 +16,7 @@ import com.trouter.core.api.RouterContract
 import com.trouter.core.api.Ui
 
 /**
- * S26 跨进程目标页（批次 C）：`@Route` /remote-third + `@CrossProcess`，
+ * S26 跨进程目标页（多进程与跨进程增强）：`@Route` /remote-third + `@CrossProcess`，
  * manifest 声明在**第三个进程** `:remote2`（与 host、:remote 并列）。
  *
  * 由 host 经 `TRouter.navigateRemote(path, bundle, target = "remote2")` 打开，

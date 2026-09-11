@@ -3,7 +3,7 @@ package com.trouter.core.api
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 异步导航句柄（批次 B）：由 [TRouter.navigateAsync] 返回，用于取消一次仍在进行中的导航。
+ * 异步导航句柄（异步拦截器改造）：由 [TRouter.navigateAsync] 返回，用于取消一次仍在进行中的导航。
  *
  * - [cancel] 幂等：重复调用只有第一次生效；
  * - 取消后：`onResult` 收到 `Blocked(path, "导航已取消…")`（若结果尚未回调），

@@ -22,9 +22,9 @@ import org.junit.runner.RunWith
 import org.hamcrest.Matchers.containsString
 
 /**
- * UI 行为驱动 · 拦截器场景（S08 门禁 Block / S09 Mock Redirect，见 docs/V2.0-拦截器方案.md §7）。
+ * UI 行为驱动 · 拦截器场景（S08 门禁 Block / S09 Mock Redirect，见 docs/拦截器版本-拦截器方案.md §7）。
  *
- * 与 MainRouterTest（V1.0 十例，默认无拦截器配置）隔离：本类 createConfig 注入 DemoInterceptors
+ * 与 MainRouterTest（最早的基础版本 十例，默认无拦截器配置）隔离：本类 createConfig 注入 DemoInterceptors
  * 的完整演示列表（gate + mock），用真实点击驱动「开/关开关 → 导航 S01 → 断言反馈/页面/日志」。
  * 开关为共享有状态实例，故每个用例开始/结束都复位（T2 零污染）。
  */

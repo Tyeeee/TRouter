@@ -20,7 +20,7 @@ class RouteTable {
 
     fun find(path: String): RouteMeta? = table[path]
 
-    /** @return true 表示确有移除（V5.0 动态注销/静态注销共用）。 */
+    /** @return true 表示确有移除（运行时注册路径版本 动态注销/静态注销共用）。 */
     fun remove(path: String): Boolean {
         if (!table.containsKey(path)) return false
         table.remove(path)

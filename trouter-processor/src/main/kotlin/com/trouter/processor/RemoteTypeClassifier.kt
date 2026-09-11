@@ -8,7 +8,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.Variance
 
 /**
- * 跨进程可用类型的**统一判定**（批次 C）。
+ * 跨进程可用类型的**统一判定**（多进程与跨进程增强）。
  *
  * 由 `@RemotePojo` 字段与 `@RemoteApi` 方法参数/返回值共用，保证两处的"支持什么类型"
  * 完全一致（不出现两套白名单各说各话）。

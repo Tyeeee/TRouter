@@ -2,10 +2,10 @@ package com.trouter.core.api
 
 import android.os.Bundle
 
-/** 拦截器注册成员标记：config.interceptors 里只允许 [RouteInterceptor]（V2 原子）与 [WrappingInterceptor]（L4 洋葱）。 */
+/** 拦截器注册成员标记：config.interceptors 里只允许两种——[RouteInterceptor]（看一眼就给结果的"原子型"）与 [WrappingInterceptor]（能包住"放行前后"的"洋葱型"）。 */
 interface RouteChainMember {
     /**
-     * 全局拦截优先级（G11，与 ARouter 对齐）。
+     * 全局拦截优先级（拦截器优先级，与 ARouter 对齐）。
      * 越大越先执行；默认 0 = 保持注册/声明顺序（稳定排序）。
      * 语义：仅在同批全局链内按优先级排序，目标级链仍按 @Interceptor(names) 顺序排在全局后。
      */
@@ -14,7 +14,7 @@ interface RouteChainMember {
 }
 
 /**
- * 拦截器决策（V2.0）：拦截链中单个拦截器的求值结果，禁止 null。
+ * 拦截器决策（拦截器版本）：拦截链中单个拦截器的求值结果，禁止 null。
  * - [Continue]：放行，继续下一个拦截器（或最终打开目标）；
  * - [Block]：终止本次导航（返回 [TRouterResult.Blocked]，不触发 onLost、不打开目标）；
  * - [Redirect]：把本次导航改写为另一条已注册 path（重新走完整导航，跳数上限见 TRouter）。
@@ -26,7 +26,7 @@ sealed class InterceptorDecision {
 }
 
 /**
- * 路由拦截器（V2.0）：原子形态（无包裹能力），宿主经 [TRouterConfig.interceptors] 注入，
+ * 路由拦截器（拦截器版本）：原子形态（无包裹能力），宿主经 [TRouterConfig.interceptors] 注入，
  * 在「路由解析后、目标打开前」按列表顺序执行（见 TRouter.navigate）。
  */
 fun interface RouteInterceptor : RouteChainMember {
@@ -34,7 +34,7 @@ fun interface RouteInterceptor : RouteChainMember {
 }
 
 /**
- * 洋葱链结果（L4）：整条链（含最终打开目标）的最终收口。
+ * 洋葱链结果（前后包裹式拦截器）：整条链（含最终打开目标）的最终收口。
  * - [Opened]：目标已打开（含"全部放行"与包裹后置通过的情况）；
  * - [Blocked]：被某拦截器终止（携带 path/reason）；
  * - [Redirected]：被改写为另一条 path（由 TRouter 以同 traceId 重新导航，跳数上限见 TRouter）。
@@ -46,7 +46,7 @@ sealed class ChainOutcome {
 }
 
 /**
- * 洋葱链（L4）：暴露给 [WrappingInterceptor] 的执行句柄。
+ * 洋葱链（前后包裹式拦截器）：暴露给 [WrappingInterceptor] 的执行句柄。
  * [proceed] 同步执行**剩余拦截器并最终打开目标**：包裹拦截器可在 proceed() 之前/之后做前置/后置逻辑。
  */
 interface InterceptorChain {
@@ -61,7 +61,7 @@ interface InterceptorChain {
 }
 
 /**
- * 洋葱包裹拦截器（L4）：通过 [InterceptorChain.proceed] 包裹后续逻辑。
+ * 洋葱包裹拦截器（前后包裹式拦截器）：通过 [InterceptorChain.proceed] 包裹后续逻辑。
  *
  * 典型洋葱形态：
  * ```

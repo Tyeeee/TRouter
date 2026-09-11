@@ -9,14 +9,14 @@ import com.trouter.core.api.TRouter
 import java.util.UUID
 
 /**
- * 跨进程导航服务（V4.0，remote 进程侧）。
+ * 跨进程导航服务（跨进程版本，remote 进程侧）。
  *
  * 宿主在 manifest 中把本组件声明到独立进程（如 android:process=":remote"）；
  * remote 进程的 Application.onCreate 会各自 init/install 一份 TRouter，
  * 因此本服务直接调用 TRouter.navigate 即由**远端进程自己的路由表**解析并打开远端页面，
  * 再把结果摘要（RemoteReplyCodec）返回 host。
  *
- * 多进程（批次 C）：本类为 **open**，宿主需要第二个跨进程进程时，
+ * 多进程（多进程与跨进程增强）：本类为 **open**，宿主需要第二个跨进程进程时，
  * 声明一个子类并在 manifest 里指定 `android:process=":remote2"` 即可（同一个类不能声明两次）。
  */
 open class RemoteRouterService : Service() {
@@ -32,12 +32,12 @@ open class RemoteRouterService : Service() {
         }
 
         override fun callService(name: String?, args: Bundle?): String {
-            // G2-remote：调用远端进程内注册的服务端点（端点返回结构化字符串）
+            // 调用远端进程内注册的服务端点（端点返回结构化字符串）
             return TRouter.invokeRemoteEndpoint(name ?: "", args ?: Bundle())
         }
 
         override fun callTyped(service: String?, method: String?, args: Bundle?): Bundle {
-            // 批次 C：类型化调用——由 @RemoteApi 生成物登记的分发器处理，结果仍走原生 Bundle
+            // 类型化调用——由 @RemoteApi 生成物登记的分发器处理，结果仍走原生 Bundle
             return TRouter.invokeRemoteApi(service ?: "", method ?: "", args ?: Bundle())
         }
     }

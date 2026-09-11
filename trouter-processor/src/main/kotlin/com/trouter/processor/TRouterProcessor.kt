@@ -17,7 +17,7 @@ import java.io.File
 /**
  * TRouter KSP 处理器。
  *
- * 职责（V1.0）：
+ * 职责（最早的基础版本）：
  * - 扫描 @Route，按 group 生成 GroupLoader_<Group> 与聚合 TRouterGroupRegistry；
  * - 编译期校验（Fail-Fast）：
  *   C1 同一 path 多类声明 → logger.error 中断编译；
@@ -52,11 +52,11 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             }
         }
 
-    /** @RemoteApi 待生成接口（批次 C） */
+    /** @RemoteApi 待生成接口（多进程与跨进程增强） */
     private val apiInterfaces = mutableListOf<KSClassDeclaration>()
     private val seenApiInterfaces = LinkedHashSet<String>()
 
-    /** @RemotePojo 待生成类（批次 C） */
+    /** @RemotePojo 待生成类（多进程与跨进程增强） */
     private val pojoClasses = mutableListOf<KSClassDeclaration>()
     private val seenPojoClasses = LinkedHashSet<String>()
 
@@ -108,7 +108,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
                 )
             }
         }
-        // @RemotePojo（批次 C）：收集待生成 POJO 编解码器的类
+        // @RemotePojo（多进程与跨进程增强）：收集待生成 POJO 编解码器的类
         for (symbol in resolver.getSymbolsWithAnnotation(ANNOTATION_REMOTE_POJO)) {
             val decl = symbol as? KSClassDeclaration
             if (decl == null) {
@@ -119,7 +119,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             pojoClasses.add(decl)
         }
 
-        // @RemoteApi（批次 C）：收集待生成类型化远程 API 的接口
+        // @RemoteApi（多进程与跨进程增强）：收集待生成类型化远程 API 的接口
         for (symbol in resolver.getSymbolsWithAnnotation(ANNOTATION_REMOTE_API)) {
             val decl = symbol as? KSClassDeclaration
             if (decl == null) {
@@ -167,10 +167,10 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             }
         }
 
-        // 批次 C：@RemotePojo 编解码器生成（与路由无关，即使本模块没有 @Route 也要生成）
+        // @RemotePojo 编解码器生成（与路由无关，即使本模块没有 @Route 也要生成）
         RemotePojoEmitter(codeGenerator, logger, modulePackage).emit(pojoClasses)
 
-        // 批次 C：@RemoteApi 类型化远程 API 生成（同样与路由无关）
+        // @RemoteApi 类型化远程 API 生成（同样与路由无关）
         RemoteApiEmitter(codeGenerator, logger, modulePackage).emit(apiInterfaces)
 
         // 生成（含 R-2：unresolved 的条目被跳过，不进入任何 GroupLoader）
@@ -204,7 +204,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             emitRegistry(loaderClassNames, allSources)
         }
 
-        // @CrossProcess 白名单（V4.0）：从带 CrossProcess 注解的路由收集，生成 CrossProcessPaths
+        // @CrossProcess 白名单（跨进程版本）：从带 CrossProcess 注解的路由收集，生成 CrossProcessPaths
         val crossRoutes = routesByGroup.values.flatten()
             .filter { route ->
                 route.pathEval.resolved &&
@@ -218,7 +218,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             emitCrossProcessPaths(crossRoutes.map { it.pathEval.value }.distinct(), crossSources)
         }
 
-        // @Interceptor 目标级映射（L3）：className -> 拦截器标识名列表（无标注模块也生成空表，保证宿主可引用）
+        // @Interceptor 目标级映射（只给某个页面挂拦截器）：className -> 拦截器标识名列表（无标注模块也生成空表，保证宿主可引用）
         val interceptorRoutes = routesByGroup.values.flatten()
             .filter { route -> route.decl.annotations.any { it.shortName.asString() == INTERCEPTOR_SHORT_NAME } }
         val targetMap = LinkedHashMap<String, List<String>>()
@@ -257,7 +257,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             |package $modulePackage.generated
             |
             |/**
-            | * 目标级拦截器映射（L3）：targetClassName -> @Interceptor names。
+            | * 目标级拦截器映射：页面类名 -> 该页面需要的拦截器名字（配合 TRouter.bindTargetInterceptor 使用）。
             | * 宿主把本表与 TRouter.bindTargetInterceptor(name, ...) 配合使用。
             | */
             |object TRouterTargetInterceptorNames {
@@ -499,7 +499,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             |package $modulePackage.generated
             |
             |/**
-            | * @CrossProcess 白名单：允许经跨进程通道导航的 path 集合（V4.0）。
+            | * @CrossProcess 白名单：允许被"跨进程打开"的页面路径集合。
             | * 宿主配置 TRouterConfig.remoteWhitelist 引用本集合。
             | */
             |object CrossProcessPaths {

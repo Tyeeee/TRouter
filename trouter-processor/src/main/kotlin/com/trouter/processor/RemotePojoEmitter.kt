@@ -10,7 +10,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.Variance
 
 /**
- * `@RemotePojo` 编解码器生成（批次 C）。
+ * `@RemotePojo` 编解码器生成（多进程与跨进程增强）。
  *
  * 为每个标注类生成 `TRouterPojo_<SimpleName>`（实现 [com.trouter.core.api.TRouterPojoCodec]）：
  * - `pack(bundle, prefix, value)` / `unpack(bundle, prefix)`：带前缀版本，供**嵌套字段**复用；

@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * TRouter 拦截器契约测试（场景 S10，见 docs/V2.0-拦截器方案.md §7）。
+ * TRouter 拦截器契约测试（场景 S10，见 docs/拦截器版本-拦截器方案.md §7）。
  *
  * 说明：拦截器的「行为驱动」UI 场景（S08 门禁 / S09 Mock）由 TRouterInterceptorUiTest 覆盖；
  * 本类只针对**无法/不宜用 UI 驱动**的契约分支直接调 API 验证：

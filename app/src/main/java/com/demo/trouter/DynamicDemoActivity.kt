@@ -12,7 +12,7 @@ import com.trouter.core.api.RouteLaunch
 import com.trouter.core.api.Ui
 
 /**
- * S13 动态路由目标页（V5.0）。
+ * S13 动态路由目标页（运行时注册路径版本）。
  *
  * 注意：本页**没有标注 @Route**——它由运行时 `TRouter.registerRoute(...)` 动态注册到路由表，
  * 证明动态路由不依赖 KSP 生成物；页面类仍只存字符串、惰性加载（Class.forName 发生在 navigate 时）。
