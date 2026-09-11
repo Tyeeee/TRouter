@@ -21,7 +21,9 @@ import java.io.File
  * - 扫描 @Route，按 group 生成 GroupLoader_<Group> 与聚合 TRouterGroupRegistry；
  * - 编译期校验（Fail-Fast）：
  *   C1 同一 path 多类声明 → logger.error 中断编译；
- *   C2 path 字面量 → Warning（提示引用 RouterContract）；
+ *   C2 path 字面量 → 级别由 KSP 参数 trouter.pathSeverity 决定：
+ *      warning（默认，向后兼容）/ error（新工程与 CI 建议，直接中断编译）；
+ *      注解级免责：@Route(..., allowLiteral = true) 只豁免本条；
  *   类型非法（非 Activity/Fragment 子类）→ error；
  *   R-2 降级：常量引用无法求值时 Warning + __UNRESOLVED_CONSTANT__ 占位 + 跳过该路由生成。
  */
@@ -34,6 +36,20 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         env.options["trouter.modulePackage"]?.takeIf { it.isNotBlank() } ?: run {
             logger.error("KSP 参数缺失：请在宿主模块配置 ksp { arg(\"trouter.modulePackage\", \"<module.namespace>\") }")
             ""
+        }
+
+    /**
+     * 路径字面量处置级别（KSP 参数 `trouter.pathSeverity`）。
+     * 未知取值不静默吞掉：提示后按 warning 处理（宁可少卡一次，也不因参数拼错误中断整条流水线）。
+     */
+    private val pathSeverity: PathSeverity =
+        when (val raw = env.options["trouter.pathSeverity"]?.trim()?.lowercase()) {
+            null, "", "warning", "warn" -> PathSeverity.WARNING
+            "error" -> PathSeverity.ERROR
+            else -> {
+                logger.warn("未知的 KSP 参数 trouter.pathSeverity=$raw（可选 warning / error），本次按 warning 处理")
+                PathSeverity.WARNING
+            }
         }
 
     /** group -> 该组路由 */
@@ -92,16 +108,21 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         if (modulePackage.isEmpty() || emitted) return
         emitted = true
 
-        // C1：路径冲突（同 path 多类声明）→ 编译错误；C2：字面量 → Warning
+        // C1：路径冲突（同 path 多类声明）→ 编译错误；C2：字面量 → 按 pathSeverity 分级
         val pathOwner = HashMap<String, String>()
         for ((_, list) in routesByGroup) {
             for (route in list) {
-                if (route.pathEval.literal) {
-                    logger.warn(
-                        "@Route path 使用了字符串字面量（${route.pathEval.value}），" +
-                            "请引用 RouterContract 常量，禁止硬编码字符串。",
-                        route.decl,
-                    )
+                if (route.pathEval.literal && !route.allowLiteral) {
+                    val base = "@Route path 使用了字符串字面量（${route.pathEval.value}），" +
+                        "请引用 RouterContract 常量，禁止硬编码字符串。"
+                    when (pathSeverity) {
+                        PathSeverity.WARNING -> logger.warn(base, route.decl)
+                        PathSeverity.ERROR -> logger.error(
+                            "$base（当前 trouter.pathSeverity=error，已中断编译；" +
+                                "确需豁免请改为 @Route(..., allowLiteral = true) 并说明原因）",
+                            route.decl,
+                        )
+                    }
                 }
                 val eval = route.pathEval
                 if (!eval.resolved) continue
@@ -226,6 +247,9 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         val groupArg = annotation.arguments.firstOrNull { it.name?.asString() == "group" }
         val group = (groupArg?.value as? String)?.takeIf { it.isNotBlank() }
             ?: Route.DEFAULT_GROUP
+        // 免责通道：仅豁免本条的「字面量」告警/报错
+        val allowLiteral = annotation.arguments
+            .firstOrNull { it.name?.asString() == "allowLiteral" }?.value as? Boolean ?: false
 
         val pathEval = evaluatePath(decl, pathArg)
 
@@ -243,6 +267,7 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
             className = decl.qualifiedName!!.asString(),
             group = group,
             kind = kind,
+            allowLiteral = allowLiteral,
             pathEval = pathEval,
         )
     }
@@ -480,9 +505,13 @@ class TRouterProcessor(private val env: SymbolProcessorEnvironment) : SymbolProc
         val group: String,
         val kind: TargetKind,
         val pathEval: PathEval,
+        val allowLiteral: Boolean,
     )
 
     private enum class TargetKind { ACTIVITY, FRAGMENT }
+
+    /** 字面量处置级别（trouter.pathSeverity）。 */
+    private enum class PathSeverity { WARNING, ERROR }
 
     private data class PathEval(
         val value: String,

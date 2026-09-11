@@ -1,0 +1,525 @@
+Initialized native services in: /Users/tye/.gradle/native
+Initialized jansi services in: /Users/tye/.gradle/native
+The client will now receive all logging from the daemon (pid: 82729). The daemon log file: /Users/tye/.gradle/daemon/9.5.0/daemon-82729.out.log
+Starting 14th build in daemon [uptime: 2 mins 2.744 secs, performance: 100%, GC rate: 0.00/s, heap usage: 1% of 2 GiB]
+Using 10 worker leases.
+Operational build model parameters: {cachingModelBuilding=false, configurationCache=true, configurationCacheDisabledReason=null, configurationCacheParallelLoad=true, configurationCacheParallelStore=false, configureOnDemand=false, invalidateCoupledProjects=false, isolatedProjects=false, modelAsProjectDependency=false, modelBuilding=false, parallelModelBuilding=false, parallelProjectConfiguration=false, parallelProjectExecution=false, resilientModelBuilding=false}
+Encryption key source: default Gradle keystore (pkcs12)
+Now considering [/Users/tye/Work/Android/TRouterDemo, /Users/tye/Work/Android/TRouterDemo/trouter-gradle-plugin] as hierarchies to watch
+Now considering [/Users/tye/Work/Android/TRouterDemo/trouter-gradle-plugin, /Users/tye/Work/Android/TRouterDemo] as hierarchies to watch
+Reusing configuration cache.
+Now considering [/Users/tye/Work/Android/TRouterDemo, /Users/tye/Work/Android/TRouterDemo/trouter-gradle-plugin] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Tasks to be executed: [task ':trouter-annotation:checkKotlinGradlePluginConfigurationErrors', task ':trouter-annotation:compileKotlin', task ':trouter-annotation:compileJava', task ':trouter-annotation:processResources', task ':trouter-annotation:classes', task ':trouter-annotation:jar', task ':app:preBuild', task ':app:preDebugBuild', task ':app:generateDebugResources', task ':app:packageDebugResources', task ':feature-about:preBuild', task ':feature-about:preDebugBuild', task ':feature-about:processDebugNavigationResources', task ':feature-demo:preBuild', task ':feature-demo:preDebugBuild', task ':feature-demo:processDebugNavigationResources', task ':trouter-core:preBuild', task ':trouter-core:preDebugBuild', task ':trouter-core:processDebugNavigationResources', task ':app:processDebugNavigationResources', task ':app:parseDebugLocalResources', task ':app:generateDebugRFile', task ':feature-about:generateDebugResources', task ':feature-about:packageDebugResources', task ':feature-about:parseDebugLocalResources', task ':feature-about:generateDebugRFile', task ':trouter-core:compileDebugAidl', task ':trouter-core:generateDebugResources', task ':trouter-core:packageDebugResources', task ':trouter-core:parseDebugLocalResources', task ':trouter-core:generateDebugRFile', task ':trouter-core:compileDebugKotlin', task ':trouter-core:javaPreCompileDebug', task ':trouter-core:compileDebugJavaWithJavac', task ':trouter-core:bundleLibCompileToJarDebug', task ':trouter-processor:checkKotlinGradlePluginConfigurationErrors', task ':trouter-processor:compileKotlin', task ':trouter-processor:compileJava', task ':trouter-processor:processResources', task ':trouter-processor:classes', task ':trouter-processor:jar', task ':feature-about:kspDebugKotlin', task ':feature-about:compileDebugKotlin', task ':feature-about:javaPreCompileDebug', task ':feature-about:compileDebugJavaWithJavac', task ':feature-about:bundleLibCompileToJarDebug', task ':feature-demo:generateDebugResources', task ':feature-demo:packageDebugResources', task ':feature-demo:parseDebugLocalResources', task ':feature-demo:generateDebugRFile', task ':feature-demo:kspDebugKotlin', task ':feature-demo:compileDebugKotlin', task ':feature-demo:javaPreCompileDebug', task ':feature-demo:compileDebugJavaWithJavac', task ':feature-demo:bundleLibCompileToJarDebug', task ':app:kspDebugKotlin', task ':app:verifyTRouterRoutes']
+Tasks that were excluded: []
+Resolve mutations for :trouter-annotation:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker,5,main]) started.
+Resolve mutations for :trouter-annotation:processResources (Thread[Execution worker Thread 3,5,main]) started.
+Resolve mutations for :app:preBuild (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :feature-about:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+:trouter-annotation:processResources (Thread[Execution worker Thread 3,5,main]) started.
+:trouter-annotation:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker,5,main]) started.
+work action Unknown value (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :trouter-core:preBuild (Thread[Execution worker Thread 7,5,main]) started.
+:app:preBuild (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :feature-demo:preBuild (Thread[Execution worker Thread 6,5,main]) started.
+:feature-about:preBuild (Thread[Execution worker Thread 5,5,main]) started.
+:feature-demo:preBuild (Thread[Execution worker Thread 6,5,main]) started.
+:trouter-core:preBuild (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :trouter-processor:checkKotlinGradlePluginConfigurationErrors (Thread[included builds,5,main]) started.
+work action Unknown value (Thread[Execution worker Thread 8,5,main]) started.
+:trouter-processor:checkKotlinGradlePluginConfigurationErrors (Thread[included builds,5,main]) started.
+work action Unknown value (Thread[Execution worker Thread 9,5,main]) started.
+Resolve mutations for :trouter-processor:processResources (Thread[Execution worker Thread 2,5,main]) started.
+:trouter-processor:processResources (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+Resolve mutations for :app:preDebugBuild (Thread[Execution worker Thread 4,5,main]) started.
+:app:preDebugBuild (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :trouter-core:preBuild UP-TO-DATE
+Skipping task ':trouter-core:preBuild' as it has no actions.
+Build b02c97b6-b753-42f0-83a1-8ae3fc5cac8b is started
+
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':trouter-annotation:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+
+> Task :feature-demo:preBuild UP-TO-DATE
+Skipping task ':feature-demo:preBuild' as it has no actions.
+Resolve mutations for :trouter-annotation:compileKotlin (Thread[Execution worker,5,main]) started.
+
+> Task :feature-about:preBuild UP-TO-DATE
+Skipping task ':feature-about:preBuild' as it has no actions.
+
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':trouter-processor:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+Resolve mutations for :feature-demo:preDebugBuild (Thread[Execution worker Thread 8,5,main]) started.
+Resolve mutations for :feature-about:preDebugBuild (Thread[Execution worker Thread 6,5,main]) started.
+:feature-demo:preDebugBuild (Thread[Execution worker Thread 8,5,main]) started.
+Resolve mutations for :trouter-core:preDebugBuild (Thread[Execution worker Thread 7,5,main]) started.
+:feature-about:preDebugBuild (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :trouter-processor:processResources UP-TO-DATE
+Caching disabled for task ':trouter-processor:processResources' because:
+  Build cache is disabled
+  Not worth caching
+Skipping task ':trouter-processor:processResources' as it is up-to-date.
+
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+Skipping task ':feature-demo:preDebugBuild' as it has no actions.
+:trouter-annotation:compileKotlin (Thread[Execution worker,5,main]) started.
+Resolve mutations for :feature-demo:processDebugNavigationResources (Thread[Execution worker Thread 8,5,main]) started.
+
+> Task :trouter-annotation:processResources NO-SOURCE
+Skipping task ':trouter-annotation:processResources' as it has no source files and no previous output files.
+Resolve mutations for :feature-demo:generateDebugResources (Thread[included builds,5,main]) started.
+:feature-demo:processDebugNavigationResources (Thread[Execution worker Thread 8,5,main]) started.
+:trouter-core:preDebugBuild (Thread[Execution worker Thread 7,5,main]) started.
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+Skipping task ':trouter-core:preDebugBuild' as it has no actions.
+:feature-demo:generateDebugResources (Thread[included builds,5,main]) started.
+
+> Task :feature-about:preDebugBuild UP-TO-DATE
+Skipping task ':feature-about:preDebugBuild' as it has no actions.
+Resolve mutations for :app:generateDebugResources (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :feature-about:processDebugNavigationResources (Thread[Execution worker Thread 6,5,main]) started.
+Resolve mutations for :feature-about:generateDebugResources (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :trouter-core:compileDebugAidl (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :trouter-core:generateDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:feature-about:processDebugNavigationResources (Thread[Execution worker Thread 6,5,main]) started.
+:feature-about:generateDebugResources (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :trouter-core:javaPreCompileDebug (Thread[Execution worker Thread 9,5,main]) started.
+Resolve mutations for :trouter-core:processDebugNavigationResources (Thread[Execution worker Thread 5,5,main]) started.
+:app:generateDebugResources (Thread[Execution worker Thread 7,5,main]) started.
+:trouter-core:generateDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:trouter-core:compileDebugAidl (Thread[Execution worker Thread 2,5,main]) started.
+:trouter-core:processDebugNavigationResources (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+Caching disabled for task ':feature-demo:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':feature-demo:generateDebugResources' as it is up-to-date.
+:trouter-core:javaPreCompileDebug (Thread[Execution worker Thread 9,5,main]) started.
+
+> Task :feature-about:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':feature-about:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':feature-about:processDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :feature-demo:packageDebugResources (Thread[included builds,5,main]) started.
+
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+Caching disabled for task ':trouter-core:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':trouter-core:generateDebugResources' as it is up-to-date.
+Resolve mutations for :trouter-core:packageDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+
+> Task :feature-about:generateDebugResources UP-TO-DATE
+Caching disabled for task ':feature-about:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':feature-about:generateDebugResources' as it is up-to-date.
+:trouter-core:packageDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+Resolve mutations for :feature-about:packageDebugResources (Thread[Execution worker Thread 4,5,main]) started.
+:feature-demo:packageDebugResources (Thread[included builds,5,main]) started.
+
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':trouter-core:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':trouter-core:processDebugNavigationResources' as it is up-to-date.
+work action resolve debug (project :feature-about) (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+Caching disabled for task ':trouter-annotation:compileKotlin' because:
+  Build cache is disabled
+Skipping task ':trouter-annotation:compileKotlin' as it is up-to-date.
+
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':trouter-core:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':trouter-core:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :trouter-annotation:compileJava (Thread[Execution worker,5,main]) started.
+
+> Task :app:generateDebugResources UP-TO-DATE
+Caching disabled for task ':app:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResources' as it is up-to-date.
+:feature-about:packageDebugResources (Thread[Execution worker Thread 4,5,main]) started.
+work action resolve debug (project :trouter-core) (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':feature-demo:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':feature-demo:processDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :app:packageDebugResources (Thread[Execution worker Thread 7,5,main]) started.
+work action resolve debug (project :feature-demo) (Thread[Execution worker Thread 8,5,main]) started.
+:trouter-annotation:compileJava (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugNavigationResources (Thread[Execution worker Thread 8,5,main]) started.
+:app:processDebugNavigationResources (Thread[Execution worker Thread 8,5,main]) started.
+:app:packageDebugResources (Thread[Execution worker Thread 7,5,main]) started.
+
+> Task :trouter-annotation:compileJava NO-SOURCE
+Skipping task ':trouter-annotation:compileJava' as it has no source files and no previous output files.
+Resolve mutations for :trouter-annotation:classes (Thread[Execution worker,5,main]) started.
+:trouter-annotation:classes (Thread[Execution worker,5,main]) started.
+
+> Task :trouter-annotation:classes UP-TO-DATE
+Skipping task ':trouter-annotation:classes' as it has no actions.
+Resolve mutations for :trouter-annotation:jar (Thread[Execution worker,5,main]) started.
+:trouter-annotation:jar (Thread[Execution worker,5,main]) started.
+
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+Caching disabled for task ':feature-demo:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':feature-demo:packageDebugResources' as it is up-to-date.
+Resolve mutations for :feature-demo:parseDebugLocalResources (Thread[included builds,5,main]) started.
+
+> Task :trouter-annotation:jar UP-TO-DATE
+Caching disabled for task ':trouter-annotation:jar' because:
+  Build cache is disabled
+  Not worth caching
+Skipping task ':trouter-annotation:jar' as it is up-to-date.
+
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+Caching disabled for task ':trouter-core:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':trouter-core:packageDebugResources' as it is up-to-date.
+work action resolve trouter-annotation.jar (project :trouter-annotation) (Thread[Execution worker,5,main]) started.
+
+> Task :app:packageDebugResources UP-TO-DATE
+Caching disabled for task ':app:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:packageDebugResources' as it is up-to-date.
+
+> Task :feature-about:packageDebugResources UP-TO-DATE
+Caching disabled for task ':feature-about:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':feature-about:packageDebugResources' as it is up-to-date.
+Resolve mutations for :trouter-core:parseDebugLocalResources (Thread[Execution worker Thread 5,5,main]) started.
+Resolve mutations for :feature-about:parseDebugLocalResources (Thread[Execution worker Thread 4,5,main]) started.
+:feature-demo:parseDebugLocalResources (Thread[Execution worker Thread 7,5,main]) started.
+IdentityTransform (Thread[Execution worker,5,main]) started.
+Resolve mutations for :trouter-processor:compileKotlin (Thread[Execution worker Thread 6,5,main]) started.
+:feature-about:parseDebugLocalResources (Thread[Execution worker Thread 4,5,main]) started.
+IdentityTransform (Thread[Execution worker Thread 3,5,main]) started.
+:trouter-processor:compileKotlin (Thread[Execution worker Thread 6,5,main]) started.
+:trouter-core:parseDebugLocalResources (Thread[Execution worker Thread 5,5,main]) started.
+IdentityTransform (Thread[Execution worker Thread 9,5,main]) started.
+
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':feature-demo:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':feature-demo:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :feature-demo:generateDebugRFile (Thread[Execution worker Thread 7,5,main]) started.
+
+> Task :feature-about:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':feature-about:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':feature-about:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :feature-about:generateDebugRFile (Thread[Execution worker Thread 4,5,main]) started.
+:feature-demo:generateDebugRFile (Thread[Execution worker Thread 7,5,main]) started.
+:feature-about:generateDebugRFile (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':trouter-core:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':trouter-core:parseDebugLocalResources' as it is up-to-date.
+
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':feature-demo:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':feature-demo:generateDebugRFile' as it is up-to-date.
+Resolve mutations for :trouter-core:generateDebugRFile (Thread[Execution worker Thread 7,5,main]) started.
+
+> Task :feature-about:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':feature-about:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':feature-about:generateDebugRFile' as it is up-to-date.
+:trouter-core:generateDebugRFile (Thread[Execution worker Thread 7,5,main]) started.
+
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+Caching disabled for task ':trouter-processor:compileKotlin' because:
+  Build cache is disabled
+Skipping task ':trouter-processor:compileKotlin' as it is up-to-date.
+Resolve mutations for :trouter-processor:compileJava (Thread[Execution worker Thread 6,5,main]) started.
+:trouter-processor:compileJava (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':trouter-core:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':trouter-core:generateDebugRFile' as it is up-to-date.
+
+> Task :trouter-processor:compileJava NO-SOURCE
+Skipping task ':trouter-processor:compileJava' as it has no source files and no previous output files.
+Resolve mutations for :trouter-processor:classes (Thread[Execution worker Thread 6,5,main]) started.
+:trouter-processor:classes (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :trouter-processor:classes UP-TO-DATE
+Skipping task ':trouter-processor:classes' as it has no actions.
+Resolve mutations for :trouter-processor:jar (Thread[Execution worker Thread 6,5,main]) started.
+:trouter-processor:jar (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :trouter-processor:jar UP-TO-DATE
+Caching disabled for task ':trouter-processor:jar' because:
+  Build cache is disabled
+  Not worth caching
+Skipping task ':trouter-processor:jar' as it is up-to-date.
+work action resolve trouter-processor.jar (project :trouter-processor) (Thread[Execution worker Thread 6,5,main]) started.
+Resolve mutations for :feature-about:javaPreCompileDebug (Thread[Execution worker Thread 6,5,main]) started.
+Resolve mutations for :feature-demo:javaPreCompileDebug (Thread[Execution worker Thread 5,5,main]) started.
+:feature-about:javaPreCompileDebug (Thread[Execution worker Thread 6,5,main]) started.
+:feature-demo:javaPreCompileDebug (Thread[Execution worker Thread 5,5,main]) started.
+
+> Task :feature-about:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':feature-about:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':feature-about:javaPreCompileDebug' as it is up-to-date.
+
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+Caching disabled for task ':trouter-core:compileDebugAidl' because:
+  Build cache is disabled
+Skipping task ':trouter-core:compileDebugAidl' as it is up-to-date.
+
+> Task :feature-demo:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':feature-demo:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':feature-demo:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :trouter-core:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:trouter-core:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':app:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':app:processDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :app:parseDebugLocalResources (Thread[Execution worker Thread 8,5,main]) started.
+:app:parseDebugLocalResources (Thread[Execution worker Thread 8,5,main]) started.
+
+> Task :app:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':app:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':app:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :app:generateDebugRFile (Thread[Execution worker Thread 8,5,main]) started.
+:app:generateDebugRFile (Thread[Execution worker Thread 8,5,main]) started.
+
+> Task :app:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':app:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugRFile' as it is up-to-date.
+
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/main/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/trouter-core/src/debug/java', not found
+Caching disabled for task ':trouter-core:compileDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':trouter-core:compileDebugKotlin' as it is up-to-date.
+Resolve mutations for :trouter-core:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+:trouter-core:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+Caching disabled for task ':trouter-core:compileDebugJavaWithJavac' because:
+  Build cache is disabled
+Skipping task ':trouter-core:compileDebugJavaWithJavac' as it is up-to-date.
+No compile result for :trouter-core:compileDebugJavaWithJavac
+Resolve mutations for :trouter-core:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+:trouter-core:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+Caching disabled for task ':trouter-core:bundleLibCompileToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Skipping task ':trouter-core:bundleLibCompileToJarDebug' as it is up-to-date.
+work action resolve classes.jar (project :trouter-core) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :feature-about:kspDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :feature-demo:kspDebugKotlin (Thread[Execution worker Thread 6,5,main]) started.
+:feature-about:kspDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:feature-demo:kspDebugKotlin (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :feature-demo:kspDebugKotlin UP-TO-DATE
+Caching disabled for task ':feature-demo:kspDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':feature-demo:kspDebugKotlin' as it is up-to-date.
+Resolve mutations for :feature-demo:compileDebugKotlin (Thread[Execution worker Thread 6,5,main]) started.
+:feature-demo:compileDebugKotlin (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :feature-demo:compileDebugKotlin UP-TO-DATE
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-demo/src/debug/java', not found
+Caching disabled for task ':feature-demo:compileDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':feature-demo:compileDebugKotlin' as it is up-to-date.
+Resolve mutations for :feature-demo:compileDebugJavaWithJavac (Thread[Execution worker Thread 6,5,main]) started.
+:feature-demo:compileDebugJavaWithJavac (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :feature-demo:compileDebugJavaWithJavac NO-SOURCE
+Skipping task ':feature-demo:compileDebugJavaWithJavac' as it has no source files and no previous output files.
+Resolve mutations for :feature-demo:bundleLibCompileToJarDebug (Thread[Execution worker Thread 6,5,main]) started.
+:feature-demo:bundleLibCompileToJarDebug (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :feature-demo:bundleLibCompileToJarDebug UP-TO-DATE
+Caching disabled for task ':feature-demo:bundleLibCompileToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Skipping task ':feature-demo:bundleLibCompileToJarDebug' as it is up-to-date.
+work action resolve classes.jar (project :feature-demo) (Thread[Execution worker Thread 6,5,main]) started.
+
+> Task :feature-about:kspDebugKotlin
+Caching disabled for task ':feature-about:kspDebugKotlin' because:
+  Build cache is disabled
+Task ':feature-about:kspDebugKotlin' is not up-to-date because:
+  Input property 'kspConfig.javaSourceRoots' file /Users/tye/Work/Android/TRouterDemo/feature-about/src/main/java/com/demo/trouter/feature/about/ConflictProbeActivity.kt has been removed.
+  Input property 'kspConfig.sourceRoots' file /Users/tye/Work/Android/TRouterDemo/feature-about/src/main/java/com/demo/trouter/feature/about/ConflictProbeActivity.kt has been removed.
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+Resolve mutations for :feature-about:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:feature-about:compileDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :feature-about:compileDebugKotlin
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+Caching disabled for task ':feature-about:compileDebugKotlin' because:
+  Build cache is disabled
+Task ':feature-about:compileDebugKotlin' is not up-to-date because:
+  Input property 'sources' file /Users/tye/Work/Android/TRouterDemo/feature-about/src/main/java/com/demo/trouter/feature/about/ConflictProbeActivity.kt has been removed.
+  Input property 'sources' file /Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/kotlin/com/demo/trouter/feature/about/generated/GroupLoader_default.kt has been removed.
+  Input property 'sources' file /Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/kotlin/com/demo/trouter/feature/about/generated/TRouterGroupRegistry.kt has changed.
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/java', not found
+Kotlin source files: /Users/tye/Work/Android/TRouterDemo/feature-about/src/main/java/com/demo/trouter/feature/about/AboutActivity.kt, /Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/kotlin/com/demo/trouter/feature/about/generated/GroupLoader_secondary.kt, /Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/kotlin/com/demo/trouter/feature/about/generated/TRouterGroupRegistry.kt, /Users/tye/Work/Android/TRouterDemo/feature-about/build/generated/ksp/debug/kotlin/com/demo/trouter/feature/about/generated/TRouterTargetInterceptorNames.kt
+Java source files: 
+Script source files: 
+Script file extensions: 
+Using Kotlin/JVM incremental compilation
+[KOTLIN] Kotlin compilation 'jdkHome' argument: /Users/tye/Library/Java/JavaVirtualMachines/jbr-17.0.14/Contents/Home
+Options for KOTLIN DAEMON: IncrementalCompilationOptions(super=CompilationOptions(compilerMode=INCREMENTAL_COMPILER, targetPlatform=JVM, reportCategories=[0, 3], reportSeverity=2, requestedCompilationResults=[0], kotlinScriptExtensions=[]), sourceChanges=org.jetbrains.kotlin.buildtools.api.SourcesChanges$Known@2a4ab393, classpathChanges=NoChanges, workingDir=/Users/tye/Work/Android/TRouterDemo/feature-about/build/kotlin/compileDebugKotlin/cacheable, multiModuleICSettings=MultiModuleICSettings(buildHistoryFile=/Users/tye/Work/Android/TRouterDemo/feature-about/build/kotlin/compileDebugKotlin/local-state/build-history.bin, useModuleDetection=true), icFeatures=IncrementalCompilationFeatures(usePreciseJavaTracking=true, withAbiSnapshot=false, preciseCompilationResultsBackup=true, keepIncrementalCompilationCachesInMemory=true, enableUnsafeIncrementalCompilationForMultiplatform=false, enableMonotonousIncrementalCompileSetExpansion=true), outputFiles=[/Users/tye/Work/Android/TRouterDemo/feature-about/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes, /Users/tye/Work/Android/TRouterDemo/feature-about/build/kotlin/compileDebugKotlin/cacheable, /Users/tye/Work/Android/TRouterDemo/feature-about/build/kotlin/compileDebugKotlin/local-state])
+Finished executing kotlin compiler using DAEMON strategy
+Resolve mutations for :feature-about:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+:feature-about:compileDebugJavaWithJavac (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :feature-about:compileDebugJavaWithJavac NO-SOURCE
+Skipping task ':feature-about:compileDebugJavaWithJavac' as it has no source files and no previous output files.
+Resolve mutations for :feature-about:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+:feature-about:bundleLibCompileToJarDebug (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :feature-about:bundleLibCompileToJarDebug
+Caching disabled for task ':feature-about:bundleLibCompileToJarDebug' because:
+  Build cache is disabled
+  Simple merging task
+Task ':feature-about:bundleLibCompileToJarDebug' is not up-to-date because:
+  Input property 'classes' file /Users/tye/Work/Android/TRouterDemo/feature-about/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/com/demo/trouter/feature/about/ConflictProbeActivity.class has been removed.
+  Input property 'classes' file /Users/tye/Work/Android/TRouterDemo/feature-about/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/com/demo/trouter/feature/about/generated/GroupLoader_secondary.class has been added.
+  Input property 'classes' file /Users/tye/Work/Android/TRouterDemo/feature-about/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/com/demo/trouter/feature/about/generated/GroupLoader_default.class has been removed.
+  and more...
+work action resolve classes.jar (project :feature-about) (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:kspDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+:app:kspDebugKotlin (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:kspDebugKotlin
+Caching disabled for task ':app:kspDebugKotlin' because:
+  Build cache is disabled
+Task ':app:kspDebugKotlin' is not up-to-date because:
+  Input property 'kspConfig.classpathStructure' file /Users/tye/.gradle/caches/9.5.0/transforms/26aba3f24a2672a4d804aa310ff027d5/transformed/output.bin has been added.
+  Input property 'kspConfig.classpathStructure' file /Users/tye/.gradle/caches/9.5.0/transforms/f62cab71fbd8e72eba47d57496e9229a/transformed/output.bin has been removed.
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/debug/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/main/kotlin', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/debug/java', not found
+file or directory '/Users/tye/Work/Android/TRouterDemo/app/src/debug/kotlin', not found
+Resolve mutations for :app:verifyTRouterRoutes (Thread[Execution worker Thread 2,5,main]) started.
+:app:verifyTRouterRoutes (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:verifyTRouterRoutes
+Caching disabled for task ':app:verifyTRouterRoutes' because:
+  Build cache is disabled
+Task ':app:verifyTRouterRoutes' is not up-to-date because:
+  Task has not declared any outputs despite executing actions.
+TRouter 跨模块校验通过：无重复 path（扫描模块 3 个，路由清单项 7 条）
+Build b02c97b6-b753-42f0-83a1-8ae3fc5cac8b is closed
+
+BUILD SUCCESSFUL in 472ms
+40 actionable tasks: 5 executed, 35 up-to-date
+Watched directory hierarchies: [/Users/tye/Work/Android/TRouterDemo]
+Configuration cache entry reused.

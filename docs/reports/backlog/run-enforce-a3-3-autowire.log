@@ -1,0 +1,145 @@
+Calculating task graph as configuration cache cannot be reused because file 'settings.gradle.kts' has changed.
+> Task :trouter-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :trouter-gradle-plugin:compileJava NO-SOURCE
+> Task :trouter-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :trouter-gradle-plugin:processResources UP-TO-DATE
+> Task :trouter-gradle-plugin:classes UP-TO-DATE
+> Task :trouter-gradle-plugin:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+:app:preBuild SKIPPED
+:app:preDebugBuild SKIPPED
+:app:mergeDebugNativeDebugMetadata SKIPPED
+:trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:trouter-annotation:compileKotlin SKIPPED
+:trouter-annotation:compileJava SKIPPED
+:trouter-annotation:processResources SKIPPED
+:trouter-annotation:classes SKIPPED
+:trouter-annotation:jar SKIPPED
+:app:generateDebugResources SKIPPED
+:app:packageDebugResources SKIPPED
+:feature-about:preBuild SKIPPED
+:feature-about:preDebugBuild SKIPPED
+:feature-about:processDebugNavigationResources SKIPPED
+:feature-demo:preBuild SKIPPED
+:feature-demo:preDebugBuild SKIPPED
+:feature-demo:processDebugNavigationResources SKIPPED
+:trouter-core:preBuild SKIPPED
+:trouter-core:preDebugBuild SKIPPED
+:trouter-core:processDebugNavigationResources SKIPPED
+:app:processDebugNavigationResources SKIPPED
+:app:parseDebugLocalResources SKIPPED
+:app:generateDebugRFile SKIPPED
+:feature-about:generateDebugResources SKIPPED
+:feature-about:packageDebugResources SKIPPED
+:feature-about:parseDebugLocalResources SKIPPED
+:feature-about:generateDebugRFile SKIPPED
+:trouter-core:compileDebugAidl SKIPPED
+:trouter-core:generateDebugResources SKIPPED
+:trouter-core:packageDebugResources SKIPPED
+:trouter-core:parseDebugLocalResources SKIPPED
+:trouter-core:generateDebugRFile SKIPPED
+:trouter-core:compileDebugKotlin SKIPPED
+:trouter-core:javaPreCompileDebug SKIPPED
+:trouter-core:compileDebugJavaWithJavac SKIPPED
+:trouter-core:bundleLibCompileToJarDebug SKIPPED
+:trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:trouter-processor:compileKotlin SKIPPED
+:trouter-processor:compileJava SKIPPED
+:trouter-processor:processResources SKIPPED
+:trouter-processor:classes SKIPPED
+:trouter-processor:jar SKIPPED
+:feature-about:kspDebugKotlin SKIPPED
+:feature-about:compileDebugKotlin SKIPPED
+:feature-about:javaPreCompileDebug SKIPPED
+:feature-about:compileDebugJavaWithJavac SKIPPED
+:feature-about:bundleLibCompileToJarDebug SKIPPED
+:feature-demo:generateDebugResources SKIPPED
+:feature-demo:packageDebugResources SKIPPED
+:feature-demo:parseDebugLocalResources SKIPPED
+:feature-demo:generateDebugRFile SKIPPED
+:feature-demo:kspDebugKotlin SKIPPED
+:feature-demo:compileDebugKotlin SKIPPED
+:feature-demo:javaPreCompileDebug SKIPPED
+:feature-demo:compileDebugJavaWithJavac SKIPPED
+:feature-demo:bundleLibCompileToJarDebug SKIPPED
+:app:kspDebugKotlin SKIPPED
+:app:compileDebugKotlin SKIPPED
+:app:javaPreCompileDebug SKIPPED
+:app:compileDebugJavaWithJavac SKIPPED
+:app:generateDebugAssets SKIPPED
+:feature-about:generateDebugAssets SKIPPED
+:feature-about:mergeDebugAssets SKIPPED
+:feature-demo:generateDebugAssets SKIPPED
+:feature-demo:mergeDebugAssets SKIPPED
+:trouter-core:generateDebugAssets SKIPPED
+:trouter-core:mergeDebugAssets SKIPPED
+:app:mergeDebugAssets SKIPPED
+:app:compressDebugAssets SKIPPED
+:app:generateDebugGlobalSynthetics SKIPPED
+:app:processDebugJavaRes SKIPPED
+:feature-about:processDebugJavaRes SKIPPED
+:feature-demo:processDebugJavaRes SKIPPED
+:trouter-core:processDebugJavaRes SKIPPED
+:app:mergeDebugJavaResource SKIPPED
+:app:checkDebugDuplicateClasses SKIPPED
+:app:desugarDebugFileDependencies SKIPPED
+:app:mergeExtDexDebug SKIPPED
+:feature-demo:bundleLibRuntimeToDirDebug SKIPPED
+:feature-about:bundleLibRuntimeToDirDebug SKIPPED
+:trouter-core:bundleLibRuntimeToDirDebug SKIPPED
+:app:mergeLibDexDebug SKIPPED
+:feature-about:writeDebugAarMetadata SKIPPED
+:feature-demo:writeDebugAarMetadata SKIPPED
+:trouter-core:writeDebugAarMetadata SKIPPED
+:app:checkDebugAarMetadata SKIPPED
+:app:mapDebugSourceSetPaths SKIPPED
+:app:compileDebugNavigationResources SKIPPED
+:app:mergeDebugResources SKIPPED
+:app:createDebugCompatibleScreenManifests SKIPPED
+:app:extractDeepLinksDebug SKIPPED
+:feature-about:extractDeepLinksDebug SKIPPED
+:feature-about:processDebugManifest SKIPPED
+:feature-demo:extractDeepLinksDebug SKIPPED
+:feature-demo:processDebugManifest SKIPPED
+:trouter-core:extractDeepLinksDebug SKIPPED
+:trouter-core:processDebugManifest SKIPPED
+:app:processDebugMainManifest SKIPPED
+:app:processDebugManifest SKIPPED
+:app:processDebugManifestForPackage SKIPPED
+:feature-about:mapDebugSourceSetPaths SKIPPED
+:feature-about:compileDebugLibraryResources SKIPPED
+:feature-demo:mapDebugSourceSetPaths SKIPPED
+:feature-demo:compileDebugLibraryResources SKIPPED
+:trouter-core:mapDebugSourceSetPaths SKIPPED
+:trouter-core:compileDebugLibraryResources SKIPPED
+:app:processDebugResources SKIPPED
+:app:dexBuilderDebug SKIPPED
+:app:mergeProjectDexDebug SKIPPED
+:app:mergeDebugJniLibFolders SKIPPED
+:feature-about:mergeDebugJniLibFolders SKIPPED
+:feature-about:mergeDebugNativeLibs SKIPPED
+:feature-about:copyDebugJniLibsProjectOnly SKIPPED
+:feature-demo:mergeDebugJniLibFolders SKIPPED
+:feature-demo:mergeDebugNativeLibs SKIPPED
+:feature-demo:copyDebugJniLibsProjectOnly SKIPPED
+:trouter-core:mergeDebugJniLibFolders SKIPPED
+:trouter-core:mergeDebugNativeLibs SKIPPED
+:trouter-core:copyDebugJniLibsProjectOnly SKIPPED
+:app:mergeDebugNativeLibs SKIPPED
+:app:stripDebugDebugSymbols SKIPPED
+:app:validateSigningDebug SKIPPED
+:app:writeDebugAppMetadata SKIPPED
+:app:writeDebugSigningConfigVersions SKIPPED
+:app:packageDebug SKIPPED
+:app:createDebugApkListingFileRedirect SKIPPED
+:app:verifyTRouterRoutes SKIPPED
+:app:assembleDebug SKIPPED
+
+BUILD SUCCESSFUL in 625ms
+4 actionable tasks: 4 up-to-date
+Configuration cache entry stored.

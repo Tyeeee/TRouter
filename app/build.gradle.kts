@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    // 批次 A3：跨模块路由 path 冲突校验（构建期闸门）。插件来自 trouter-gradle-plugin（settings 里 includeBuild）
+    id("com.trouter.route-conflict")
 }
 
 android {
@@ -39,6 +41,8 @@ android {
 // KSP：处理器据此推导生成包名（须与 android.namespace 保持一致）
 ksp {
     arg("trouter.modulePackage", "com.demo.trouter")
+    // 路径字面量处置级别：默认 warning（向后兼容）；CI/新工程可 -PtrouterPathSeverity=error 直接卡编译
+    arg("trouter.pathSeverity", (findProperty("trouterPathSeverity") as String?) ?: "warning")
 }
 
 dependencies {
@@ -68,27 +72,8 @@ dependencies {
 }
 
 // ---------------------------------------------------------------------------
-// L1：跨模块路由 path 冲突 —— 构建期校验（debug 变体）。
-// 逻辑在 :trouter-processor 的 CrossModuleConflictScanner（JVM main，避免 DSL 闭包生成 bug）；
-// 本脚本只接线：kspDebugKotlin 完成后以 JavaExec 扫描各模块生成目录，冲突则以非零退出使构建失败。
+// L1 跨模块路由 path 冲突校验：已由插件 com.trouter.route-conflict 提供
+// （见 trouter-gradle-plugin；自动发现各模块 KSP 生成目录，并挂到 check / assemble*）。
+// 命令：./gradlew :app:verifyTRouterRoutes   ；配置：trouterConflict { variants / autoWire / modules }
 // ---------------------------------------------------------------------------
-val verifyCrossModuleRouteConflicts = tasks.register<JavaExec>("verifyCrossModuleRouteConflicts") {
-    group = "verification"
-    description = "跨模块路由 path 冲突检测（构建期，L1）"
-    dependsOn(":trouter-processor:jar")
-    classpath = project(":trouter-processor").sourceSets["main"].runtimeClasspath
-    mainClass.set("com.trouter.processor.CrossModuleConflictScanner")
-    val moduleDirs = listOf(
-        "app" to File(rootDir, "app/build/generated/ksp/debug/kotlin").absolutePath,
-        "feature-demo" to File(rootDir, "feature-demo/build/generated/ksp/debug/kotlin").absolutePath,
-        "feature-about" to File(rootDir, "feature-about/build/generated/ksp/debug/kotlin").absolutePath,
-    )
-    for ((moduleName, dirPath) in moduleDirs) {
-        args(moduleName, dirPath)
-    }
-}
 
-// kspDebugKotlin 跑完（生成完毕）后立即执行校验；JavaExec 无环（finalizer 语义）。
-tasks.matching { it.name == "kspDebugKotlin" }.configureEach {
-    finalizedBy(verifyCrossModuleRouteConflicts)
-}

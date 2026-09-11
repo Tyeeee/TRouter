@@ -1,0 +1,45 @@
+Calculating task graph as configuration cache cannot be reused because file 'app/build.gradle.kts' has changed.
+
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+
+> Task :feature-demo:preBuild UP-TO-DATE
+> Task :trouter-core:preBuild UP-TO-DATE
+> Task :feature-demo:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-processor:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :trouter-core:preDebugBuild UP-TO-DATE
+> Task :trouter-annotation:processResources NO-SOURCE
+> Task :trouter-processor:processResources UP-TO-DATE
+> Task :trouter-core:javaPreCompileDebug UP-TO-DATE
+> Task :trouter-core:processDebugNavigationResources UP-TO-DATE
+> Task :trouter-core:generateDebugResources UP-TO-DATE
+> Task :feature-demo:processDebugNavigationResources UP-TO-DATE
+> Task :feature-demo:generateDebugResources UP-TO-DATE
+> Task :trouter-core:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileKotlin UP-TO-DATE
+> Task :trouter-core:parseDebugLocalResources UP-TO-DATE
+> Task :feature-demo:packageDebugResources UP-TO-DATE
+> Task :trouter-annotation:compileJava NO-SOURCE
+> Task :trouter-annotation:classes UP-TO-DATE
+> Task :trouter-core:generateDebugRFile UP-TO-DATE
+> Task :feature-demo:parseDebugLocalResources UP-TO-DATE
+> Task :feature-demo:generateDebugRFile UP-TO-DATE
+> Task :trouter-annotation:jar UP-TO-DATE
+> Task :trouter-processor:compileKotlin UP-TO-DATE
+> Task :trouter-processor:compileJava NO-SOURCE
+> Task :trouter-processor:classes UP-TO-DATE
+> Task :trouter-core:compileDebugAidl UP-TO-DATE
+> Task :trouter-processor:jar UP-TO-DATE
+> Task :trouter-core:compileDebugKotlin UP-TO-DATE
+> Task :trouter-core:compileDebugJavaWithJavac UP-TO-DATE
+> Task :trouter-core:bundleLibCompileToJarDebug UP-TO-DATE
+
+> Task :feature-demo:kspDebugKotlin
+w: [ksp] @Route path 使用了字符串字面量（/enforce-a1-probe），请引用 RouterContract 常量，禁止硬编码字符串。
+
+BUILD SUCCESSFUL in 741ms
+21 actionable tasks: 1 executed, 20 up-to-date
+Configuration cache entry stored.
