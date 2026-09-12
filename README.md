@@ -80,11 +80,80 @@ when (val result = TRouter.navigate("/second")) {
 
 ## 3. 5 分钟接入
 
-> 目前还没发布到 Maven 中央仓库，所以接入方式是**把源码模块拷进你的工程**（下面第 1 步）。
-> 以后发版了这一段会改。将来发布时，坐标统一在同一个命名空间下：
-> `com.trouter:trouter-annotation` / `com.trouter:trouter-processor` / `com.trouter:trouter-core`（当前版本 `1.0.0`）。
+把库拿到工程里有**两种方式，二选一**：
 
-### 第 1 步：把 3 个模块拷进工程，并在 `settings.gradle.kts` 里登记
+- **方式 A：用 Maven 坐标**（推荐；适合团队内部 / CI）——本库已经接入 `maven-publish`，
+  坐标固定为 `com.trouter:trouter-{annotation,processor,core,lint}`，当前版本 `1.0.0`；
+- **方式 B：把源码模块拷进工程**（还没上公共仓库时的兜底，也方便直接改库源码调试）。
+
+> ⚠️ 目前**还没发布到公共仓库**（Maven 中央仓库那套账号 / 签名 / 发布流程还没做），
+> 所以方式 A 需要你自己先发布一次（本机仓库或团队内部仓库都行，见下面方式 A 的第 ① 步）。
+
+### 第 1 步 · 方式 A：用 Maven 坐标（推荐）
+
+**① 发布这份库**（在库的源码目录里执行一次；改了库代码后要重新执行）：
+
+```bash
+./gradlew publishToMavenLocal                               # 4 个模块 → ~/.m2/repository/com/trouter
+cd trouter-gradle-plugin && ../gradlew publishToMavenLocal   # 可选：构建期"路径冲突"护栏插件
+```
+
+产物：`trouter-core-1.0.0.aar`（Android 库，release 变体）+ `trouter-annotation/processor/lint-1.0.0.jar`
++ 插件 `trouter-gradle-plugin-1.0.0.jar` 及其插件标记产物。
+
+> 想发到团队内部仓库（Nexus / Artifactory 等）：在对应模块里加一个
+> `maven { url = uri("..."); credentials { ... } }` 仓库声明后跑 `publish`，**坐标不用改**。
+
+**② 让工程能找到它**（`settings.gradle.kts`）：
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        mavenLocal()      // 本机发布出来的库在这里（发到内部仓库就换成内部仓库地址）
+        google()
+        mavenCentral()
+    }
+}
+```
+
+**③ 加依赖**（版本目录 + 各模块的构建文件）：
+
+```toml
+# gradle/libs.versions.toml
+[versions]
+trouter = "1.0.0"
+
+[libraries]
+trouter-annotation = { group = "com.trouter", name = "trouter-annotation", version.ref = "trouter" }
+trouter-core       = { group = "com.trouter", name = "trouter-core",       version.ref = "trouter" }
+trouter-processor  = { group = "com.trouter", name = "trouter-processor",  version.ref = "trouter" }
+trouter-lint       = { group = "com.trouter", name = "trouter-lint",       version.ref = "trouter" }
+```
+
+```kotlin
+dependencies {
+    // 注解与运行时：上层页面要写 @Route、要调 TRouter，所以用 api 暴露出去
+    api(libs.trouter.annotation)
+    api(libs.trouter.core)
+    // 只有"声明了 @Route 的模块"需要这一行（编译期生成路由表）
+    ksp(libs.trouter.processor)
+    // 可选：调用点硬编码路径检查（见第 6 节护栏二）
+    lintChecks(libs.trouter.lint)
+}
+```
+
+**④ 可选：加"跨模块路径冲突"护栏**（见[第 6 节](#6-三道自动护栏写错了编译就报错)）——
+`pluginManagement` 里也要能看到库，然后一行接入：
+
+```kotlin
+// settings.gradle.kts
+pluginManagement { repositories { mavenLocal(); google(); mavenCentral(); gradlePluginPortal() } }
+
+// 应用模块
+plugins { id("com.trouter.route-conflict") version "1.0.0" }
+```
+
+### 第 1 步 · 方式 B：把 3 个模块拷进工程
 
 ```kotlin
 include(":trouter-annotation")   // 注解
@@ -94,6 +163,9 @@ include(":trouter-core")         // 运行时（真正干活的）
 
 另外两个是"可选的检查工具"，想用再加（见[第 6 节](#6-三道自动护栏写错了编译就报错)）：
 `trouter-lint`、`trouter-gradle-plugin`。
+
+> 提示：用方式 A 的团队，第 2 步里的 `implementation(project(":trouter-…"))` 换成上面的
+> `api(libs.trouter.annotation)` / `api(libs.trouter.core)` / `ksp(libs.trouter.processor)` 即可，其余完全一样。
 
 ### 第 2 步：给"有页面的模块"配好代码生成
 
@@ -851,7 +923,8 @@ adb shell run-as com.demo.trouter cat files/backtest/last-report.txt
 
 - **模块自动初始化**：现在各模块的初始化代码要你自己在 Application 里写，还没做成"模块自动注册自己"；
 - **页面之间的全局事件**：模块之间发消息/收消息这类能力还没有，需要的话先用接口调用（[5.10](#510-模块之间用接口调用)）；
-- **还没发布到 Maven 中央仓库**，所以接入要拷源码模块。
+- **还没发布到公共仓库**（Maven 中央仓库那套账号 / 签名 / 发布流程没做）；
+  已经支持发布到 Maven 仓库（本机 `~/.m2` 或你自己的内部仓库），用法见[第 3 节](#3-5-分钟接入)方式 A。
 
 **版本环境**（这是本工程验证过的组合，别的组合理论上能用但没逐个验证）：
 
@@ -978,8 +1051,9 @@ Copyright 2026 Tyeeee
 简单说：可以自由使用、修改、商用、闭源分发，只要保留版权与许可声明；同时包含专利授权条款
 （这也是 Android 生态里最常用的许可证）。
 
-> 接入方式提醒：目前还没发布到 Maven 中央仓库，接入是把 `trouter-annotation` / `trouter-processor` / `trouter-core`
-> 三个模块的源码拷进你的工程（见[第 3 节](#3-5-分钟接入)）；拷贝时请一并保留 `LICENSE` 与版权声明。
+> 接入方式提醒：两种都行（见[第 3 节](#3-5-分钟接入)）—— 用 Maven 坐标（`com.trouter:*:1.0.0`），
+> 或把 `trouter-annotation` / `trouter-processor` / `trouter-core` 的源码拷进工程；
+> 拷贝源码这种方式请一并保留 `LICENSE` 与版权声明。
 
 ---
 
