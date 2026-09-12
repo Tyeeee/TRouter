@@ -5,6 +5,7 @@ import android.content.Context
 import com.demo.trouter.backtest.RouteLog
 import com.demo.trouter.generated.CrossProcessPaths
 import com.demo.trouter.generated.TRouterTargetInterceptorNames
+import com.tlogger.core.TLogger
 import com.trouter.core.api.TRouterConfig
 import com.trouter.core.internal.RemoteRouterService
 
@@ -33,8 +34,10 @@ object DemoRouterConfig {
         isDebug = true,
         // 日志同时进内存缓冲与 logcat：内存缓冲给回测断言用，logcat 给人排查用
         logSink = { line ->
+            // 回测台就地断言日志要读这份内存缓冲，所以两条通道都留着：
+            // 内存缓冲（给回测）+ TLogger（给人和上报，Tag 仍是 TRouter）
             RouteLog.append(line)
-            android.util.Log.d("TRouter", line)
+            TLogger.logger("TRouter").d { line }
             extraSink?.invoke(line)
         },
         onLost = onLost,

@@ -4,9 +4,9 @@ plugins {
     kotlin("jvm") version "2.2.10"
 }
 
-// 统一对外坐标（命名空间）：group 与包名根保持一致，最终坐标形如 com.trouter:<模块名>:1.0.0
+// 统一对外坐标（命名空间）：group 与包名根保持一致，最终坐标形如 com.trouter:<模块名>:<版本号>
 group = "com.trouter"
-version = "1.0.0"
+version = "1.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -30,9 +30,9 @@ gradlePlugin {
     }
 }
 
-// 发布：com.trouter:trouter-gradle-plugin:1.0.0
+// 发布：com.trouter:trouter-gradle-plugin:1.0.1
 // java-gradle-plugin 会额外生成插件标记产物（com.trouter.route-conflict:com.trouter.route-conflict.gradle.plugin），
-// 消费方才能用 plugins { id("com.trouter.route-conflict") version "1.0.0" } 从 Maven 解析。
+// 消费方才能用 plugins { id("com.trouter.route-conflict") version "1.0.1" } 从 Maven 解析。
 publishing {
     publications.withType<MavenPublication>().configureEach {
         pom {

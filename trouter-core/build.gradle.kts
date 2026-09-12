@@ -3,9 +3,9 @@ plugins {
     `maven-publish`
 }
 
-// 统一对外坐标（命名空间）：group 与包名根保持一致，最终坐标形如 com.trouter:<模块名>:1.0.0
+// 统一对外坐标（命名空间）：group 与包名根保持一致，最终坐标形如 com.trouter:<模块名>:<版本号>
 group = "com.trouter"
-version = "1.0.0"
+version = "1.0.1"
 
 android {
     namespace = "com.trouter.core"
@@ -35,16 +35,18 @@ android {
 }
 
 dependencies {
+    // 默认日志通道：TLogger（库只调 TLogger.logger(...)，不 install —— 装日志是宿主的决定）
+    implementation(libs.tlogger.core)
+
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.timber)
 
     // 测试底座 BaseTRouterTest/TestConfig 位于 src/debug，依赖只进 debug 变体
     debugImplementation(libs.junit)
     debugImplementation(libs.androidx.test.core)
 }
 
-// 发布：安卓库发 AAR（带源码包），坐标 com.trouter:trouter-core:1.0.0
+// 发布：安卓库发 AAR（带源码包），坐标 com.trouter:trouter-core:<版本号>
 // 用 afterEvaluate 是因为 release 这个产物要等配置阶段结束才存在
 afterEvaluate {
     publishing {

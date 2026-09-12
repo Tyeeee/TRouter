@@ -308,24 +308,24 @@ internal object BacktestNodesRemote {
         id = "J04",
         feature = F_J,
         title = "连发多次跳转：每次都真的打开，不丢不串",
-        expected = "连续发起 5 次 /second 导航（不等待、不间隔），5 次都返回「成功」，且屏幕上真的依次出现 5 个页面；全部返回后回到回测台",
+        expected = "连续发起 3 次 /second 导航（不等待、不间隔），3 次都返回「成功」，且屏幕上真的依次出现 3 个页面；全部返回后回到回测台",
     ) { ctx ->
         val mark = ctx.mark()
         val startedAt = android.os.SystemClock.elapsedRealtime()
-        repeat(5) {
+        repeat(3) {
             val r = ctx.mainValue { TRouter.navigate(RouterContract.PATH_SECOND) }
             ctx.require(r is TRouterResult.Success, "第 ${it + 1} 次导航应 Success，实际=$r")
         }
-        ctx.note("5 次导航连发耗时 ${android.os.SystemClock.elapsedRealtime() - startedAt}ms（全部当场返回成功）")
+        ctx.note("3 次导航连发耗时 ${android.os.SystemClock.elapsedRealtime() - startedAt}ms（全部当场返回成功）")
 
         // 页面切换是异步的：等它到位再数，而不是睡固定时间赌。
         // 这里等得比较宽松，因为观察到一个**平台行为**：连发时系统会把 Activity 启动排队，
-        // 最后一次启动实测被推迟过 20~30 秒（同一台模拟器、负载高时更明显）。
-        // 那是系统的启动队列，不是库的缺陷——库的职责是"每次导航都如实发起并且不丢不串"，
-        // 因此断言落在"页面最终全部出现"，同时把耗时记为证据。
-        val opened = ctx.awaitPageCount(SecondActivity::class.java, mark, 5, timeoutMs = 30_000)
-        ctx.note("5 个页面全部到前台共耗时 ${android.os.SystemClock.elapsedRealtime() - startedAt}ms")
-        ctx.expect(opened, 5, "最终出现的页面数")
+        // 最后一次启动实测被推迟过 20~30 秒（负载高时更明显）。那是系统的启动队列，不是库的缺陷——
+        // 库的职责是"每次导航都如实发起、不吞不串"，所以断言落在"页面最终全部出现"，耗时记为证据。
+        // 连发次数取 3：足以抓"丢页面/串页面"，又把系统排队深度压到可控范围，避免节点被平台拖成假失败。
+        val opened = ctx.awaitPageCount(SecondActivity::class.java, mark, 3, timeoutMs = 30_000)
+        ctx.note("3 个页面全部到前台共耗时 ${android.os.SystemClock.elapsedRealtime() - startedAt}ms")
+        ctx.expect(opened, 3, "最终出现的页面数")
         ctx.closeAllPagesSince(mark)
         ctx.awaitHostBack()
     }

@@ -83,7 +83,7 @@ when (val result = TRouter.navigate("/second")) {
 把库拿到工程里有**两种方式，二选一**：
 
 - **方式 A：用 Maven 坐标**（推荐；适合团队内部 / CI）——本库已经接入 `maven-publish`，
-  坐标固定为 `com.trouter:trouter-{annotation,processor,core,lint}`，当前版本 `1.0.0`；
+  坐标固定为 `com.trouter:trouter-{annotation,processor,core,lint}`，当前版本 `1.0.1`；
 - **方式 B：把源码模块拷进工程**（还没上公共仓库时的兜底，也方便直接改库源码调试）。
 
 > ⚠️ 目前**还没发布到公共仓库**（Maven 中央仓库那套账号 / 签名 / 发布流程还没做），
@@ -98,8 +98,8 @@ when (val result = TRouter.navigate("/second")) {
 cd trouter-gradle-plugin && ../gradlew publishToMavenLocal   # 可选：构建期"路径冲突"护栏插件
 ```
 
-产物：`trouter-core-1.0.0.aar`（Android 库，release 变体）+ `trouter-annotation/processor/lint-1.0.0.jar`
-+ 插件 `trouter-gradle-plugin-1.0.0.jar` 及其插件标记产物。
+产物：`trouter-core-1.0.1.aar`（Android 库，release 变体）+ `trouter-annotation/processor/lint-1.0.1.jar`
++ 插件 `trouter-gradle-plugin-1.0.1.jar` 及其插件标记产物。
 
 > 想发到团队内部仓库（Nexus / Artifactory 等）：在对应模块里加一个
 > `maven { url = uri("..."); credentials { ... } }` 仓库声明后跑 `publish`，**坐标不用改**。
@@ -121,7 +121,7 @@ dependencyResolutionManagement {
 ```toml
 # gradle/libs.versions.toml
 [versions]
-trouter = "1.0.0"
+trouter = "1.0.1"
 
 [libraries]
 trouter-annotation = { group = "com.trouter", name = "trouter-annotation", version.ref = "trouter" }
@@ -150,7 +150,7 @@ dependencies {
 pluginManagement { repositories { mavenLocal(); google(); mavenCentral(); gradlePluginPortal() } }
 
 // 应用模块
-plugins { id("com.trouter.route-conflict") version "1.0.0" }
+plugins { id("com.trouter.route-conflict") version "1.0.1" }
 ```
 
 ### 第 1 步 · 方式 B：把 3 个模块拷进工程
@@ -164,8 +164,11 @@ include(":trouter-core")         // 运行时（真正干活的）
 另外两个是"可选的检查工具"，想用再加（见[第 6 节](#6-三道自动护栏写错了编译就报错)）：
 `trouter-lint`、`trouter-gradle-plugin`。
 
-> 提示：用方式 A 的团队，第 2 步里的 `implementation(project(":trouter-…"))` 换成上面的
+> 提示 1：用方式 A 的团队，第 2 步里的 `implementation(project(":trouter-…"))` 换成上面的
 > `api(libs.trouter.annotation)` / `api(libs.trouter.core)` / `ksp(libs.trouter.processor)` 即可，其余完全一样。
+>
+> 提示 2：**拷源码的方式同样要能解析 `io.github.tyeeee:tlogger-core:0.1.0`**（库的默认日志通道是 TLogger），
+> 在 `settings.gradle.kts` 的 `repositories` 里加 `mavenLocal()` 或你们的内部仓库即可。
 
 ### 第 2 步：给"有页面的模块"配好代码生成
 
@@ -794,11 +797,31 @@ adb logcat -s TRouter
 **同一次点击的日志都带同一个编号**（`traceId`），从入口一直贯穿到跨进程的收发，
 搜这个编号就能把一条链路完整拉出来。
 
-日志默认关着，配置里 `isDebug = true` 才打印。想接到自己公司的日志系统：
+日志默认关着，配置里 `isDebug = true` 才打印。
+
+**日志走 TLogger**：库内部只"用"日志、不"装"日志 —— 调 `TLogger.logger("TRouter").d { ... }`，
+宿主装了 TLogger 就和全 App 一条线（`adb logcat -s TRouter` 照样能看到，Tag 是 `TRouter`）；
+宿主没装，TLogger 本身是空操作，不报错也不崩。
 
 ```kotlin
-TRouterConfig(logSink = { line -> MyLogger.d(line) })
+// 宿主（App / 进程入口）装一次日志系统；库不会替你装
+TLogger.install(
+    LoggingConfig.builder()
+        .sink(AndroidLogSink())                       // 或你们自己的出口：打码 / 落盘 / 上报
+        .defaultLevel(if (isDebug) LogLevel.DEBUG else LogLevel.WARN)
+        .build(),
+)
+
+// 想把路由日志单独接到别处（文件 / 上报 / 另一个来源名），配 logSink 即可
+TRouterConfig(
+    isDebug = BuildConfig.DEBUG,
+    logSink = { line -> TLogger.logger("Router").d { line } },
+)
 ```
+
+> **依赖说明**：`trouter-core` 运行时只依赖 `io.github.tyeeee:tlogger-core`（日志）、
+> `androidx.fragment`（FRAGMENT 目标）与 `androidx.core`（系统栏避让）。
+> 之前用过的 Timber **已经去掉**（它会被带进消费方运行时，而且库不该替宿主 plant 日志实现）。
 
 ### 7.2 想知道"这个页面到底是不是路由打开的"
 
@@ -1051,7 +1074,7 @@ Copyright 2026 Tyeeee
 简单说：可以自由使用、修改、商用、闭源分发，只要保留版权与许可声明；同时包含专利授权条款
 （这也是 Android 生态里最常用的许可证）。
 
-> 接入方式提醒：两种都行（见[第 3 节](#3-5-分钟接入)）—— 用 Maven 坐标（`com.trouter:*:1.0.0`），
+> 接入方式提醒：两种都行（见[第 3 节](#3-5-分钟接入)）—— 用 Maven 坐标（`com.trouter:*:1.0.1`），
 > 或把 `trouter-annotation` / `trouter-processor` / `trouter-core` 的源码拷进工程；
 > 拷贝源码这种方式请一并保留 `LICENSE` 与版权声明。
 

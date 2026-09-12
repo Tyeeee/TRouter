@@ -19,6 +19,8 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // 自己的库（TLogger / TRouter）目前只发在本机 Maven 仓库
+        mavenLocal()
         google()
         mavenCentral()
     }

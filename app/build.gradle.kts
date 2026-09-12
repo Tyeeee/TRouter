@@ -48,6 +48,10 @@ dependencies {
     implementation(project(":feature-about"))
     ksp(project(":trouter-processor"))
     // 回测台要检查 FRAGMENT 类路由是否真的把片段装进了容器页，因此宿主要能拿到 FragmentManager
+    // 日志：TLogger（App 侧唯一的安装处在这里；TRouter 的日志也就跟全 App 一条线）
+    implementation(libs.tlogger.core)
+    implementation(libs.tlogger.android)
+
     implementation(libs.androidx.fragment)
     // 批次 A2：把 TRouter 的 Lint 规则挂到本模块的 Lint 检查里（调用点硬编码 → lint error）
     lintChecks(project(":trouter-lint"))

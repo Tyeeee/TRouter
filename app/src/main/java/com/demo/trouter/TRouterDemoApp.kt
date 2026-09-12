@@ -1,6 +1,11 @@
 package com.demo.trouter
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
+import com.tlogger.android.AndroidLogSink
+import com.tlogger.core.LogLevel
+import com.tlogger.core.LoggingConfig
+import com.tlogger.core.TLogger
 import com.trouter.core.api.TRouter
 
 /**
@@ -23,9 +28,21 @@ class TRouterDemoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // 日志：本 App 是**唯一的安装处**（库只"用"日志、不"装"日志）。
+        // 装了之后 TRouter 的日志（来源名 TRouter）和全 App 日志都从这里出去，可以一起过滤/上报。
+        TLogger.install(
+            LoggingConfig.builder()
+                .sink(AndroidLogSink())
+                .defaultLevel(if (isDebuggable()) LogLevel.DEBUG else LogLevel.WARN)
+                .build(),
+        )
         // 配置的单一来源：回测台用同一个工厂重新装配，保证"回测跑的配置"与"真实运行的配置"逐字段相同
         TRouter.init(this, DemoRouterConfig.create(this))
         TRouter.install(DemoRouteRegistry)
         DemoProcessWiring.apply(this)
     }
+
+    /** 调试包判断：用 FLAG_DEBUGGABLE，不依赖 BuildConfig（本模块没开 buildConfig）。 */
+    private fun isDebuggable(): Boolean =
+        applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }

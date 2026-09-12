@@ -10,13 +10,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import com.tlogger.core.TLogger
 import com.trouter.core.internal.FragmentContainerActivity
 import com.trouter.core.internal.RemoteRouter
 import com.trouter.core.internal.RouteTable
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
-import timber.log.Timber
 
 /**
  * TRouter 统一入口（单例）。
@@ -33,13 +33,17 @@ import timber.log.Timber
  *    只登记「类名字符串」，不加载任何页面类（惰性，见 RouteMeta 注释）；
  * 3. [navigate]：按 path 查表并打开目标；页面类在此刻才真正加载。
  *
- * 可观测性（最早的基础版本 四个埋点，Timber，Tag=TRouter，消息为结构化 [节点] 行）：
+ * 可观测性（四个埋点，Tag=TRouter，消息为结构化 [节点] 行）：
  * navigate 入口/出口、GroupLoader 加载开始/结束；受 config.isDebug 控制。
- * logSink（测试收集器）与 logcat（Timber）收到的消息一致，无重复前缀。
+ *
+ * 日志默认走 **TLogger**（`TLogger.logger("TRouter")`，来源名 `TRouter`）：
+ * 宿主装了自己的 TLogger，路由日志就和全 App 一条线；宿主没装，TLogger 是空操作，不报错也不崩。
+ * 想换别的通道（Timber / 文件 / 上报）就配置 [TRouterConfig.logSink]。
+ * **本库只"用"日志、不"装"日志** —— `TLogger.install` 永远是宿主/进程入口的事。
  */
 object TRouter {
 
-    /** Timber 日志 Tag（logcat 过滤：adb logcat -s TRouter）。 */
+    /** 日志来源名 / Tag（TLogger 的来源名，也是 logcat 过滤用的 Tag：adb logcat -s TRouter）。 */
     private const val LOG_TAG = "TRouter"
 
     /** 拦截器 Redirect 重定向累计跳数上限（防死循环，见 navigateInternal）。 */
@@ -88,7 +92,6 @@ object TRouter {
     private var lifecycleApp: Application? = null
     private var activityListener: Application.ActivityLifecycleCallbacks? = null
     private var resumedActivity: WeakReference<Activity>? = null
-    private var timberPlanted = false
 
     // host 侧跨进程通道客户端（按需 bind，reset 时断开）。
     // **每个目标进程一个客户端实例**——连接/队列状态按进程隔离，互不干扰。
@@ -104,6 +107,9 @@ object TRouter {
 
     // 异步链的恢复执行与结果回调统一回主线程（打开页面必须主线程）
     private val mainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
+
+    // 库只拿日志器、不安装（TLogger 的库侧约定）；安装由宿主在进程入口做
+    private val logger = TLogger.logger(LOG_TAG)
 
     private fun runOnMain(block: () -> Unit) {
         if (Looper.myLooper() == Looper.getMainLooper()) block() else mainHandler.post(block)
@@ -124,11 +130,6 @@ object TRouter {
             liveInterceptors.addAll(config.interceptors)
         }
         this.initialized = true
-        // Timber：进程内只 plant 一次
-        if (!timberPlanted) {
-            timberPlanted = true
-            Timber.plant(Timber.DebugTree())
-        }
         val application = app as? Application
         if (application != null && lifecycleApp !== application) {
             lifecycleApp?.unregisterActivityLifecycleCallbacks(activityListener)
@@ -1707,6 +1708,7 @@ object TRouter {
     private fun log(message: String) {
         if (!config.isDebug) return
         val sink = config.logSink
-        if (sink != null) sink(message) else Timber.tag(LOG_TAG).d(message)
+        // 默认走 TLogger（没装就是空操作）；宿主配了 logSink 就完全交给宿主
+        if (sink != null) sink(message) else logger.d { message }
     }
 }

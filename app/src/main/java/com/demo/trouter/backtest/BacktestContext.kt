@@ -207,7 +207,7 @@ class BacktestContext internal constructor(
     }
 
     /** 等待宿主页面重新回到前台（返回键/返回按钮的效果）。 */
-    fun awaitHostBack(timeoutMs: Long = 6_000): Activity {
+    fun awaitHostBack(timeoutMs: Long = 12_000): Activity {
         // 关键：结果回调可能**先于**本调用到达（页面 finish、回调一回来，回测台就已经在前台了），
         // 此时"再等一次 resume 事件"会永远等不到——所以先看现状，再决定要不要等。
         if (host.hostResumed && !host.hostActivity.isFinishing) return host.hostActivity

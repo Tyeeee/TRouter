@@ -11,9 +11,10 @@ ksp = "2.2.10-2.0.2"
 fragment = "1.8.9"
 androidxTestCore = "1.6.1"
 androidxTestRules = "1.6.1"
-timber = "5.0.1"
 # 批次 A2：Lint 检查模块（版本必须与 AGP 9.3.2 的 Lint 线一致：AGP 9.3.2 ↔ 32.3.2）
 lint = "32.3.2"
+# 自己的日志库 TLogger（TRouter 的默认日志通道；消费方用同一个坐标，日志自然合成一条线）
+tlogger = "0.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,9 +27,12 @@ ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", v
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
 lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
+
+# 自己的日志库（与 TScaffold 同一套坐标；TRouter 内部日志也走它）
+tlogger-core = { group = "io.github.tyeeee", name = "tlogger-core", version.ref = "tlogger" }
+tlogger-android = { group = "io.github.tyeeee", name = "tlogger-android", version.ref = "tlogger" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
