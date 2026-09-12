@@ -19,8 +19,8 @@
 ## 二、如何运行
 
 ```bash
-# 1) 起模拟器（AVD trouter_test，API 36；或用你自己的设备）
-$ANDROID_HOME/emulator/emulator -avd trouter_test &
+# 1) 起模拟器（AVD Pixel_6_API_36，API 36；或用你自己的设备）
+$ANDROID_HOME/emulator/emulator -avd Pixel_6_API_36 &
 
 # 2) 安装演示 App
 ./gradlew :app:installDebug

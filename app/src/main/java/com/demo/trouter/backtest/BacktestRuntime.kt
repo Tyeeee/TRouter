@@ -157,6 +157,12 @@ interface BacktestHost {
         onResult: (resultCode: Int, data: android.content.Intent?) -> Unit,
     ): com.trouter.core.api.TRouterResult
 
+    /**
+     * 用**现代** Activity Result API 启动一个 Intent（宿主在构造期就用 registerForActivityResult 注册了 launcher），
+     * 结果回调给 [onResult]。回测节点用它验证 `TRouter.buildIntent` 产出的 Intent 真的能被 modern API 启动并收到结果。
+     */
+    fun launchWithActivityResult(intent: android.content.Intent, onResult: (resultCode: Int, data: android.content.Intent?) -> Unit)
+
     /** 节点开始/结束的进度回调（更新回测台界面）。 */
     fun onNodeStart(node: BacktestNode, index: Int, total: Int)
 

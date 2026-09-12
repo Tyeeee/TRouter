@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.trouter.core.api.DemoParams
 import com.demo.trouter.R
 import com.trouter.annotation.Route
@@ -42,6 +44,16 @@ class BacktestConsoleActivity : ComponentActivity(), BacktestHost {
     private val logLines = ArrayList<String>()
 
     private val pendingResults = HashMap<Int, (resultCode: Int, data: Intent?) -> Unit>()
+
+    // 现代 Activity Result API：在构造期注册（这是它的要求），回测节点用它来验证 buildIntent 的产物
+    private var pendingModernResult: ((resultCode: Int, data: Intent?) -> Unit)? = null
+
+    private val modernLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val callback = pendingModernResult
+            pendingModernResult = null
+            callback?.invoke(result.resultCode, result.data)
+        }
 
     override val hostActivity: Activity get() = this
     override val hostResumed: Boolean get() = resumed
@@ -207,6 +219,15 @@ class BacktestConsoleActivity : ComponentActivity(), BacktestHost {
     ): TRouterResult {
         pendingResults[requestCode] = onResult
         return TRouter.navigateForResult(path, requestCode, bundle)
+    }
+
+    override fun launchWithActivityResult(
+        intent: Intent,
+        onResult: (resultCode: Int, data: Intent?) -> Unit,
+    ) {
+        // 注意：这里**没有** requestCode —— 结果只走 registerForActivityResult 的注册回调
+        pendingModernResult = onResult
+        modernLauncher.launch(intent)
     }
 
     override fun onNodeStart(node: BacktestNode, index: Int, total: Int) {

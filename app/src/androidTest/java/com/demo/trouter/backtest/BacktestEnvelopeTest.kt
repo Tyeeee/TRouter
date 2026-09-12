@@ -9,6 +9,7 @@ import com.trouter.core.api.RouteMeta
 import com.trouter.core.api.RouteTargetKind
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.TRouter
+import com.trouter.core.api.TRouterIntent
 import com.trouter.core.api.TRouterResult
 import com.trouter.core.testing.BaseTRouterTest
 import org.junit.Assert.assertEquals
@@ -48,6 +49,11 @@ class BacktestEnvelopeTest : BaseTRouterTest() {
             "navigateUri 未初始化应答",
             TRouterResult.NotInitialized,
             TRouter.navigateUri(Uri.parse("trouter://app/second")),
+        )
+        assertEquals(
+            "buildIntent 未初始化应答",
+            TRouterIntent.NotInitialized,
+            TRouter.buildIntent(RouterContract.PATH_SECOND),
         )
 
         // navigateAsync 的契约是"回调恒在主线程"，因此这里必须等它，不能立刻读

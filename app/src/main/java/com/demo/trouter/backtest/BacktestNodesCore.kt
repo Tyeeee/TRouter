@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import com.demo.trouter.DemoInterceptors
 import com.demo.trouter.ResultDemoKeys
 import com.demo.trouter.ResultEchoActivity
 import com.demo.trouter.feature.about.AboutActivity
@@ -14,6 +15,7 @@ import com.trouter.core.api.RouteLaunch
 import com.trouter.core.api.RouteTargetKind
 import com.trouter.core.api.RouterContract
 import com.trouter.core.api.TRouter
+import com.trouter.core.api.TRouterIntent
 import com.trouter.core.api.TRouterResult
 import com.trouter.core.internal.FragmentContainerActivity
 import java.util.concurrent.CountDownLatch
@@ -39,7 +41,7 @@ internal object BacktestNodesCore {
     val nodes: List<BacktestNode> = listOf(
         a01(), a02(), a03(), a04(), a05(), a06(), a07(),
         b01(), b02(), b03(), b04(),
-        c01(), c02(), c03(), c04(),
+        c01(), c02(), c03(), c04(), c05(), c06(), c07(),
     )
 
     // ------------------------------------------------------------------ A
@@ -392,6 +394,132 @@ internal object BacktestNodesCore {
         ctx.note("中继证据=$payload")
         ctx.expectContains(payload, "成功 ${RouterContract.PATH_SECOND}", "中继页自己发起的第二跳结果")
         ctx.awaitHostBack()
+    }
+
+    private fun c05() = BacktestNode(
+        id = "C05",
+        feature = F_C,
+        title = "产出 Intent 交给现代 Activity Result API（registerForActivityResult）",
+        expected = "buildIntent 产出的 Intent 带着完整路由元数据；用 registerForActivityResult 注册的 launcher 启动它，" +
+            "页面真的打开，且结果**只**从 launcher 回调回来（完全不碰 onActivityResult）",
+    ) { ctx ->
+        val logMark = ctx.logMark()
+        val built = ctx.mainValue { TRouter.buildIntent(RouterContract.PATH_RESULT_DEMO) }
+        ctx.noteNavigateLogs(logMark, "buildIntent")
+        ctx.require(built is TRouterIntent.Ready, "应产出 Intent，实际=${describeIntent(built)}")
+        val ready = built as TRouterIntent.Ready
+        // 元数据必须已经写好（目标页靠它自述"我是被路由打开的"）
+        ctx.expect(ready.intent.getStringExtra(RouteLaunch.EXTRA_PATH), RouterContract.PATH_RESULT_DEMO, "Intent 里的 path")
+        ctx.expect(ready.intent.getStringExtra(RouteLaunch.EXTRA_KIND), RouteTargetKind.ACTIVITY.name, "Intent 里的 kind")
+        ctx.expect(ready.intent.getStringExtra(RouteLaunch.EXTRA_GROUP), RouterContract.GROUP_DEFAULT, "Intent 里的 group")
+        ctx.require(ready.intent.component?.className == ResultEchoActivity::class.java.name, "Intent 应指向目标页：${ready.intent.component}")
+
+        val mark = ctx.mark()
+        // 页面打开后由后台线程扮演"用户点了返回并携带结果"
+        ctx.background {
+            val page = ctx.awaitPage(ResultEchoActivity::class.java, mark, 20_000)
+            ctx.sleep(200)
+            ctx.finishPageWithResult(
+                page,
+                Activity.RESULT_OK,
+                Intent().putExtra(ResultDemoKeys.EXTRA_RESULT_TEXT, "C05 现代 API 回传的数据"),
+            )
+        }
+        val (code, data) = ctx.awaitCallback<Pair<Int, Intent?>>(30_000, "ActivityResultLauncher 回调") { cb ->
+            ctx.host.launchWithActivityResult(ready.intent) { c, d -> cb(c to d) }
+        }
+        ctx.assertBackgroundOk()
+        ctx.expect(code, Activity.RESULT_OK, "launcher 收到的 resultCode")
+        ctx.expect(
+            data?.getStringExtra(ResultDemoKeys.EXTRA_RESULT_TEXT),
+            "C05 现代 API 回传的数据",
+            "launcher 收到的数据",
+        )
+        ctx.note("结果来自 registerForActivityResult 的注册回调（没有用 onActivityResult / requestCode）")
+        ctx.awaitHostBack()
+    }
+
+    private fun c06() = BacktestNode(
+        id = "C06",
+        feature = F_C,
+        title = "buildIntent 与 navigate 同语义：未注册/被拦/别名 一致生效",
+        expected = "未注册路径不产出 Intent（NotFound）；门禁拦截时不产出 Intent（Blocked）且页面不会打开；别名解析照样生效（Intent 指向真实路径）",
+    ) { ctx ->
+        // 1) 未注册路径
+        val missing = ctx.mainValue { TRouter.buildIntent(RouterContract.PATH_UNREGISTERED) }
+        ctx.require(missing is TRouterIntent.NotFound, "未注册路径应 NotFound，实际=${describeIntent(missing)}")
+
+        // 2) 被拦截：不产出 Intent，也不许偷偷打开页面
+        DemoInterceptors.gate.enabled = true
+        val mark = ctx.mark()
+        val blocked = ctx.mainValue { TRouter.buildIntent(RouterContract.PATH_SECOND) }
+        ctx.require(blocked is TRouterIntent.Blocked, "被拦截应 Blocked，实际=${describeIntent(blocked)}")
+        ctx.expectContains((blocked as TRouterIntent.Blocked).reason, "门禁", "拦截原因")
+        ctx.expectNoPageOpened(mark, quietMs = 800)
+        DemoInterceptors.gate.enabled = false
+
+        // 3) 别名解析
+        ctx.require(
+            TRouter.registerRouteAlias(BacktestContract.ALIAS_LEGACY_SECOND, RouterContract.PATH_SECOND),
+            "别名注册应成功",
+        )
+        ctx.onCleanup { TRouter.unregisterRouteAlias(BacktestContract.ALIAS_LEGACY_SECOND) }
+        val aliasLogMark = ctx.logMark()
+        val alias = ctx.mainValue { TRouter.buildIntent(BacktestContract.ALIAS_LEGACY_SECOND) }
+        ctx.noteNavigateLogs(aliasLogMark, "别名 buildIntent")
+        ctx.require(alias is TRouterIntent.Ready, "别名应能产出 Intent，实际=${describeIntent(alias)}")
+        ctx.expect(
+            (alias as TRouterIntent.Ready).intent.getStringExtra(RouteLaunch.EXTRA_PATH),
+            RouterContract.PATH_SECOND,
+            "别名产出 Intent 里的 path（应是真实路径）",
+        )
+    }
+
+    private fun c07() = BacktestNode(
+        id = "C07",
+        feature = F_C,
+        title = "链上需要等待时：buildIntent 明确拒绝，buildIntentAsync 正常产出",
+        expected = "异步拦截器会延后放行时：buildIntent 返回 Blocked 并提示改用 buildIntentAsync；buildIntentAsync 能产出可启动的 Intent；两种方式都**只产出、不启动**页面",
+    ) { ctx ->
+        DemoInterceptors.async.enabled = true
+        DemoInterceptors.async.delayMs = 300L
+        val mark = ctx.mark()
+
+        val sync = ctx.mainValue { TRouter.buildIntent(RouterContract.PATH_SECOND) }
+        ctx.require(sync is TRouterIntent.Blocked, "同步 buildIntent 应被拒绝，实际=${describeIntent(sync)}")
+        ctx.expectContains(
+            (sync as TRouterIntent.Blocked).reason,
+            "buildIntentAsync",
+            "拒绝原因里给出替代方案",
+        )
+
+        val async = ctx.awaitCallback<TRouterIntent>(10_000, "buildIntentAsync 产出") { cb ->
+            TRouter.buildIntentAsync(RouterContract.PATH_SECOND) { cb(it) }
+        }
+        ctx.require(async is TRouterIntent.Ready, "buildIntentAsync 应产出 Intent，实际=${describeIntent(async)}")
+        ctx.expect(
+            (async as TRouterIntent.Ready).intent.getStringExtra(RouteLaunch.EXTRA_PATH),
+            RouterContract.PATH_SECOND,
+            "产出 Intent 里的 path",
+        )
+        // 关键契约：buildIntent 系列**从不**启动页面
+        ctx.expectNoPageOpened(mark, quietMs = 800)
+        ctx.note("两次调用都只产出 Intent，屏幕上没有出现任何页面")
+    }
+
+
+    /** 把 [TRouterIntent] 描述成人话（失败时把原因也带出来，而不是只打一个对象地址）。 */
+    private fun describeIntent(r: TRouterIntent): String = when (r) {
+        is TRouterIntent.Ready -> "Ready(path=${r.meta.path}, component=${r.intent.component?.className})"
+        is TRouterIntent.NotFound -> "NotFound(path=${r.path})"
+        is TRouterIntent.Blocked -> "Blocked(path=${r.path}, reason=${r.reason})"
+        TRouterIntent.NotInitialized -> "NotInitialized"
+    }
+
+    /** 把这一小段里库自己打的 navigate 出口日志抓出来当证据（失败时最有用）。 */
+    private fun BacktestContext.noteNavigateLogs(mark: Int, label: String) {
+        val exit = logsSince(mark).filter { it.contains("[navigate][exit]") || it.contains("[interceptor]") }
+        if (exit.isEmpty()) note("$label 期间库日志：无") else exit.forEach { note("$label 库日志：${it.take(200)}") }
     }
 
     // ------------------------------------------------------------------ 工具

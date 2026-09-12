@@ -1,10 +1,10 @@
 ================ TRouter 回测报告 ================
 设备：Google sdk_gphone64_arm64 / API 36
-宿主进程：com.demo.trouter (pid=28284)
-结论：共 68 个节点，通过 68，失败 0，跳过 0，耗时 101650ms
+宿主进程：com.demo.trouter (pid=5801)
+结论：共 71 个节点，通过 71，失败 0，跳过 0，耗时 75717ms
 --------------------------------------------------
 【A · 基础跳转与页面落地】
-  [通过] A01 打开 /second：页面真的出现，并带着路由元数据（1476ms）
+  [通过] A01 打开 /second：页面真的出现，并带着路由元数据（702ms）
       期望：屏幕出现 SecondActivity；它真实收到的 path=/second、kind=ACTIVITY、group=default、traceId 非空；按返回回到回测台
       实测：按预期完成
       证据：navigate 返回=Success
@@ -12,9 +12,9 @@
       证据：页面真实收到的 path=/second
       证据：页面真实收到的 kind=ACTIVITY
       证据：页面真实收到的 group=default
-      证据：traceId=1b3e4689
+      证据：traceId=26224db8
       证据：按返回后回到回测台：BacktestConsoleActivity
-  [通过] A02 打开 /fragment-demo：容器页出现，片段真的被装进去且拿到参数（1226ms）
+  [通过] A02 打开 /fragment-demo：容器页出现，片段真的被装进去且拿到参数（671ms）
       期望：屏幕出现 FragmentContainerActivity，里面真的装着 DemoFragment；片段 arguments 里的 path/kind 正确，且容器内部键没有泄漏成业务参数
       实测：按预期完成
       证据：navigate 返回的 kind=FRAGMENT
@@ -22,47 +22,47 @@
       证据：片段真实收到的 path=/fragment-demo
       证据：片段真实收到的 kind=FRAGMENT
       证据：片段参数 keys=[com.trouter.core.extra.COST_MS, com.trouter.core.extra.TRACE_ID, com.trouter.core.extra.GROUP, com.trouter.core.extra.KIND, com.trouter.core.extra.PATH]
-  [通过] A03 跨模块打开 /about：另一个模块的页面被打开（1246ms）
+  [通过] A03 跨模块打开 /about：另一个模块的页面被打开（727ms）
       期望：屏幕出现 feature-about 模块里的 AboutActivity（调用方完全没有 import 它）
       实测：按预期完成
       证据：真实打开的页面=AboutActivity
       证据：目标页所在模块包名 含「com.demo.trouter.feature.about」
       证据：页面真实收到的 group=secondary
       证据：目标类=com.demo.trouter.feature.about.AboutActivity
-  [通过] A04 自己也是路由页：打开 /main（1452ms）
+  [通过] A04 自己也是路由页：打开 /main（696ms）
       期望：回测台本身也是注册页面；导航 /main 后主页真的出现，返回后回到回测台
       实测：按预期完成
       证据：真实打开的页面=MainActivity
-      证据：主页实例=72354086，单任务模式=268435456
-  [通过] A05 打开不存在的路径：不崩溃、不打开页面、兜底回调触发（1479ms）
+      证据：主页实例=147142327，单任务模式=268435456
+  [通过] A05 打开不存在的路径：不崩溃、不打开页面、兜底回调触发（1481ms）
       期望：navigate 返回 NotFound；没有任何页面被打开；配置的 onLost 兜底回调真的收到了这个 path；日志里留下 NotFound 出口
       实测：按预期完成
       证据：NotFound 携带的 path=/not/exist
       证据：900ms 内没有任何页面被打开
       证据：onLost 收到=[/not/exist]
-      证据：日志证据：[navigate][exit] traceId=44978573 hop=0 result=NotFound(path=/not/exist) costMs=0
-  [通过] A06 带参数打开 /second：目标页真的收到了参数（1706ms）
+      证据：日志证据：[navigate][exit] traceId=c6e691b3 hop=0 result=NotFound(path=/not/exist) costMs=0
+  [通过] A06 带参数打开 /second：目标页真的收到了参数（642ms）
       期望：目标页 intent 里 msg/count 与调用方传的一致（不是默认值）
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
       证据：目标页真实收到的 msg=A06 的参数
       证据：目标页真实收到的 count=66
-  [通过] A07 连续打开同一个页面两次：两次都真的打开，不串页（2416ms）
+  [通过] A07 连续打开同一个页面两次：两次都真的打开，不串页（909ms）
       期望：两个 SecondActivity 实例先后被切到前台；全部返回后回到回测台
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
       证据：真实打开的页面=SecondActivity
       证据：被打开的次数=2
 【B · 参数透传与保留键】
-  [通过] B01 参数操作页：页面自己收到参数并显示出来（1079ms）
+  [通过] B01 参数操作页：页面自己收到参数并显示出来（637ms）
       期望：回测台导航到 /bt-form 并传参；表单页上真实渲染出「参数透传 ✓ msg=… count=…」
       实测：按预期完成
       证据：真实打开的页面=BacktestFormActivity
-      证据：表单页屏幕文本=✓ 本次由 TRouter 打开 · path=/bt-form · kind=ACTIVITY · group=default · traceId=8364a43c · 解析 3ms 参数透传 ✓ msg=B01 给表单页的参数 · count=11
+      证据：表单页屏幕文本=✓ 本次由 TRouter 打开 · path=/bt-form · kind=ACTIVITY · group=default · traceId=9943e8b7 · 解析 1ms 参数透传 ✓ msg=B01 给表单页的参数 · count=11
       证据：表单页屏幕上的一行 含「参数透传 ✓」
       证据：表单页屏幕上的一行 含「B01 给表单页的参数」
       证据：表单页屏幕上的一行 含「count=11」
-  [通过] B02 由页面发起同步跳转：输入框里的参数真的带到下一页（2612ms）
+  [通过] B02 由页面发起同步跳转：输入框里的参数真的带到下一页（698ms）
       期望：在表单页填入参数后点「同步跳转」，/second 真的打开且收到的正是输入框里的值；表单页上的结果行显示成功
       实测：按预期完成
       证据：真实打开的页面=BacktestFormActivity
@@ -70,35 +70,35 @@
       证据：真实打开的页面=SecondActivity
       证据：下一页真实收到的 msg=B02 输入框里的值
       证据：下一页真实收到的 count=22
-  [通过] B03 由页面发起异步跳转：同样把参数带到下一页（2634ms）
+  [通过] B03 由页面发起异步跳转：同样把参数带到下一页（712ms）
       期望：表单页点「异步跳转」后 /second 真的打开，参数一致，异步回调在页面上显示成功
       实测：按预期完成
       证据：真实打开的页面=BacktestFormActivity
       证据：真实打开的页面=SecondActivity
       证据：下一页真实收到的 msg=B03 异步参数
-  [通过] B04 由页面打开不存在的路径：页面上显示未找到，且没有任何页面被打开（2087ms）
+  [通过] B04 由页面打开不存在的路径：页面上显示未找到，且没有任何页面被打开（1569ms）
       期望：表单页结果行出现「未找到路径」；屏幕上不出现任何新页面
       实测：按预期完成
       证据：真实打开的页面=BacktestFormActivity
       证据：表单页结果行 含「未找到路径」
       证据：900ms 内没有任何页面被打开
 【C · 页面返回值（navigateForResult）】
-  [通过] C01 要返回值地打开页面：页面回传的数据真的回到发起方（2843ms）
+  [通过] C01 要返回值地打开页面：页面回传的数据真的回到发起方（845ms）
       期望：ResultEchoActivity 被打开；它 setResult(RESULT_OK, 数据) 后，回测台的 onActivityResult 收到同一段文字
       实测：按预期完成
       证据：真实打开的页面=ResultEchoActivity
       证据：回传的 resultCode=-1
       证据：回传的文本=C01 页面回传的数据
-  [通过] C02 页面直接返回（不带结果）：发起方只拿到取消，不会拿到假数据（1425ms）
+  [通过] C02 页面直接返回（不带结果）：发起方只拿到取消，不会拿到假数据（852ms）
       期望：ResultEchoActivity 被打开后直接返回，回测台收到 RESULT_CANCELED（不是 RESULT_OK）
       实测：按预期完成
       证据：真实打开的页面=ResultEchoActivity
       证据：回传的 resultCode=0
-  [通过] C03 要返回值地打开一个不存在的路径：明确报错，不打开页面（1639ms）
+  [通过] C03 要返回值地打开一个不存在的路径：明确报错，不打开页面（1480ms）
       期望：navigateForResult 返回 NotFound，屏幕上不出现任何新页面
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
-  [通过] C04 中继页：页面里再打开一个页面，并把中继证据回传（3363ms）
+  [通过] C04 中继页：页面里再打开一个页面，并把中继证据回传（1059ms）
       期望：回测台 → 中继页 → /second 三跳链路成立；/second 返回后中继页回到前台；中继页回传的证据里写明它成功打开了 /second
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
@@ -106,33 +106,66 @@
       证据：中继页回传的 resultCode=-1
       证据：中继证据=relay→/second 结果=成功 /second
       证据：中继页自己发起的第二跳结果 含「成功 /second」
+  [通过] C05 产出 Intent 交给现代 Activity Result API（registerForActivityResult）（834ms）
+      期望：buildIntent 产出的 Intent 带着完整路由元数据；用 registerForActivityResult 注册的 launcher 启动它，页面真的打开，且结果**只**从 launcher 回调回来（完全不碰 onActivityResult）
+      实测：按预期完成
+      证据：buildIntent 库日志：[interceptor][start] traceId=56c6011c path=/result-demo interceptors=3
+      证据：buildIntent 库日志：[interceptor][eval] traceId=56c6011c index=1 class=GateInterceptor decision=Continue
+      证据：buildIntent 库日志：[interceptor][eval] traceId=56c6011c index=2 class=MockInterceptor decision=Continue
+      证据：buildIntent 库日志：[interceptor][end] traceId=56c6011c decision=Continue costMs=0
+      证据：buildIntent 库日志：[navigate][exit] traceId=56c6011c hop=0 result=Success(meta=/result-demo, kind=ACTIVITY) costMs=0
+      证据：Intent 里的 path=/result-demo
+      证据：Intent 里的 kind=ACTIVITY
+      证据：Intent 里的 group=default
+      证据：真实打开的页面=ResultEchoActivity
+      证据：launcher 收到的 resultCode=-1
+      证据：launcher 收到的数据=C05 现代 API 回传的数据
+      证据：结果来自 registerForActivityResult 的注册回调（没有用 onActivityResult / requestCode）
+  [通过] C06 buildIntent 与 navigate 同语义：未注册/被拦/别名 一致生效（1394ms）
+      期望：未注册路径不产出 Intent（NotFound）；门禁拦截时不产出 Intent（Blocked）且页面不会打开；别名解析照样生效（Intent 指向真实路径）
+      实测：按预期完成
+      证据：拦截原因 含「门禁」
+      证据：800ms 内没有任何页面被打开
+      证据：别名 buildIntent 库日志：[interceptor][start] traceId=95318fd8 path=/second interceptors=3
+      证据：别名 buildIntent 库日志：[interceptor][eval] traceId=95318fd8 index=1 class=GateInterceptor decision=Continue
+      证据：别名 buildIntent 库日志：[interceptor][eval] traceId=95318fd8 index=2 class=MockInterceptor decision=Continue
+      证据：别名 buildIntent 库日志：[interceptor][end] traceId=95318fd8 decision=Continue costMs=0
+      证据：别名 buildIntent 库日志：[navigate][exit] traceId=95318fd8 hop=1 result=Success(meta=/second, kind=ACTIVITY) costMs=0
+      证据：别名产出 Intent 里的 path（应是真实路径）=/second
+  [通过] C07 链上需要等待时：buildIntent 明确拒绝，buildIntentAsync 正常产出（1688ms）
+      期望：异步拦截器会延后放行时：buildIntent 返回 Blocked 并提示改用 buildIntentAsync；buildIntentAsync 能产出可启动的 Intent；两种方式都**只产出、不启动**页面
+      实测：按预期完成
+      证据：拒绝原因里给出替代方案 含「buildIntentAsync」
+      证据：产出 Intent 里的 path=/second
+      证据：800ms 内没有任何页面被打开
+      证据：两次调用都只产出 Intent，屏幕上没有出现任何页面
 【D · 拦截器（拦截/改道/优先级/包裹）】
-  [通过] D01 门禁拦截器：拦下的跳转不会打开页面（2229ms）
+  [通过] D01 门禁拦截器：拦下的跳转不会打开页面（1511ms）
       期望：开启门禁后导航 /second 返回 Blocked（原因含门禁提示），屏幕上不出现任何新页面；关闭后恢复正常
       实测：按预期完成
       证据：Blocked 原因=演示门禁开启：拦截 /second
       证据：拦截原因 含「门禁」
       证据：900ms 内没有任何页面被打开
-      证据：日志证据：[navigate][exit] traceId=be9dc806 hop=0 result=Blocked(path=/second, reason=演示门禁开启：拦截 /second) costMs=1
+      证据：日志证据：[navigate][exit] traceId=58f26a26 hop=0 result=Blocked(path=/second, reason=演示门禁开启：拦截 /second) costMs=0
       证据：真实打开的页面=SecondActivity
-  [通过] D02 改道拦截器：请求 /second，屏幕上出现的是替身页（1983ms）
+  [通过] D02 改道拦截器：请求 /second，屏幕上出现的是替身页（639ms）
       期望：开启 Mock 后导航 /second，真正被打开的是 MockSecondActivity（/mock/second），真实页不出现
       实测：按预期完成
       证据：最终打开的 path=/mock/second
       证据：真实打开的页面=MockSecondActivity
       证据：真实页被打开的次数=0
-  [通过] D03 改道成环：跳数上限收口，不会无限循环（1492ms）
+  [通过] D03 改道成环：跳数上限收口，不会无限循环（1483ms）
       期望：两个路径互相改道时，导航最终返回 Blocked（原因含 redirect loop），屏幕上不出现任何页面
       实测：按预期完成
       证据：收口原因 含「redirect loop」
       证据：900ms 内没有任何页面被打开
       证据：日志里出现的跳数=3
-  [通过] D04 拦截器优先级：优先级大的先执行（705ms）
+  [通过] D04 拦截器优先级：优先级大的先执行（624ms）
       期望：注册两个优先级不同的拦截器，执行顺序为 高优先级 → 低优先级（与声明顺序相反）
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
       证据：拦截器执行顺序=[high, low]
-  [通过] D05 洋葱包裹拦截器：放行前、放行后都执行到了，页面确实打开（1642ms）
+  [通过] D05 洋葱包裹拦截器：放行前、放行后都执行到了，页面确实打开（625ms）
       期望：包裹拦截器的前后置逻辑都执行（顺序：前置→打开页面→后置），页面被真实打开
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
@@ -145,127 +178,127 @@
       实测：按预期完成
       证据：拦截原因 含「D06 包裹拦截器拦下」
       证据：900ms 内没有任何页面被打开
-  [通过] D07 目标级拦截器没绑定：明确报错而不是静默跳过（1518ms）
+  [通过] D07 目标级拦截器没绑定：明确报错而不是静默跳过（1481ms）
       期望：解绑 /remote-second 上声明的 remoteAudit 后导航它，返回 Blocked 且原因指出目标拦截器未注册；不应静默放行
       实测：按预期完成
       证据：解绑 remoteAudit=true
       证据：拦截原因 含「目标拦截器未注册」
       证据：900ms 内没有任何页面被打开
-  [通过] D08 拦截器自己抛异常：变成可读的 Blocked，不崩溃、不开页（1482ms）
+  [通过] D08 拦截器自己抛异常：变成可读的 Blocked，不崩溃、不开页（1487ms）
       期望：拦截器抛出的异常被收口成 Blocked（原因含 interceptor error 与异常类型），屏幕上不出现任何页面，进程不崩溃
       实测：按预期完成
       证据：收口原因 含「interceptor error」
       证据：收口原因 含「IllegalStateException」
       证据：900ms 内没有任何页面被打开
 【E · 异步拦截器（等待/超时/取消）】
-  [通过] E01 异步拦截器延后放行：页面打开，回调在主线程且只回调一次（966ms）
+  [通过] E01 异步拦截器延后放行：页面打开，回调在主线程且只回调一次（913ms）
       期望：开启异步拦截器（延时 300ms < 超时 1500ms）后用 navigateAsync，页面被真实打开；结果回调发生在主线程，且只回调一次
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
       证据：结果回调次数=1
       证据：回调在主线程=true
-  [通过] E02 需要等待时用同步导航：明确拒绝，且不卡主线程（1613ms）
+  [通过] E02 需要等待时用同步导航：明确拒绝，且不卡主线程（1502ms）
       期望：异步拦截器会延后放行时，同步 navigate 返回 Blocked（原因提示改用 navigateAsync）；页面不打开；主线程在 300ms 内仍然可响应
       实测：按预期完成
       证据：拒绝原因 含「navigateAsync」
-      证据：主线程在 57ms 内响应（阈值 300ms）
+      证据：主线程在 17ms 内响应（阈值 300ms）
       证据：900ms 内没有任何页面被打开
-  [通过] E03 异步拦截器立即放行：同步导航照常可用（兼容边界）（691ms）
+  [通过] E03 异步拦截器立即放行：同步导航照常可用（兼容边界）（619ms）
       期望：异步拦截器开关关闭时会立即放行，此时同步 navigate 正常打开页面，不受影响
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
-  [通过] E04 异步拦截器一直不回来：超时收口，迟到的放行不再开页（4713ms）
+  [通过] E04 异步拦截器一直不回来：超时收口，迟到的放行不再开页（4594ms）
       期望：异步耗时 3000ms 超过配置超时 1500ms：结果 Blocked（原因含超时）；再等 2 秒（迟到的放行到达），页面依然没有打开
       实测：按预期完成
       证据：收口原因 含「超时」
-      证据：收口耗时=1638ms（配置超时 1500ms）
+      证据：收口耗时=1508ms（配置超时 1500ms）
       证据：500ms 内没有任何页面被打开
       证据：迟到的放行没有打开任何页面
-  [通过] E05 导航中途取消：页面永远不打开（2633ms）
+  [通过] E05 导航中途取消：页面永远不打开（2639ms）
       期望：异步拦截器还在等待时取消导航：结果 Blocked（原因含取消）；之后即使拦截器放行，页面也不会打开
       实测：按预期完成
       证据：取消原因 含「取消」
       证据：400ms 内没有任何页面被打开
       证据：取消后迟到放行没有打开页面
-  [通过] E06 异步拦截器改道：屏幕上出现的是改道后的页面（959ms）
+  [通过] E06 异步拦截器改道：屏幕上出现的是改道后的页面（623ms）
       期望：异步拦截器立即改道 /second → /mock/second，真正被打开的是 MockSecondActivity
       实测：按预期完成
       证据：最终打开的 path=/mock/second
       证据：真实打开的页面=MockSecondActivity
       证据：真实页被打开的次数=0
-  [通过] E07 异步拦截器直接拦下：原因如实回传，页面不打开（1588ms）
+  [通过] E07 异步拦截器直接拦下：原因如实回传，页面不打开（1481ms）
       期望：异步拦截器 block('风控未通过') 后，结果 Blocked 且原因就是这句话；屏幕上不出现任何页面
       实测：按预期完成
       证据：拦截原因=E07 风控未通过
       证据：900ms 内没有任何页面被打开
-  [通过] E08 同一轮重复终止：第二次被拒绝，且不会重复打开页面（3016ms）
+  [通过] E08 同一轮重复终止：第二次被拒绝，且不会重复打开页面（3003ms）
       期望：异步拦截器先放行再试图再次终止时，第二次调用被拒绝（业务侧能观察到 IllegalStateException）；页面只会被打开一次
       实测：按预期完成
       证据：重复终止的观测结果=[第二次终止被拒绝：IllegalStateException]
       证据：900ms 内没有任何页面被打开
       证据：最终结果=异步拦截器超时（1500ms）: 
 【F · 动态路由 / 图谱 / 自检 / 热更】
-  [通过] F01 运行时注册路径：注册后页面真的能打开（1197ms）
+  [通过] F01 运行时注册路径：注册后页面真的能打开（690ms）
       期望：运行时注册 /dynamic-demo（该页面没有 @Route 注解）后导航它，DynamicDemoActivity 真的被打开
       实测：按预期完成
       证据：真实打开的页面=DynamicDemoActivity
       证据：页面收到的 path=/dynamic-demo
-  [通过] F02 注销动态路径后：立刻变成找不到，且不再打开页面（2186ms）
+  [通过] F02 注销动态路径后：立刻变成找不到，且不再打开页面（1591ms）
       期望：注册→打开成功→注销→再导航返回 NotFound，屏幕上不出现任何新页面
       实测：按预期完成
       证据：真实打开的页面=DynamicDemoActivity
       证据：900ms 内没有任何页面被打开
-  [通过] F03 重复注册同一条路径：被拒绝，且原有登记不被覆盖（580ms）
+  [通过] F03 重复注册同一条路径：被拒绝，且原有登记不被覆盖（584ms）
       期望：对已注册的 /second 再注册一个指向别的类的路由，返回 false（拒绝覆盖），/second 仍指向原来的页面类
       实测：按预期完成
       证据：冲突后 /second 仍指向的类=com.demo.trouter.feature.demo.SecondActivity
-  [通过] F04 自检：注册了但类加载不了的路径会被点名（616ms）
+  [通过] F04 自检：注册了但类加载不了的路径会被点名（591ms）
       期望：运行时注册一个指向不存在类的路径后，checkRouteTargets() 点名这条路径；注销后自检回到干净
       实测：按预期完成
       证据：自检点名=[/dynamic-demo]
-  [通过] F05 批量热更的原子性：一条不合法，整批不生效（593ms）
+  [通过] F05 批量热更的原子性：一条不合法，整批不生效（595ms）
       期望：一批里同时有一条合法、一条与既有路径冲突时，applyRouteConfig 返回 false，且两条都没有落地（合法的那条也不该生效）
       实测：按预期完成
       证据：冲突后 /second 仍指向的类=com.demo.trouter.feature.demo.SecondActivity
       证据：整批失败后 /second 与 /bt-atomic-good 均未被改动
-  [通过] F06 动态路由导出：只含动态注册的，静态路由不掺进来（587ms）
+  [通过] F06 动态路由导出：只含动态注册的，静态路由不掺进来（583ms）
       期望：注册一条动态路由后，exportDynamicRoutes() 里只有它；静态的 /second、/about 等不出现在动态集合里
       实测：按预期完成
       证据：动态集合内容=[/dynamic-demo]
-  [通过] F07 路由图谱与路由表一致（593ms）
+  [通过] F07 路由图谱与路由表一致（590ms）
       期望：routeGraph 的边数 = 注册路由数；每个目标类去重后计入节点数；每条边的 path 都能在 registeredRoutes 里找到
       实测：按预期完成
       证据：图谱边数=11
       证据：图谱节点数（去重后的目标类）=11
       证据：图谱：节点 11 / 边 11
-  [通过] F08 重复装配：不会把路由表撑大，重复路径会被点名（587ms）
+  [通过] F08 重复装配：不会把路由表撑大，重复路径会被点名（595ms）
       期望：再调一次 install(同一个注册表)：路由条数不变，日志里出现 duplicate 告警（first-wins 语义可见）
       实测：按预期完成
       证据：重复装配后的路由条数=11
       证据：duplicate 告警 11 条，例如：[RouteTable][duplicate] path=/main keep=com.demo.trouter.MainActivity incoming=com.demo.trouter.MainActivity
-  [通过] F09 聚合注册表体检：无重复路径、关键路径在、三个模块都有贡献（583ms）
+  [通过] F09 聚合注册表体检：无重复路径、关键路径在、三个模块都有贡献（585ms）
       期望：registeredRoutes() 无重复 path；/second /about /main /fragment-demo /remote-second 都在；host 与两个 feature 模块的页面都出现在表里
       实测：按预期完成
       证据：共 11 条路径，来自 3 个模块
 【G · 路径别名与外部链接】
-  [通过] G01 精确别名：老链接照样打开新页面（1374ms）
+  [通过] G01 精确别名：老链接照样打开新页面（671ms）
       期望：注册别名 /legacy/second → /second 后，导航 /legacy/second 真的打开 SecondActivity
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
       证据：别名跳转后页面收到的 path（应是真实路径）=/second
-  [通过] G02 正则别名：一批老链接都能落到同一个新页面（1016ms）
+  [通过] G02 正则别名：一批老链接都能落到同一个新页面（633ms）
       期望：注册 regex:/legacy/item/.* → /second 后，导航 /legacy/item/42 真的打开 SecondActivity
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
-  [通过] G03 别名与真实路径同名：被拒绝（不会制造二义性）（623ms）
+  [通过] G03 别名与真实路径同名：被拒绝（不会制造二义性）（580ms）
       期望：用已注册的真实路径当别名去注册，返回 false
       实测：按预期完成
-  [通过] G04 别名成环：跳数上限收口，不会无限解析（1503ms）
+  [通过] G04 别名成环：跳数上限收口，不会无限解析（1488ms）
       期望：两个别名互相指向时，导航返回 Blocked（原因含 alias loop），屏幕上不出现任何页面
       实测：按预期完成
       证据：收口原因 含「alias loop」
       证据：900ms 内没有任何页面被打开
-  [通过] G05 外部链接进来：链接里的参数覆盖调用方参数并送达页面（1945ms）
+  [通过] G05 外部链接进来：链接里的参数覆盖调用方参数并送达页面（683ms）
       期望：trouter://app/second?msg=from-uri 打开 SecondActivity，页面收到的 msg 是链接里的值（覆盖了 bundle 里的值）
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
@@ -273,128 +306,128 @@
       证据：链接携带的数字参数会以字符串形式送达；页面若用 getInt 读取会拿到默认值（已在报告里记录）
       证据：真实打开的页面=SecondActivity
       证据：链接里 count=7 送达后，页面用 RouteArgs.int 读到的是 -1（原始类型是 String）
-  [通过] G06 外部链接的负向情形：白名单外的 scheme、缺路径都要明确报错（1526ms）
+  [通过] G06 外部链接的负向情形：白名单外的 scheme、缺路径都要明确报错（1498ms）
       期望：scheme 不在白名单内 → Blocked 且原因提到 scheme；链接没有路径段 → Blocked 且原因提到缺少路径；两种情况都不打开页面
       实测：按预期完成
       证据：拒绝原因 含「scheme」
       证据：拒绝原因 含「缺少路径」
       证据：900ms 内没有任何页面被打开
-  [通过] G07 外部链接的 scheme 大小写：不应该影响匹配（1382ms）
+  [通过] G07 外部链接的 scheme 大小写：不应该影响匹配（606ms）
       期望：系统对 scheme 的匹配本身不区分大小写（manifest 里注册 router://，收到 Router:// 也会投递到 App）；因此 TROUTER://app/second 这种写法同样应该能打开页面
       实测：按预期完成
       证据：大写 scheme 的结果=Success(meta=RouteMeta(path=/second, group=default, targetClassName=com.demo.trouter.feature.demo.SecondActivity, kind=ACTIVITY))
       证据：真实打开的页面=SecondActivity
 【H · 模块间服务与跨进程端点】
-  [通过] H01 模块间接口调用：注册、查找、拒重复、注销（578ms）
+  [通过] H01 模块间接口调用：注册、查找、拒重复、注销（584ms）
       期望：注册实现后 findService 拿到的就是同一个实例；重复注册同一接口返回 false；注销后 findService 返回 null
       实测：按预期完成
-  [通过] H02 已注册服务快照：登记的东西看得见（591ms）
+  [通过] H02 已注册服务快照：登记的东西看得见（583ms）
       期望：注册两个接口后，registeredServices() 里能看到这两个接口；注销后快照里不再有
       实测：按预期完成
-  [通过] H03 跨进程端点的本地行为：调用、未注册错误、错误识别（578ms）
+  [通过] H03 跨进程端点的本地行为：调用、未注册错误、错误识别（587ms）
       期望：本地注册端点后被调用返回预期字符串；调用没注册的端点返回 -ERR 开通的错误串，且 isRemoteEndpointError 认得出来
       实测：按预期完成
       证据：端点返回值=echo:hello
       证据：未注册端点回包=-ERR unregistered:btMissingEndpoint
       证据：未注册回包内容 含「unregistered」
-  [通过] H04 端点重名：被拒绝，不会悄悄顶掉原来的实现（587ms）
+  [通过] H04 端点重名：被拒绝，不会悄悄顶掉原来的实现（582ms）
       期望：同名端点重复注册返回 false，且第一次注册的实现仍然生效
       实测：按预期完成
       证据：重名后实际生效的端点实现=first
 【I · 跨进程（三进程）】
-  [通过] I01 跨进程打开页面：另一个进程真的开了页面（有它的进程号作证）（4038ms）
+  [通过] I01 跨进程打开页面：另一个进程真的开了页面（有它的进程号作证）（2048ms）
       期望：导航 /remote-second 返回 Success；随后向 :remote 进程回读它最近打开的页面，路径一致，且进程号与回测台所在进程不同
       实测：按预期完成
-      证据：远端证词=lastOpen path=/remote-second msg=(未收到 msg) count=-1 pid=28400
+      证据：远端证词=lastOpen path=/remote-second msg=(未收到 msg) count=-1 pid=5905
       证据：远端页面真实收到的路径 含「path=/remote-second」
-      证据：回测台 pid=28284，远端 pid=28400
-  [通过] I02 跨进程带参数：远端页面真的收到了参数（3088ms）
+      证据：回测台 pid=5801，远端 pid=5905
+  [通过] I02 跨进程带参数：远端页面真的收到了参数（2074ms）
       期望：跨进程导航时带 msg/count，远端页面自己记下的收参正是这两个值
       实测：按预期完成
-      证据：远端证词=lastOpen path=/remote-second msg=I02 跨进程参数 count=88 pid=28400
+      证据：远端证词=lastOpen path=/remote-second msg=I02 跨进程参数 count=88 pid=5905
       证据：远端页面真实收到的 msg 含「msg=I02 跨进程参数」
       证据：远端页面真实收到的 count 含「count=88」
-  [通过] I03 没标 @CrossProcess 的路径走跨进程通道：被白名单拦下（621ms）
+  [通过] I03 没标 @CrossProcess 的路径走跨进程通道：被白名单拦下（594ms）
       期望：导航 /second（未标注 @CrossProcess）时返回 Blocked，原因指出未标注 @CrossProcess
       实测：按预期完成
       证据：拒绝原因 含「CrossProcess」
-  [通过] I04 两个进程各有一份端点表：互不串台（592ms）
+  [通过] I04 两个进程各有一份端点表：互不串台（582ms）
       期望：demoClock2 只在 :remote2 注册：指定 target=remote2 能调到（回包带另一个进程号）；用默认 target 调同一个名字只会得到「未注册」
       实测：按预期完成
-      证据：:remote2 回包=clock2-v1 q=from-backtest pid=28425
+      证据：:remote2 回包=clock2-v1 q=from-backtest pid=5930
       证据：:remote2 端点回包 含「clock2-v1」
       证据：默认(:remote) 回包=-ERR unregistered:demoClock2
       证据：默认进程回包 含「unregistered」
-  [通过] I05 跨进程传业务对象（不用手写序列化）（1038ms）
+  [通过] I05 跨进程传业务对象（不用手写序列化）（628ms）
       期望：把含 List / 枚举 / 可空嵌套对象的业务对象发到 :remote2，远端解包后逐字段回显一致，且带远端进程号
       实测：按预期完成
       证据：本地 pack/unpack 往返=DemoReport(id=BT-2026, count=7, ok=true, tags=[alpha, beta], inner=DemoInner(name=内层对象, level=HIGH))
-      证据：远端回包=pojoEcho ✓ id=BT-2026 count=7 ok=true tags=alpha|beta inner=内层对象/HIGH pid=28425
+      证据：远端回包=pojoEcho ✓ id=BT-2026 count=7 ok=true tags=alpha|beta inner=内层对象/HIGH pid=5930
       证据：远端解包后的 id 含「id=BT-2026」
       证据：远端解包后的 count 含「count=7」
       证据：远端解包后的 List 字段 含「tags=alpha|beta」
       证据：远端解包后的嵌套对象与枚举 含「inner=内层对象/HIGH」
-  [通过] I06 像调本地接口一样调远端接口：三种签名都对（609ms）
+  [通过] I06 像调本地接口一样调远端接口：三种签名都对（595ms）
       期望：经类型化远程接口连续调用 count / summarize / report，结果逐项正确，summarize 的回包带远端进程号
       实测：按预期完成
       证据：count("abcd") 的结果=8
-      证据：summarize=远端汇总 tag=bt level=HIGH sum=6 pid=28425
+      证据：summarize=远端汇总 tag=bt level=HIGH sum=6 pid=5930
       证据：summarize 回包 含「sum=6」
       证据：summarize 回包里的枚举参数 含「level=HIGH」
       证据：report 返回对象的 id=remote-Z
       证据：report 返回对象的 count=99
       证据：report 返回对象里的枚举字段=HIGH
-  [通过] I07 调远端没实现的接口：走错误回调，不崩不卡（598ms）
+  [通过] I07 调远端没实现的接口：走错误回调，不崩不卡（596ms）
       期望：用默认 target（:remote）调用只在 :remote2 实现的类型化接口，错误回调被触发且原因指出未注册
       实测：按预期完成
       证据：错误回调=远端未注册该 API：com.demo.trouter.DemoStatsApi
       证据：错误原因 含「未注册」
-  [通过] I08 指定了不存在的目标进程：明确报错，不静默走默认进程（629ms）
+  [通过] I08 指定了不存在的目标进程：明确报错，不静默走默认进程（603ms）
       期望：target 写成没配置过的名字时返回 Blocked，原因提示要把该进程加进配置
       实测：按预期完成
       证据：拒绝原因 含「未配置」
-  [通过] I09 拿没登记编解码器的接口做远程代理：立刻报配置错误（583ms）
+  [通过] I09 拿没登记编解码器的接口做远程代理：立刻报配置错误（600ms）
       期望：对一个没有 @RemoteApi 登记的接口调用 remoteApi()，直接抛 IllegalStateException（配置错误必须显性），而不是运行期悄悄失败
       实测：按预期完成
       证据：抛出的异常类型=class java.lang.IllegalStateException
       证据：异常信息 含「未注册」
 【J · 健壮性与边界】
-  [通过] J01 空路径：明确 NotFound，不崩溃、不开页（1482ms）
+  [通过] J01 空路径：明确 NotFound，不崩溃、不开页（1493ms）
       期望：导航空字符串返回 NotFound，屏幕上不出现任何页面
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
-  [通过] J02 注册了但目标类不存在：运行期降级为 NotFound，不崩溃（1492ms）
+  [通过] J02 注册了但目标类不存在：运行期降级为 NotFound，不崩溃（1488ms）
       期望：动态注册一条指向不存在类的路径后导航它：返回 NotFound、兜底回调触发、屏幕上不出现页面、进程不崩溃
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
-      证据：日志证据：[navigate][exit] traceId=f73e47b3 hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=2
-  [通过] J03 在后台线程发起跳转：照样能打开页面（754ms）
+      证据：日志证据：[navigate][exit] traceId=7335af85 hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=0
+  [通过] J03 在后台线程发起跳转：照样能打开页面（623ms）
       期望：从一个非主线程调用 navigate，页面仍被打开（库不要求调用方在主线程）
       实测：按预期完成
       证据：真实打开的页面=SecondActivity
-  [通过] J04 连发多次跳转：每次都真的打开，不丢不串（2907ms）
+  [通过] J04 连发多次跳转：每次都真的打开，不丢不串（1100ms）
       期望：连续发起 5 次 /second 导航（不等待、不间隔），5 次都返回「成功」，且屏幕上真的依次出现 5 个页面；全部返回后回到回测台
       实测：按预期完成
-      证据：5 次导航连发耗时 980ms（全部当场返回成功）
-      证据：5 个页面全部到前台共耗时 1609ms
+      证据：5 次导航连发耗时 106ms（全部当场返回成功）
+      证据：5 个页面全部到前台共耗时 256ms
       证据：最终出现的页面数=5
-  [通过] J05 注销静态路径后重装：能恢复（2684ms）
+  [通过] J05 注销静态路径后重装：能恢复（1603ms）
       期望：注销 /about 后导航它返回 NotFound；再装配一次注册表后，页面又能正常打开
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
       证据：真实打开的页面=AboutActivity
-  [通过] J06 静态路由表自检：没有一条是打不开的（582ms）
+  [通过] J06 静态路由表自检：没有一条是打不开的（581ms）
       期望：checkRouteTargets() 在干净的路由表上返回空（每条注册路径的目标类都能加载到）
       实测：按预期完成
       证据：检查了 11 条路径，全部可加载
-  [通过] J07 异步等待之后才发现目标打不开：不崩溃、按打开失败降级（1801ms）
+  [通过] J07 异步等待之后才发现目标打不开：不崩溃、按打开失败降级（1795ms）
       期望：链上有一个真的会等待的异步拦截器，等待结束后才发现目标类不存在：结果 NotFound、兜底回调触发、不出现页面、进程不崩溃
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
-      证据：日志证据：[navigate][exit] traceId=b17345f3 hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=302
-  [通过] J08 包裹拦截器放行后目标打不开：按打开失败降级，不误报成拦截器错误（1488ms）
+      证据：日志证据：[navigate][exit] traceId=bf1538d4 hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=303
+  [通过] J08 包裹拦截器放行后目标打不开：按打开失败降级，不误报成拦截器错误（1486ms）
       期望：洋葱包裹拦截器 proceed() 之后目标类不存在：结果 NotFound（不是 Blocked(interceptor error)）、兜底回调触发、不出现页面
       实测：按预期完成
       证据：900ms 内没有任何页面被打开
-      证据：日志证据：[navigate][exit] traceId=90d9b219 hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=1
+      证据：日志证据：[navigate][exit] traceId=eb74059a hop=0 result=Error(ClassNotFoundException: com.demo.trouter.NoSuchPageActivity) costMs=1
 ==================================================

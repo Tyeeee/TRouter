@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -204,7 +205,11 @@ object TRouter {
 
     /**
      * 带结果回调的导航（拿页面返回值）：以 startActivityForResult 发起，结果由调用方 Activity 的
-     * onActivityResult/ResultLauncher 接收（与系统语义一致）；无前台 Activity 时返回 Blocked。
+     * **onActivityResult** 接收（与系统语义一致）；无前台 Activity 时返回 Blocked。
+     *
+     * ⚠️ 这是**老式**回调路径：`registerForActivityResult` 注册出来的 launcher **收不到**这里的结果
+     * （launcher 只接收自己发起的请求）。想用现代 Activity Result API，请用 [buildIntent] 拿到 Intent
+     * 自己 `launcher.launch(intent)`；链上需要等待（异步拦截器）时用 [buildIntentAsync]。
      */
     fun navigateForResult(path: String, requestCode: Int, bundle: Bundle? = null): TRouterResult {
         if (!initialized) return TRouterResult.NotInitialized
@@ -250,11 +255,96 @@ object TRouter {
                 requestCode = null,
                 allowAsync = true,
                 cancelled = { request.isCancelled },
+                captureIntent = null,
                 finish = ::deliver,
             )
         }
         return request
     }
+
+    /**
+     * **只解析、只产出 Intent**，不启动任何页面（见 [TRouterIntent]）。
+     *
+     * 与 [navigate] 的语义完全一致（同步）：别名、重定向、拦截器、`onLost`、元数据写入全都照跑，
+     * 唯一区别是**链末端不调用 startActivity**，而是把造好的 Intent 交回来。因此现代写法可以直接用：
+     *
+     * ```
+     * private val pick = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
+     *     if (r.resultCode == Activity.RESULT_OK) { /* r.data */ }
+     * }
+     *
+     * when (val r = TRouter.buildIntent(RouterContract.PATH_RESULT_DEMO)) {
+     *     is TRouterIntent.Ready        -> pick.launch(r.intent)     // Intent 在你自己手里
+     *     is TRouterIntent.Blocked      -> toast(r.reason)           // 登录校验/灰度照样生效
+     *     is TRouterIntent.NotFound     -> toast("没有这个页面")
+     *     TRouterIntent.NotInitialized  -> toast("忘了 init")
+     * }
+     * ```
+     *
+     * 不需要前台 Activity（只造 Intent、不启动）；链上若挂着**需要等待**的异步拦截器，
+     * 返回 [TRouterIntent.Blocked]（提示改用 [buildIntentAsync]）——绝不阻塞主线程。
+     */
+    fun buildIntent(path: String, bundle: Bundle? = null): TRouterIntent {
+        if (!initialized) return TRouterIntent.NotInitialized
+        val holder = arrayOfNulls<Intent>(1)
+        val result = navigateInternal(
+            path = path,
+            bundle = bundle,
+            traceId = newTraceId(),
+            redirectHop = 0,
+            requestCode = null,
+            captureIntent = { holder[0] = it },
+        )
+        return toTRouterIntent(result, holder[0])
+    }
+
+    /**
+     * [buildIntent] 的异步版（异步拦截器改造）：链上出现**需要等待**的异步拦截器时用这个，
+     * 否则会像同步导航一样被明确拒绝。
+     *
+     * 回调恒在主线程、只回调一次；返回 [RouteRequest] 可取消（取消后迟到的放行不会产出 Intent）。
+     */
+    fun buildIntentAsync(path: String, bundle: Bundle? = null, onResult: (TRouterIntent) -> Unit): RouteRequest {
+        val delivered = AtomicBoolean(false)
+        val holder = arrayOfNulls<Intent>(1)
+        fun deliver(result: TRouterIntent) {
+            if (delivered.compareAndSet(false, true)) runOnMain { onResult(result) }
+        }
+        if (!initialized) {
+            deliver(TRouterIntent.NotInitialized)
+            return RouteRequest {}
+        }
+        val traceId = newTraceId()
+        val request = RouteRequest {
+            log("[buildIntent][cancel] traceId=$traceId path=$path")
+            deliver(TRouterIntent.Blocked(path, "导航已取消（RouteRequest.cancel）"))
+        }
+        runOnMain {
+            runNavigate(
+                path = path,
+                bundle = bundle,
+                traceId = traceId,
+                redirectHop = 0,
+                requestCode = null,
+                allowAsync = true,
+                cancelled = { request.isCancelled },
+                captureIntent = { holder[0] = it },
+            ) { result -> deliver(toTRouterIntent(result, holder[0])) }
+        }
+        return request
+    }
+
+    /** 内部链结果 → 对外 [TRouterIntent]（Success 配上真正造出来的那个 Intent）。 */
+    private fun toTRouterIntent(result: TRouterResult, intent: Intent?): TRouterIntent = when (result) {
+        is TRouterResult.Success ->
+            if (intent != null) TRouterIntent.Ready(result.meta, intent)
+            else TRouterIntent.Blocked(result.meta.path, "未能产出 Intent（内部状态异常）")
+        is TRouterResult.NotFound -> TRouterIntent.NotFound(result.path)
+        is TRouterResult.Blocked -> TRouterIntent.Blocked(result.path, result.reason)
+        TRouterResult.NotInitialized -> TRouterIntent.NotInitialized
+    }
+
+    private fun newTraceId(): String = UUID.randomUUID().toString().replace("-", "").take(8)
 
     /**
      * 单跳导航实现（Redirect 重入复用本方法，同一 traceId 贯穿各跳）。
@@ -266,6 +356,7 @@ object TRouter {
         traceId: String,
         redirectHop: Int,
         requestCode: Int? = null,
+        captureIntent: ((Intent) -> Unit)? = null,
     ): TRouterResult {
         var captured: TRouterResult? = null
         runNavigate(
@@ -276,6 +367,7 @@ object TRouter {
             requestCode = requestCode,
             allowAsync = false,
             cancelled = { false },
+            captureIntent = captureIntent,
         ) { captured = it }
         // allowAsync=false 时链不可能挂起：finish 必然在本次调用栈内同步完成
         return captured ?: TRouterResult.Blocked(path, "链执行异常：未产出结果")
@@ -300,6 +392,7 @@ object TRouter {
         requestCode: Int?,
         allowAsync: Boolean,
         cancelled: () -> Boolean,
+        captureIntent: ((Intent) -> Unit)?,
         finish: (TRouterResult) -> Unit,
     ) {
         val startMs = SystemClock.elapsedRealtime()
@@ -330,7 +423,7 @@ object TRouter {
                 return
             }
             log("[route][alias] from=$path to=$resolved hop=$redirectHop")
-            runNavigate(resolved, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, finish)
+            runNavigate(resolved, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, captureIntent, finish)
             return
         }
 
@@ -359,7 +452,7 @@ object TRouter {
         }
 
         try {
-            executeChain(meta, bundle, traceId, requestCode, allowAsync, cancelled, handleOpenFailure) { outcome ->
+            executeChain(meta, bundle, traceId, requestCode, allowAsync, cancelled, captureIntent, handleOpenFailure) { outcome ->
                 val cost = SystemClock.elapsedRealtime() - startMs
                 when (outcome) {
                     is ChainOutcome.Opened -> {
@@ -377,7 +470,7 @@ object TRouter {
                             settle(TRouterResult.Blocked(meta.path, reason))
                         } else {
                             log("[navigate][exit] traceId=$traceId hop=$redirectHop result=Redirect(target=${outcome.targetPath}) costMs=$cost")
-                            runNavigate(outcome.targetPath, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, settle)
+                            runNavigate(outcome.targetPath, bundle, traceId, redirectHop + 1, requestCode, allowAsync, cancelled, captureIntent, settle)
                         }
                     }
                 }
@@ -399,6 +492,7 @@ object TRouter {
         requestCode: Int?,
         allowAsync: Boolean,
         cancelled: () -> Boolean,
+        captureIntent: ((Intent) -> Unit)?,
         onOpenFailure: (Throwable) -> Unit,
         onOutcome: (ChainOutcome) -> Unit,
     ) {
@@ -408,7 +502,7 @@ object TRouter {
             return
         }
         if (members.isEmpty()) {
-            onOutcome(ChainOutcome.Opened(openTarget(meta, bundle, traceId, requestCode)))
+            onOutcome(ChainOutcome.Opened(openTarget(meta, bundle, traceId, requestCode, captureIntent)))
             return
         }
 
@@ -430,7 +524,7 @@ object TRouter {
             if (Looper.myLooper() == Looper.getMainLooper()) block() else handler.post(block)
         }
         val runSync: (Int) -> ChainOutcome = { from ->
-            stepChain(members, from, meta, bundle, traceId, requestCode)
+            stepChain(members, from, meta, bundle, traceId, requestCode, captureIntent)
         }
         val evalAtomic: (RouteInterceptor, Int) -> ChainOutcome? = { m, idx ->
             evalRouteInterceptor(m, meta, bundle, traceId, idx)
@@ -485,7 +579,7 @@ object TRouter {
                 if (settled) return
                 if (index >= members.size) {
                     val opened = try {
-                        openTarget(meta, bundle, traceId, requestCode)
+                        openTarget(meta, bundle, traceId, requestCode, captureIntent)
                     } catch (t: Throwable) {
                         failOpen(t)
                         return
@@ -609,7 +703,7 @@ object TRouter {
         if (allowAsync) {
             AsyncRunner().start()
         } else {
-            once(stepChain(members, 0, meta, bundle, traceId, requestCode))
+            once(stepChain(members, 0, meta, bundle, traceId, requestCode, captureIntent))
         }
     }
 
@@ -662,6 +756,7 @@ object TRouter {
         bundle: Bundle?,
         traceId: String,
         requestCode: Int?,
+        captureIntent: ((Intent) -> Unit)? = null,
     ): ChainOutcome {
         // 匿名对象里的成员名会与 AsyncChain 同名，先取别名
         val waitMeta = meta
@@ -698,7 +793,7 @@ object TRouter {
                 // 注意：这里**不能**用 finally 复位 insideProceed——finally 会先于外层 catch 执行，
                 // 复位之后外层就分不清"异常来自拦截器"还是"来自打开目标"了。
                 insideProceed = true
-                val rest = stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+                val rest = stepChain(members, index + 1, meta, bundle, traceId, requestCode, captureIntent)
                 insideProceed = false
                 runCatching { done(rest) }
                 outcome = rest
@@ -731,10 +826,15 @@ object TRouter {
         if (immediate == null) {
             closed = true
             log("[interceptor][async][deferred-sync] traceId=$traceId class=${member.javaClass.simpleName}")
+            // "怎么改"要按调用方用的是哪套 API 给：导航空手走 navigateAsync，只要 Intent 的走 buildIntentAsync
+            val advice = if (captureIntent != null) {
+                "请改用 TRouter.buildIntentAsync(path, bundle) { intentResult -> ... }"
+            } else {
+                "请改用 TRouter.navigateAsync(path, bundle) { result -> ... }"
+            }
             return ChainOutcome.Blocked(
                 meta.path,
-                "异步拦截器 ${member.javaClass.simpleName} 在同步导航中没有立即放行（延迟放行会阻塞主线程，已被拒绝）：" +
-                    "请改用 TRouter.navigateAsync(path, bundle) { result -> ... }",
+                "异步拦截器 ${member.javaClass.simpleName} 在同步导航中没有立即放行（延迟放行会阻塞主线程，已被拒绝）：$advice",
             )
         }
         return immediate
@@ -751,18 +851,19 @@ object TRouter {
         bundle: Bundle?,
         traceId: String,
         requestCode: Int? = null,
+        captureIntent: ((Intent) -> Unit)? = null,
     ): ChainOutcome {
-        if (index >= members.size) return openTargetOutcome(meta, bundle, traceId, requestCode)
+        if (index >= members.size) return openTargetOutcome(meta, bundle, traceId, requestCode, captureIntent)
 
         return when (val member = members[index]) {
             is RouteInterceptor ->
                 evalRouteInterceptor(member, meta, bundle, traceId, index)
-                    ?: stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+                    ?: stepChain(members, index + 1, meta, bundle, traceId, requestCode, captureIntent)
             is WrappingInterceptor ->
                 evalWrappingInterceptor(member, meta, bundle, traceId, index) {
-                    stepChain(members, index + 1, meta, bundle, traceId, requestCode)
+                    stepChain(members, index + 1, meta, bundle, traceId, requestCode, captureIntent)
                 }
-            is AsyncInterceptor -> runAsyncMemberSynchronously(member, members, index, meta, bundle, traceId, requestCode)
+            is AsyncInterceptor -> runAsyncMemberSynchronously(member, members, index, meta, bundle, traceId, requestCode, captureIntent)
             else -> ChainOutcome.Blocked(meta.path, "未知拦截器类型: ${member.javaClass.name}")
         }
     }
@@ -837,8 +938,14 @@ object TRouter {
     }
 
     /** 链末端：真正打开目标（异常向上冒泡，由 navigateInternal 按打开失败处理）。 */
-    private fun openTargetOutcome(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): ChainOutcome {
-        val opened = openTarget(meta, bundle, traceId, requestCode)
+    private fun openTargetOutcome(
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        requestCode: Int? = null,
+        captureIntent: ((Intent) -> Unit)? = null,
+    ): ChainOutcome {
+        val opened = openTarget(meta, bundle, traceId, requestCode, captureIntent)
         return ChainOutcome.Opened(opened)
     }
 
@@ -1526,15 +1633,17 @@ object TRouter {
 
     // ------------------------------------------------------------------ 内部实现
 
-    private fun openTarget(meta: RouteMeta, bundle: Bundle?, traceId: String, requestCode: Int? = null): RouteMeta {
+    /**
+     * 只造 Intent、**不启动**（含路由元数据）：[openTarget] 与 [buildIntent] 共用的末端实现。
+     *
+     * 抽出来的原因：现代 Activity Result API（`registerForActivityResult`）要求调用方自己拿到 Intent 去 launch，
+     * 而原实现把"造 Intent"和"启动页面"写死在一起，外部拿不到那个 Intent（见 [buildIntent]）。
+     */
+    private fun buildTargetIntent(meta: RouteMeta, bundle: Bundle?, traceId: String, startMs: Long): Intent {
         val ctx = requireNotNull(appContext) { "TRouter.init(context, config) 必须先行调用" }
-        // 页面类在此刻才真正加载（惰性：init/install 不加载页面类）
-        val startMs = SystemClock.elapsedRealtime()
-        loadTargetClass(meta.targetClassName)
-
         val intent = when (meta.kind) {
             RouteTargetKind.ACTIVITY ->
-                android.content.Intent().setClassName(ctx, meta.targetClassName)
+                Intent().setClassName(ctx, meta.targetClassName)
             RouteTargetKind.FRAGMENT ->
                 FragmentContainerActivity.intent(ctx, meta.targetClassName)
         }
@@ -1550,6 +1659,32 @@ object TRouter {
         if (meta.kind == RouteTargetKind.FRAGMENT) {
             intent.putExtra(FragmentContainerActivity.EXTRA_FRAGMENT_CLASS, meta.targetClassName)
         }
+        return intent
+    }
+
+    /**
+     * 链末端：造 Intent 后按模式收口 ——
+     * - [captureIntent] 非空：**只交给调用方**（[buildIntent] 路径），不启动任何页面；
+     * - 否则照旧启动（`startActivityForResult` / `startActivity` / 无前台时 NEW_TASK 兜底）。
+     */
+    private fun openTarget(
+        meta: RouteMeta,
+        bundle: Bundle?,
+        traceId: String,
+        requestCode: Int? = null,
+        captureIntent: ((Intent) -> Unit)? = null,
+    ): RouteMeta {
+        val ctx = requireNotNull(appContext) { "TRouter.init(context, config) 必须先行调用" }
+        // 页面类在此刻才真正加载（惰性：init/install 不加载页面类）
+        val startMs = SystemClock.elapsedRealtime()
+        loadTargetClass(meta.targetClassName)
+
+        val intent = buildTargetIntent(meta, bundle, traceId, startMs)
+        if (captureIntent != null) {
+            // 只产出、不启动：用哪个 launcher、什么时候 launch，由调用方决定
+            captureIntent(intent)
+            return meta
+        }
 
         // 优先在当前（前台）Activity 的任务内打开 → 返回键/返回栈语义正确；
         // 无前台 UI（如通知/无界面场景）时才回退 applicationContext + NEW_TASK。
@@ -1563,7 +1698,7 @@ object TRouter {
         } else if (requestCode != null) {
             throw IllegalStateException("navigateForResult 需要前台 Activity（当前无 resumed Activity）")
         } else {
-            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ctx.startActivity(intent)
         }
         return meta

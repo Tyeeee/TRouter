@@ -176,7 +176,8 @@ class MyApp : Application() {
 |---|---|---|
 | 打开一个页面 | `TRouter.navigate(路径, 参数)` | [5.1](#51-打开一个页面) |
 | 跳转时带参数 / 在页面里取参数 | `navigate(路径, bundle)` + `RouteArgs` | [5.2](#52-带参数跳转与取参数) |
-| 打开页面，并在它返回时拿到数据 | `TRouter.navigateForResult(...)` | [5.3](#53-打开页面并拿到返回值) |
+| 打开页面，并在它返回时拿到数据 | `TRouter.navigateForResult(...)`（老式回调） | [5.3](#53-打开页面并拿到返回值) |
+| 用 `registerForActivityResult` 打开页面（现代写法） | `TRouter.buildIntent(...)` 拿到 Intent 自己 launch | [5.3](#53-打开页面并拿到返回值) |
 | 跳转前做登录校验 / 灰度 / 临时换页 | 拦截器（`RouteInterceptor`） | [5.4](#54-拦截器跳转前先做检查) |
 | 跳转前要联网、要等待（不能卡主线程） | `TRouter.navigateAsync(...)` | [5.5](#55-跳转前需要等待异步拦截器) |
 | 页面必须跑在另一个进程里 | `@CrossProcess` + `TRouter.navigateRemote(...)` | [5.6](#56-把页面开在另一个进程里) |
@@ -248,7 +249,38 @@ val count = args.int("count", 0)    // 也可以给默认值
 
 ### 5.3 打开页面并拿到返回值
 
-和系统自带的方式一样，结果还是回到你的 `onActivityResult`：
+#### 推荐：配合 `registerForActivityResult`（现代写法）
+
+用 `buildIntent` 让 TRouter **只解析、只产出 Intent**，启动交给你自己 —— 于是现代 Activity Result API 照常可用，
+而且路由解析、别名、拦截器（登录/灰度/兜底）、`onLost`、页面自述元数据一样都不少：
+
+```kotlin
+// 发起方（注册必须写在 onStart 之前，通常是字段初始化）
+private val pick = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+        val text = result.data?.getStringExtra("result.text")
+    }
+}
+
+when (val r = TRouter.buildIntent(RouterContract.PATH_RESULT_DEMO, bundle)) {
+    is TRouterIntent.Ready        -> pick.launch(r.intent)   // Intent 在你自己手里
+    is TRouterIntent.Blocked      -> toast("打不开：${r.reason}")   // 被拦截器拦下，原因可读
+    is TRouterIntent.NotFound     -> toast("没有这个页面：${r.path}")
+    TRouterIntent.NotInitialized  -> toast("忘了 TRouter.init")
+}
+```
+
+- **不需要前台页面**（只造 Intent、不启动），后台/通知场景也能用；
+- 语义与 `navigate` 完全一致：拦截器返回 `Blocked`、未注册返回 `NotFound` 并触发 `onLost`、别名照样解析；
+- 链上挂着**需要等待**的异步拦截器时返回 `Blocked`（提示改用 `buildIntentAsync`）——绝不阻塞主线程：
+
+```kotlin
+TRouter.buildIntentAsync(RouterContract.PATH_SECOND) { r ->
+    if (r is TRouterIntent.Ready) pick.launch(r.intent)
+}
+```
+
+#### 兼容：老式 `navigateForResult` + `onActivityResult`
 
 ```kotlin
 // 发起方
@@ -264,6 +296,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 > ⚠️ 这种方式要求**当前有前台页面**。如果是在后台（比如通知栏点击）发起，会返回 `Blocked` 并说明原因——
 > 因为系统要求"谁来发起的、结果就回到谁那里"，后台没有这个"谁"。
+>
+> ⚠️ 它走的是系统的 `startActivityForResult`，**`registerForActivityResult` 注册出来的 launcher 收不到它的结果**
+> （launcher 只接收自己发起的请求）。要用现代 API 就用上面的 `buildIntent`。
 
 ### 5.4 拦截器：跳转前先做检查
 
@@ -773,7 +808,7 @@ adb shell settings put global animator_duration_scale 0
 点一下会**真的发起跳转、真的把页面打开、真的跨进程调用**，
 然后对照"屏幕上究竟发生了什么"给结论（通过 / 失败 + 每个节点的证据行）。
 
-- 一共 **68 个节点**，按功能点分 10 组：基础跳转、参数、返回值、拦截器、异步拦截器、
+- 一共 **71 个节点**，按功能点分 10 组：基础跳转、参数、返回值、拦截器、异步拦截器、
   动态路由、别名与深链、服务与端点、跨进程、健壮性；
 - 每行右边有「跑」按钮可以只复验某一条；每个节点都会记录证据
   （真实打开的页面类名、页面真实收到的参数、真实日志行、远端进程自己的证词）；
@@ -790,7 +825,7 @@ adb shell run-as com.demo.trouter cat files/backtest/last-report.txt
 
 **自动化测试**：目前有 109 个手机上的用例（24 个测试类）+ 7 个"检查规则"自己的单元测试，
 覆盖跳转、拦截器、异步拦截器、动态路由、深链、别名、跨进程（含三个真实进程）、对象传输、跨进程调接口等，
-最近一次结果见 `docs/reports/backtest/回测台-功能节点回测报告.md`（68/68 节点 + 109/109 用例全部通过）。
+最近一次结果见 `docs/reports/backtest/回测台-功能节点回测报告.md`（71/71 节点 + 109/109 用例全部通过）。
 跑方法：
 
 ```bash
@@ -860,7 +895,7 @@ adb shell run-as com.demo.trouter cat files/backtest/last-report.txt
 | 文档 | 内容 |
 |---|---|
 | `docs/demo/README.md` | 演示工程逐场景导览（每一行点进去会看到什么） |
-| `docs/reports/backtest/回测台-功能节点回测报告.md` | **全量回测结果**：68 个功能节点 + 109 个设备用例、怎么跑、发现了哪些缺陷、还剩什么限制 |
+| `docs/reports/backtest/回测台-功能节点回测报告.md` | **全量回测结果**：71 个功能节点 + 109 个设备用例、怎么跑、发现了哪些缺陷、还剩什么限制 |
 
 **设计与历史留档（想追溯"为什么这么设计"再看）**：
 
