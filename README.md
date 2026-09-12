@@ -81,7 +81,8 @@ when (val result = TRouter.navigate("/second")) {
 ## 3. 5 分钟接入
 
 > 目前还没发布到 Maven 中央仓库，所以接入方式是**把源码模块拷进你的工程**（下面第 1 步）。
-> 以后发版了这一段会改。
+> 以后发版了这一段会改。将来发布时，坐标统一在同一个命名空间下：
+> `com.trouter:trouter-annotation` / `com.trouter:trouter-processor` / `com.trouter:trouter-core`（当前版本 `1.0.0`）。
 
 ### 第 1 步：把 3 个模块拷进工程，并在 `settings.gradle.kts` 里登记
 
