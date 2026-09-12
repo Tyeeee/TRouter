@@ -83,7 +83,7 @@ when (val result = TRouter.navigate("/second")) {
 把库拿到工程里有**两种方式，二选一**：
 
 - **方式 A：用 Maven 坐标**（推荐；适合团队内部 / CI）——本库已经接入 `maven-publish`，
-  坐标固定为 `com.trouter:trouter-{annotation,processor,core,lint}`，当前版本 `1.0.1`；
+  坐标固定为 `com.trouter:trouter-{annotation,processor,core,lint}`，当前版本 `0.1.0`；
 - **方式 B：把源码模块拷进工程**（还没上公共仓库时的兜底，也方便直接改库源码调试）。
 
 > ⚠️ 目前**还没发布到公共仓库**（Maven 中央仓库那套账号 / 签名 / 发布流程还没做），
@@ -98,8 +98,8 @@ when (val result = TRouter.navigate("/second")) {
 cd trouter-gradle-plugin && ../gradlew publishToMavenLocal   # 可选：构建期"路径冲突"护栏插件
 ```
 
-产物：`trouter-core-1.0.1.aar`（Android 库，release 变体）+ `trouter-annotation/processor/lint-1.0.1.jar`
-+ 插件 `trouter-gradle-plugin-1.0.1.jar` 及其插件标记产物。
+产物：`trouter-core-0.1.0.aar`（Android 库，release 变体）+ `trouter-annotation/processor/lint-0.1.0.jar`
++ 插件 `trouter-gradle-plugin-0.1.0.jar` 及其插件标记产物。
 
 > 想发到团队内部仓库（Nexus / Artifactory 等）：在对应模块里加一个
 > `maven { url = uri("..."); credentials { ... } }` 仓库声明后跑 `publish`，**坐标不用改**。
@@ -121,7 +121,7 @@ dependencyResolutionManagement {
 ```toml
 # gradle/libs.versions.toml
 [versions]
-trouter = "1.0.1"
+trouter = "0.1.0"
 
 [libraries]
 trouter-annotation = { group = "com.trouter", name = "trouter-annotation", version.ref = "trouter" }
@@ -150,7 +150,7 @@ dependencies {
 pluginManagement { repositories { mavenLocal(); google(); mavenCentral(); gradlePluginPortal() } }
 
 // 应用模块
-plugins { id("com.trouter.route-conflict") version "1.0.1" }
+plugins { id("com.trouter.route-conflict") version "0.1.0" }
 ```
 
 ### 第 1 步 · 方式 B：把 3 个模块拷进工程
@@ -1074,7 +1074,7 @@ Copyright 2026 Tyeeee
 简单说：可以自由使用、修改、商用、闭源分发，只要保留版权与许可声明；同时包含专利授权条款
 （这也是 Android 生态里最常用的许可证）。
 
-> 接入方式提醒：两种都行（见[第 3 节](#3-5-分钟接入)）—— 用 Maven 坐标（`com.trouter:*:1.0.1`），
+> 接入方式提醒：两种都行（见[第 3 节](#3-5-分钟接入)）—— 用 Maven 坐标（`com.trouter:*:0.1.0`），
 > 或把 `trouter-annotation` / `trouter-processor` / `trouter-core` 的源码拷进工程；
 > 拷贝源码这种方式请一并保留 `LICENSE` 与版权声明。
 

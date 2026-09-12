@@ -6,7 +6,7 @@ plugins {
 
 // 统一对外坐标（命名空间）：group 与包名根保持一致，最终坐标形如 com.trouter:<模块名>:<版本号>
 group = "com.trouter"
-version = "1.0.1"
+version = "0.1.0"
 
 // 说明：本模块只在构建期使用（Lint 检查），不打包进 APK。
 // Lint 32.x（AGP 9.3.2 线）自身要求 JVM 17，因此这里的目标版本是 17，而不是其他模块的 11。
